@@ -1,0 +1,21 @@
+{
+  "app_name": "جروتباسكت",
+  "basket_delivered_zero": "تم توصيل {{count}} منتج ",
+  "basket_delivered": "تم توصيل {{count}} منتجات ",
+
+  "test": "كوكو واوا",
+  "footer": "عرض لمقالة في <2>مدونة فرايز</2>.<5/>بني بواسطة ريأكت و أي إيتين نكست و بولما.",
+  "nameTitle": "This is your name",
+  "userMessagesUnread_one": "مرحبا <1>{{name}}</1>, لديك عدد {{count}} رساله غير مقرؤه. <5>اذهب الي الرساله</5>.",
+  "userMessagesUnread_plural": "مرحبا <1>{{name}}</1>, لديك عدد {{count}} رساله غير مقرؤه. <5>اذهب الي الرساله</5>.",
+  "key_zero": "ليس لديك رسال",
+  "key_one": "لديك رساله واحده",
+  "key_two": "لديك رسالتان",
+  "key_few": "لديك عدد {{count}} رسائل",
+  "key_many": "لديك عدد {{count}} رساله",
+  "key_other": "لديك عدد {{count}} رساله",
+  "user_name": "مرحبا <2>{{name}}</2> مره أخري",
+  "friend": "اهلا بك ",
+  "friend_male": " {{name}} اهلا بك ",
+  "friend_female": "اهلا بكي {{name}}"
+}

@@ -1,0 +1,106 @@
+{
+  "navBar": {
+    "Announcement": "Free Shipping on Orders Over {{val}} LE",
+
+    "weekendBoots": "Weekend Boots",
+    "terrusClogs": "Terrace Clogs",
+    "accessories": "Accessories",
+    "shopAll": "Shop All",
+    "values": "Values"
+  },
+  "home": {
+    "newCollection": "The New Collection is Here.",
+    "hero": "Comfy. Water Resistant. Unisex. Made with 96% Recycled and Natural Materials.",
+    "newIn": "New In",
+    "socially": "Socially and Environmentally Progressive Outdoor Footwear.",
+    "madeOf1": "The Weekend Boot Thesus outdoor footwear is made from tough recycled nylon and natural rubber. They are versatile, comfy, durable and made with environmentally and socially progressive materials.",
+    "madeOf2": "Each pair diverts 1-2 Kg of waste from waterways and landfill, reduces 20 Kg of CO2 and conserves 10 L of water compared to your traditional leather boot.",
+    "stayInTouch": "Let's stay in touch. Get {{val, currency(USD)}} off your first purchase, early access to new releases and outdoor tips, trips and education.",
+    "beOutside": "#BeOutside"
+  },
+  "button": {
+    "save": "Save",
+    "addToCart": "Add To Cart",
+    "shopNow": "Shop Now",
+    "joinUs": "Join us",
+    "submit": "Submit",
+    "login": "Login",
+    "logout": "Logout",
+    "signup": "Sign Up",
+    "profile": "Profile",
+    "profileSettings": "Profile Settings",
+    "favorites": "Favorites",
+    "shopItems": "Shop Some Items",
+    "proceedToCheckOut": "Proceed To Check Out"
+  },
+  "product": {
+    "name": "Name",
+    "price": "{{val}} LE",
+    "productName": "Product Name",
+    "productPrice": "Product Price",
+    "category": "Category",
+    "quantity": "Quantity",
+    "soldOut": "Out Of Stock",
+    "Price": "Price",
+    "discountedPrice": "Discounted Price",
+    "discountPercentage": "Discount Percentage",
+    "sku": "SKU"
+  },
+  "store": {
+    "storeBootsHero": "The Weekend Boot",
+    "storeBootsHeroSub": "Made with 98% environmentally progressive materials.",
+    "storeClogsHero": "The Terrus",
+    "storeClogsHeroSub": "Made with 99% natural and recycled materials.",
+    "4in1h2": "The 4-in-1 Hiking Boot",
+    "4in1p": "Comfy, cosy and seriously cute. This 4-in-1 hiking boot is a go-to all year outdoor staple made for the trails, parks and city streets. They are water-resistant and easy to clean - from summer through winter they’ve got you covered. Each pair is vegan, cruelty free and made with recycled ocean plastic.",
+    "clogsH1": "Easy, Comfy Slip On",
+    "yourCart": "Your Cart",
+    "shoppingCartEmpty": " Your Shopping Cart Is Empty...",
+    "totalPrice": "Total Price {{val}} LE",
+    "totalPriceBeforeDiscount": "Total Price Before Discount {{val}} LE",
+    "shopAll": "Shop All"
+  },
+
+  "footer": {
+    "ourShop": "Our Shop",
+    "help": "Get Help",
+    "sizeGuides": "Size Guides",
+    "shippingInfo": "Shipping Information",
+    "refundPolicy": "Refund Policy",
+    "faq": "FAQ",
+    "aboutUs": "About Us",
+    "terms": "Terms Of Service",
+    "contact": "Contact Us",
+    "follow": "Follow Our Latest News",
+    "values": "Values"
+  },
+  "form": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "rePassword": "Renter Password",
+    "address": "Address",
+    "phoneNumber": "Phone Number",
+    "gender": "Gender",
+    "birthDate": "BirthDate",
+    "alreadyMember": "Already a Member",
+    "notMember": "Not A Member",
+    "male": "Male",
+    "female": "Female"
+  },
+  "formErrors": {
+    "fieldRequired": "This Field Is Required",
+    "fieldMin": "This Field Can't be less than {{val}} Characters",
+    "fieldMax": "This Field Can't be more than {{val}} Characters",
+    "notValid": "Not A Valid {{val}}",
+    "pwdRegex": "Password Must Be At Least 8 Characters Containing A Capital Letter And A Special Character",
+    "notValidPwd": "This Password Isn't correct",
+    "pwdDoesntMatch": "Password Doesn't Match",
+    "notValidEmail": "Enter A Vallid Email",
+    "notRegEmail": "This Email Is Not Registered",
+    "notVallidPhone": "Enter A Valid Phone Number",
+    "dateBefore": "Date Can't Be Before 1/1/1990",
+    "dateAfter": "Date Can't Be in the Future"
+  }
+}
