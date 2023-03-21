@@ -18,6 +18,7 @@ import {
   Drawer,
   Button,
   Anchor,
+  Image,
 } from "@mantine/core";
 
 import IconChevronDown from "../../assets/images/chevron-down.svg";
@@ -39,7 +40,6 @@ const useStyles = createStyles((theme) => ({
     },
     [`@media (max-width: ${theme.breakpoints.xs})`]: {
       justifyContent: "center",
-      backgroundColor: "red",
     },
     alignItems: "center",
     height: "100%",
@@ -184,25 +184,76 @@ export function Navbar() {
   return (
     <>
       <Header height={HEADER_HEIGHT} mb={120} className={classes.root}>
-        <Container className={classes.header} fluid>
-          <Group spacing={7}>
-            <Text
-              weight={700}
-              size="lg"
-              sx={{ lineHeight: 1.5 }}
+        <Container
+          size="xl"
+          sx={{
+            display: "flex",
+            [`@media (min-width: ${theme.breakpoints.sm})`]: {
+              justifyContent: "space-between",
+            },
+            [`@media (max-width: ${theme.breakpoints.xs})`]: {
+              justifyContent: "center",
+            },
+
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <Group
+            spacing={7}
+            w={{ base: "100%", sm: "fit-content" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Burger
+              opened={opened}
+              onClick={toggle}
+              className={classes.burger}
+              size="sm"
               mr="auto"
-              c="black.1"
-            >
-              Cafe House
-            </Text>
+            />
+            <Group mr="auto" pl={{ sm: 70 }}>
+              <Box>
+                <Image
+                  maw={50}
+                  src={
+                    new URL(`../../assets/images/logo.png`, import.meta.url)
+                      .href
+                  }
+                  alt="Random image"
+                />
+              </Box>
+
+              <Text
+                weight={700}
+                size="2rem"
+                lts="2px"
+                sx={{ fontFamily: "Damion, cursive", lineHeight: 1.5 }}
+                c="#c79c60"
+              >
+                Cafe House
+              </Text>
+            </Group>
           </Group>
-          <Burger
-            opened={opened}
-            onClick={toggle}
-            className={classes.burger}
-            size="sm"
-          />
-          <Group spacing={5} className={classes.links}>
+
+          <Group
+            spacing={1}
+            className={classes.links}
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+
+              "& :first-child": {
+                fontFamily: "Damion, cursive",
+                lineHeight: 2,
+                color: "#c79c60",
+                fontSize: "1.5rem",
+              },
+            }}
+          >
             {items}
           </Group>
 

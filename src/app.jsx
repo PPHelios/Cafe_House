@@ -7,7 +7,7 @@ import {
   RouterProvider,
   createRoutesFromElements,
 } from "react-router-dom";
-
+import { CustomFonts } from "./utils/CustomFont";
 import { useTranslation } from "react-i18next";
 import { appState } from "./store/appState";
 import MainLayout from "./layouts/MainLayout";
@@ -45,6 +45,7 @@ export function App() {
         dir: docDir === "rtl" ? "rtl" : "ltr",
       }}
     >
+      <CustomFonts />
       <RouterProvider router={router} />
     </MantineProvider>
   );
