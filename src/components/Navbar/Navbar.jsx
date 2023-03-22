@@ -10,7 +10,6 @@ import {
   Burger,
   Paper,
   Transition,
-  UnstyledButton,
   Text,
   Box,
   Collapse,
@@ -19,13 +18,14 @@ import {
   Button,
   Anchor,
   Image,
+  Flex,
 } from "@mantine/core";
 
-import IconChevronDown from "../../assets/images/chevron-down.svg";
+import navUnderline from "../../assets/images/nav-underline.png";
 import { useDisclosure } from "@mantine/hooks";
 import { Link } from "react-router-dom";
 
-const HEADER_HEIGHT = 60;
+const HEADER_HEIGHT = 70;
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -33,128 +33,29 @@ const useStyles = createStyles((theme) => ({
     zIndex: 1,
   },
 
-  header: {
-    display: "flex",
-    [`@media (max-width: ${theme.breakpoints.md})`]: {
-      justifyContent: "space-between",
-    },
-    [`@media (max-width: ${theme.breakpoints.xs})`]: {
-      justifyContent: "center",
-    },
-    alignItems: "center",
-    height: "100%",
-  },
-
-  links: {
-    [theme.fn.smallerThan("sm")]: {
-      display: "none",
-    },
-  },
-
-  user: {
-    color: "red",
-    padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
-    borderRadius: theme.radius.sm,
-    transition: "background-color 100ms ease",
-
-    "&:hover": {
-      backgroundColor: theme.fn.lighten(
-        theme.fn.variant({ variant: "filled", color: theme.primaryColor })
-          .background,
-        0.1
-      ),
-    },
-    [theme.fn.smallerThan("sm")]: {
-      display: "none",
-    },
-  },
-
-  userActive: {
-    backgroundColor: theme.fn.lighten(
-      theme.fn.variant({ variant: "filled", color: theme.primaryColor })
-        .background,
-      0.1
-    ),
-  },
-
-  burger: {
-    [theme.fn.largerThan("sm")]: {
-      display: "none",
-    },
-  },
-
   link: {
+    py: 12,
     display: "block",
     lineHeight: 1,
-    padding: "8px 12px",
     borderRadius: theme.radius.sm,
-    textDecoration: "none",
-
     fontSize: theme.fontSizes.md,
     fontWeight: 500,
 
+    color: theme.colors.gray[3],
     "&:hover": {
-      backgroundColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[6]
-          : theme.colors.gray[0],
-    },
-
-    [theme.fn.smallerThan("sm")]: {
-      borderRadius: 0,
-      padding: theme.spacing.md,
+      textDecoration: "none",
+      color: theme.colors.gold[0],
     },
   },
 
   linkActive: {
-    "&, &:hover": {
-      backgroundColor: theme.fn.variant({
-        variant: "light",
-        color: theme.primaryColor,
-      }).background,
-      color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
-        .color,
-    },
-  },
-  tabs: {
-    [theme.fn.smallerThan("sm")]: {
-      display: "none",
-    },
-  },
-
-  tabsList: {
-    borderBottom: "0 !important",
-  },
-
-  tab: {
+    fontFamily: "Damion, cursive",
+    fontSize: theme.fontSizes.xl,
     fontWeight: 500,
-    height: 38,
-    color: theme.white,
-    backgroundColor: "transparent",
-    borderColor: theme.fn.variant({
-      variant: "filled",
-      color: theme.primaryColor,
-    }).background,
-
-    "&:hover": {
-      backgroundColor: theme.fn.lighten(
-        theme.fn.variant({ variant: "filled", color: theme.primaryColor })
-          .background,
-        0.1
-      ),
-    },
-
-    "&[data-active]": {
-      backgroundColor: theme.fn.lighten(
-        theme.fn.variant({ variant: "filled", color: theme.primaryColor })
-          .background,
-        0.1
-      ),
-      borderColor: theme.fn.variant({
-        variant: "filled",
-        color: theme.primaryColor,
-      }).background,
-    },
+    color: theme.colors.gold[0],
+    backgroundImage: `url(${navUnderline})`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "50% 90%",
   },
 }));
 
@@ -166,16 +67,26 @@ const links = [
 ];
 export function Navbar() {
   const [opened, { toggle }] = useDisclosure(false);
-  const { classes, theme } = useStyles();
+  const { classes, theme, cx } = useStyles();
   const [opened2, { open, close }] = useDisclosure(false);
+  const [active, setActive] = useState(0);
   const { t } = useTranslation("common");
 
-  const items = links.map((link) => (
+  const items = links.map((link, index) => (
     <Anchor
       component={Link}
       key={link.label}
       to={link.link}
-      className={classes.link}
+      className={cx(classes.link, {
+        [classes.linkActive]: index === active,
+      })}
+      onClick={() => {
+        setActive(index);
+      }}
+      py={24}
+      px={{ xs: 7, md: 12 }}
+      textDecoration="none"
+      // bg="teal"
     >
       {t(`navBar.${link.label}`)}
     </Anchor>
@@ -183,79 +94,57 @@ export function Navbar() {
 
   return (
     <>
-      <Header height={HEADER_HEIGHT} mb={120} className={classes.root}>
-        <Container
-          size="xl"
-          sx={{
-            display: "flex",
-            [`@media (min-width: ${theme.breakpoints.sm})`]: {
-              justifyContent: "space-between",
-            },
-            [`@media (max-width: ${theme.breakpoints.xs})`]: {
-              justifyContent: "center",
-            },
+      <Header height={HEADER_HEIGHT} className={classes.root}>
+        <Container size="xl" height="100%" bg="black">
+          <Flex h={70} justify={{ xs: "center", sm: "space-between" }}>
+            <Group
+              spacing={7}
+              w={{ base: "100%", sm: "fit-content" }}
+              position="center"
+            >
+              <Burger
+                opened={opened}
+                onClick={toggle}
+                display={{ xs: "block", sm: "none" }}
+                c="gold.0"
+                size="sm"
+                mr="auto"
+                title="Open navigation menu"
+                aria-label="Open navigation menu"
+              />
+              <Group mr="auto" pl={{ md: 70 }}>
+                <Box>
+                  <Image
+                    maw={50}
+                    src={
+                      new URL(`../../assets/images/logo.png`, import.meta.url)
+                        .href
+                    }
+                    alt="Random image"
+                  />
+                </Box>
 
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
-          <Group
-            spacing={7}
-            w={{ base: "100%", sm: "fit-content" }}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              className={classes.burger}
-              size="sm"
-              mr="auto"
-            />
-            <Group mr="auto" pl={{ sm: 70 }}>
-              <Box>
-                <Image
-                  maw={50}
-                  src={
-                    new URL(`../../assets/images/logo.png`, import.meta.url)
-                      .href
-                  }
-                  alt="Random image"
-                />
-              </Box>
-
-              <Text
-                weight={700}
-                size="2rem"
-                lts="2px"
-                sx={{ fontFamily: "Damion, cursive", lineHeight: 1.5 }}
-                c="#c79c60"
-              >
-                Cafe House
-              </Text>
+                <Text
+                  weight={500}
+                  size="2rem"
+                  lts="2px"
+                  sx={{ fontFamily: "Damion, cursive", lineHeight: 1.5 }}
+                  c="gold.0"
+                >
+                  Cafe House
+                </Text>
+              </Group>
             </Group>
-          </Group>
 
-          <Group
-            spacing={1}
-            className={classes.links}
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-
-              "& :first-child": {
-                fontFamily: "Damion, cursive",
-                lineHeight: 2,
-                color: "#c79c60",
-                fontSize: "1.5rem",
-              },
-            }}
-          >
-            {items}
-          </Group>
+            <Group
+              spacing={1}
+              display={{ base: "none", sm: "flex" }}
+              justify="center"
+              align="center"
+            >
+              {items}
+            </Group>
+          </Flex>
 
           <Transition
             transition="pop-top-right"
@@ -270,13 +159,6 @@ export function Navbar() {
           </Transition>
         </Container>
       </Header>
-      <Drawer opened={opened2} onClose={close} title="Authentication">
-        {/* Drawer content */}
-      </Drawer>
-
-      <Group position="center">
-        <Button onClick={open}>Open Drawer</Button>
-      </Group>
     </>
   );
 }

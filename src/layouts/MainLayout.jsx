@@ -9,7 +9,6 @@ function MainLayout() {
       <Navbar />
       {/* <LanguageSwitcher />
       <button onClick={() => appState.changethemeColor()}>change theme</button> */}
-      {/* <img src={new URL(`../assets/images/${x}.webp`, import.meta.url).href} /> */}
       <Outlet />
     </>
   );

@@ -8,6 +8,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import { CustomFonts } from "./utils/CustomFont";
+//import { mantineTheme } from "./utils/mantineTheme";
 import { useTranslation } from "react-i18next";
 import { appState } from "./store/appState";
 import MainLayout from "./layouts/MainLayout";
@@ -19,6 +20,7 @@ export function App() {
     key: "mantine-rtl",
     stylisPlugins: [rtlPlugin],
   });
+
   const { i18n } = useTranslation();
   const docDir = i18n.dir();
   useEffect(() => {
@@ -43,6 +45,13 @@ export function App() {
       theme={{
         colorScheme: appState.themeColor.color.value,
         dir: docDir === "rtl" ? "rtl" : "ltr",
+        colors: {
+          // Add your color
+          gold: ["#c79c60" /* ... */],
+          main: ["#282726"],
+          // or replace default theme color
+          //  blue: ['#E9EDFC', '#C1CCF6', '#99ABF0' /* ... */],
+        },
       }}
     >
       <CustomFonts />
