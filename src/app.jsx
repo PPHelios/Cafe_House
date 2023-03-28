@@ -7,13 +7,16 @@ import {
   RouterProvider,
   createRoutesFromElements,
 } from "react-router-dom";
-import { CustomFonts } from "./utils/CustomFont";
 //import { mantineTheme } from "./utils/mantineTheme";
 import { useTranslation } from "react-i18next";
-import { appState } from "./store/appState";
+import { themeColor } from "./store/appState";
 import MainLayout from "./layouts/MainLayout";
 import Menu from "./features/Menu/Menu";
 import HomePage from "./features/HomePage/HomePage";
+import MapSearch from "./features/MapSearch/MapSearch";
+import AddProperty from "./features/AddProperty/AddProperty";
+import Login from "./features/Authentication/Login"
+import Signup from "./features/Authentication/Signup"
 
 export function App() {
   const rtlCache = createEmotionCache({
@@ -32,7 +35,10 @@ export function App() {
       <>
         <Route path="/" element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/menu" element={<Menu />} />
+          <Route path="/search" element={<MapSearch />} />
+          <Route path="/add" element={<AddProperty />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Route>
       </>
     )
@@ -43,7 +49,7 @@ export function App() {
       withNormalizeCSS
       emotionCache={docDir === "rtl" ? rtlCache : undefined}
       theme={{
-        colorScheme: appState.themeColor.color.value,
+        colorScheme: themeColor.value,
         dir: docDir === "rtl" ? "rtl" : "ltr",
         colors: {
           // Add your color
@@ -54,7 +60,6 @@ export function App() {
         },
       }}
     >
-      <CustomFonts />
       <RouterProvider router={router} />
     </MantineProvider>
   );

@@ -1,164 +1,124 @@
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
-import {
-  createStyles,
-  Header,
-  Container,
-  Menu,
-  Group,
-  Center,
-  Burger,
-  Paper,
-  Transition,
-  Text,
-  Box,
-  Collapse,
-  Stack,
-  Drawer,
-  Button,
-  Anchor,
-  Image,
-  Flex,
-} from "@mantine/core";
-
-import navUnderline from "../../assets/images/nav-underline.png";
-import { useDisclosure } from "@mantine/hooks";
 import { Link } from "react-router-dom";
+import { createStyles, Header, Group, ActionIcon, Container, Burger, rem ,Box, Button,Image,Text,Drawer} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import {  IconWorld  } from '@tabler/icons-preact';
 
-const HEADER_HEIGHT = 70;
+import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
+
+import logo from "../../assets/images/logo.png"
 
 const useStyles = createStyles((theme) => ({
-  root: {
-    position: "relative",
-    zIndex: 1,
-  },
-
-  link: {
-    py: 12,
-    display: "block",
-    lineHeight: 1,
-    borderRadius: theme.radius.sm,
-    fontSize: theme.fontSizes.md,
-    fontWeight: 500,
-
-    color: theme.colors.gray[3],
-    "&:hover": {
-      textDecoration: "none",
-      color: theme.colors.gold[0],
+  inner: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [theme.fn.smallerThan('sm')]: {
+      justifyContent: 'flex-start',
     },
   },
 
-  linkActive: {
-    fontFamily: "Damion, cursive",
-    fontSize: theme.fontSizes.xl,
-    fontWeight: 500,
-    color: theme.colors.gold[0],
-    backgroundImage: `url(${navUnderline})`,
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "50% 90%",
+  links: {
+
+    [theme.fn.smallerThan('sm')]: {
+      display: 'none',
+    },
   },
+
+  actions: {
+    [theme.fn.smallerThan('sm')]: {
+      display:"none"
+    },
+  },
+
+  burger: {
+    marginRight: theme.spacing.md,
+
+    
+  },
+
+  link: {
+    display: 'block',
+    lineHeight: 1,
+    padding: `${rem(8)} ${rem(12)}`,
+    borderRadius: theme.radius.sm,
+    textDecoration: 'none',
+    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
+    fontSize: theme.fontSizes.sm,
+    fontWeight: 500,
+
+    '&:hover': {
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+      color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
+    },
+  },
+  linkActive: {
+    '&, &:hover': {
+      backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background,
+      color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
+    },
+  },
+  
 }));
 
-const links = [
-  { link: "/", label: "home" },
-  { link: "todaySpecial", label: "todaySpecial" },
-  { link: "menu", label: "menu" },
-  { link: "contact", label: "contact" },
-];
-export function Navbar() {
-  const [opened, { toggle }] = useDisclosure(false);
-  const { classes, theme, cx } = useStyles();
-  const [opened2, { open, close }] = useDisclosure(false);
-  const [active, setActive] = useState(0);
-  const { t } = useTranslation("common");
 
-  const items = links.map((link, index) => (
-    <Anchor
-      component={Link}
+const links=[{label:"login", link:"/login"},{label:"signup", link:"/signup"}]
+export function Navbar() {
+ 
+  const [opened, { toggle }] = useDisclosure(false);
+  const [opened2, { open, close }] = useDisclosure(false);
+  const [active, setActive] = useState(links[0].label);
+  const { classes, cx } = useStyles();
+
+  const items = links.map((link) => (
+    <Box
+    component={Link}
       key={link.label}
       to={link.link}
-      className={cx(classes.link, {
-        [classes.linkActive]: index === active,
-      })}
+      className={cx(classes.link, { [classes.linkActive]: active === link.label })}
       onClick={() => {
-        setActive(index);
+        setActive(link.label);
       }}
-      py={24}
-      px={{ xs: 7, md: 12 }}
-      textDecoration="none"
-      // bg="teal"
     >
-      {t(`navBar.${link.label}`)}
-    </Anchor>
+      {link.label}
+    </Box>
   ));
 
   return (
     <>
-      <Header height={HEADER_HEIGHT} className={classes.root}>
-        <Container size="xl" height="100%" bg="black">
-          <Flex h={70} justify={{ xs: "center", sm: "space-between" }}>
-            <Group
-              spacing={7}
-              w={{ base: "100%", sm: "fit-content" }}
-              position="center"
-            >
-              <Burger
-                opened={opened}
-                onClick={toggle}
-                display={{ xs: "block", sm: "none" }}
-                c="gold.0"
-                size="sm"
-                mr="auto"
-                title="Open navigation menu"
-                aria-label="Open navigation menu"
-              />
-              <Group mr="auto" pl={{ md: 70 }}>
-                <Box>
-                  <Image
-                    maw={50}
-                    src={
-                      new URL(`../../assets/images/logo.png`, import.meta.url)
-                        .href
-                    }
-                    alt="Random image"
-                  />
-                </Box>
+    <Header >
+      <Container className={classes.inner} h={80} fluid >
+        <Burger opened={opened} onClick={()=>{
+          toggle()
+          open()
+        }} size="sm" className={classes.burger} mr="auto"/>
 
-                <Text
-                  weight={500}
-                  size="2rem"
-                  lts="2px"
-                  sx={{ fontFamily: "Damion, cursive", lineHeight: 1.5 }}
-                  c="gold.0"
-                >
-                  Cafe House
-                </Text>
-              </Group>
-            </Group>
+ <Group  mr="auto" pl={280} spacing={3} position="center" component={Link}  to="/">
+ <Text c="blue" ff="Times New Roman" fz={40}>My </Text>
+  <Box w={60}> <Image src={logo} alt="logo"/></Box>
+ 
+  <Text c="blue" ff="Times New Roman" fz={40}>ome</Text>
+ </Group>
 
-            <Group
-              spacing={1}
-              display={{ base: "none", sm: "flex" }}
-              justify="center"
-              align="center"
-            >
-              {items}
-            </Group>
-          </Flex>
-
-          <Transition
-            transition="pop-top-right"
-            duration={200}
-            mounted={opened}
-          >
-            {(styles) => (
-              <Paper className={classes.dropdown} withBorder style={styles}>
-                {items}
-              </Paper>
-            )}
-          </Transition>
-        </Container>
-      </Header>
-    </>
+        <Group spacing={10} className={classes.actions} position="center" noWrap>
+          <Group spacing={2}>
+          {items}
+        </Group>
+          <ActionIcon size="lg">
+          <IconWorld  size="2rem" stroke={1.5} />
+          </ActionIcon>
+          <ThemeToggler />
+          <Button variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>Advertise</Button>
+        </Group>
+      </Container>
+    </Header>
+    <Drawer opened={opened2} onClose={()=>{
+      close()
+      toggle()
+    }} title="My Home">
+   <Text c="blue" component={Link} to="/add">Add Property</Text>
+  </Drawer>
+  </>
   );
 }
