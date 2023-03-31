@@ -1,10 +1,16 @@
-import { Button,  Group } from '@mantine/core';
-import { GithubIcon, DiscordIcon, TwitterIcon } from '@mantine/ds';
-import  GoogleIcon  from '../../assets/images/googleIcon.svg';
-import  FacebookIcon  from '../../assets/images/facebookIcon.svg';
-import { IconBrandGoogle,IconBrandFacebookFilled  } from '@tabler/icons-preact';
+import { Button, Group } from "@mantine/core";
+import GoogleIcon from "../../assets/images/googleIcon.svg";
+import FacebookIcon from "../../assets/images/facebookIcon.svg";
+import { IconBrandGoogle, IconBrandFacebookFilled } from "@tabler/icons-preact";
 export function GoogleButton(props) {
-  return <Button leftIcon={<IconBrandGoogle />} variant="default" color="gray" {...props} />;
+  return (
+    <Button
+      leftIcon={<IconBrandGoogle />}
+      variant="default"
+      color="gray"
+      {...props}
+    />
+  );
 }
 
 export function FacebookButton(props) {
@@ -12,10 +18,10 @@ export function FacebookButton(props) {
     <Button
       leftIcon={<IconBrandFacebookFilled />}
       sx={(theme) => ({
-        backgroundColor: '#4267B2',
-        color: '#fff',
-        '&:not([data-disabled]):hover': {
-          backgroundColor: theme.fn.darken('#4267B2', 0.1),
+        backgroundColor: "#4267B2",
+        color: "#fff",
+        "&:not([data-disabled]):hover": {
+          backgroundColor: theme.fn.darken("#4267B2", 0.1),
         },
       })}
       {...props}
@@ -26,14 +32,14 @@ export function FacebookButton(props) {
 export function DiscordButton(props) {
   return (
     <Button
-      leftIcon={<DiscordIcon size="1rem" />}
+      // leftIcon={<DiscordIcon size="1rem" />}
       sx={(theme) => ({
-        backgroundColor: theme.colorScheme === 'dark' ? '#5865F2' : '#5865F2',
-        '&:not([data-disabled]):hover': {
+        backgroundColor: theme.colorScheme === "dark" ? "#5865F2" : "#5865F2",
+        "&:not([data-disabled]):hover": {
           backgroundColor:
-            theme.colorScheme === 'dark'
-              ? theme.fn.lighten('#5865F2', 0.05)
-              : theme.fn.darken('#5865F2', 0.05),
+            theme.colorScheme === "dark"
+              ? theme.fn.lighten("#5865F2", 0.05)
+              : theme.fn.darken("#5865F2", 0.05),
         },
       })}
       {...props}
@@ -42,11 +48,11 @@ export function DiscordButton(props) {
 }
 
 // Twitter button as anchor
-export function TwitterButton(props ) {
+export function TwitterButton(props) {
   return (
     <Button
       component="a"
-      leftIcon={<TwitterIcon size="1rem" color="#00ACEE" />}
+      // leftIcon={<TwitterIcon size="1rem" color="#00ACEE" />}
       variant="default"
       {...props}
     />
@@ -57,12 +63,14 @@ export function GithubButton(props) {
   return (
     <Button
       {...props}
-      leftIcon={<GithubIcon size="1rem" />}
+      // leftIcon={<GithubIcon size="1rem" />}
       sx={(theme) => ({
-        backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
-        color: '#fff',
-        '&:hover': {
-          backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+        backgroundColor:
+          theme.colors.dark[theme.colorScheme === "dark" ? 9 : 6],
+        color: "#fff",
+        "&:hover": {
+          backgroundColor:
+            theme.colors.dark[theme.colorScheme === "dark" ? 9 : 6],
         },
       })}
     />
