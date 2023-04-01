@@ -36,6 +36,27 @@ export default function Login(props) {
     const res = await fetch(
       "https://sageaddition.backendless.app/api/users/oauth/facebook/request_url",
       {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify(formData),
+      }
+    );
+    if (!res.ok) {
+      console.log(res);
+      const err = await res.json();
+      throw new Error(err.message);
+    } else {
+      console.log(res);
+      const data = await res.json();
+      console.log(data);
+    }
+  };
+  const handleGoogleAuth2 = async () => {
+    const res = await fetch(
+      "https://sageaddition.backendless.app/api/users/oauth/facebook/login",
+      {
         method: "POST",
 
         headers: {
@@ -152,7 +173,7 @@ export default function Login(props) {
           <Button type="submit" radius="xl">
             {upperFirst(type)}
           </Button>
-          <Button onClick={() => handleGoogleAuth()}>test auth</Button>
+          <Button onClick={() => handleGoogleAuth2()}>test auth</Button>
         </Group>
       </form>
     </Paper>
