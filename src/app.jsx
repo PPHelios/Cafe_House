@@ -10,15 +10,22 @@ import {
 //import { mantineTheme } from "./utils/mantineTheme";
 import { useTranslation } from "react-i18next";
 import { themeColor } from "./store/appState";
+
+// BACKENDLESS
+import Backendless from "backendless";
+Backendless.initApp(
+  import.meta.env.VITE_APPLICATION_ID,
+  import.meta.env.VITE_JS_API_KEY
+);
 // Import Parse minified version
-import Parse from "parse/dist/parse.min.js";
+// import Parse from "parse/dist/parse.min.js";
 
 // Your Parse initialization configuration goes here
-const PARSE_APPLICATION_ID = import.meta.env.VITE_PARSE_APPLICATION_ID;
-const PARSE_HOST_URL = import.meta.env.VITE_PARSE_HOST_URL;
-const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
-Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
-Parse.serverURL = PARSE_HOST_URL;
+// const PARSE_APPLICATION_ID = import.meta.env.VITE_PARSE_APPLICATION_ID;
+// const PARSE_HOST_URL = import.meta.env.VITE_PARSE_HOST_URL;
+// const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
+// Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
+// Parse.serverURL = PARSE_HOST_URL;
 import MainLayout from "./layouts/MainLayout";
 import Menu from "./features/Menu/Menu";
 import HomePage from "./features/HomePage/HomePage";
