@@ -34,7 +34,7 @@ export default function Login(props) {
   });
   const handleGoogleAuth = async () => {
     const res = await fetch(
-      "https://sageaddition.backendless.app/api/users/oauth/googleplus/request_url",
+      "https://sageaddition.backendless.app/api/users/oauth/facebook/login",
       {
         method: "POST",
 
@@ -46,11 +46,11 @@ export default function Login(props) {
       }
     );
     if (!res.ok) {
-      // const err = await res.json();
-      throw new Error(res.message);
+      const err = await res.json();
+      throw new Error(err.message);
     } else {
-      //  const data = await res.json();
-      console.log(res);
+      const data = await res.json();
+      console.log(data);
     }
   };
   const handleSubmit = (data) => {
