@@ -35,7 +35,9 @@ export default function Login(props) {
   const handleGoogleAuth = async () => {
     const res = await fetch(
       "https://sageaddition.backendless.app/api/users/oauth/facebook/request_url",
+
       {
+        method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -98,9 +100,10 @@ export default function Login(props) {
       </Text>
 
       <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl" onClick={handleGoogleAuth}>
-          Google
-        </GoogleButton>
+        <button onClick={handleGoogleAuth}>
+          <GoogleButton radius="xl">Google</GoogleButton>
+        </button>
+
         <TwitterButton radius="xl">Twitter</TwitterButton>
       </Group>
 
