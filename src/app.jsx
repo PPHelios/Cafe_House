@@ -12,28 +12,33 @@ import { useTranslation } from "react-i18next";
 import { themeColor } from "./store/appState";
 
 // BACKENDLESS
-import Backendless from "backendless";
-Backendless.initApp(
-  import.meta.env.VITE_APPLICATION_ID,
-  import.meta.env.VITE_JS_API_KEY
-);
-// Import Parse minified version
-// import Parse from "parse/dist/parse.min.js";
+// import Backendless from "backendless";
+// Backendless.initApp(
+//   import.meta.env.VITE_APPLICATION_ID,
+//   import.meta.env.VITE_JS_API_KEY
+// );
+//Import Parse minified version
+import Parse from "parse/dist/parse.min.js";
 
-// Your Parse initialization configuration goes here
-// const PARSE_APPLICATION_ID = import.meta.env.VITE_PARSE_APPLICATION_ID;
-// const PARSE_HOST_URL = import.meta.env.VITE_PARSE_HOST_URL;
-// const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
-// Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
-// Parse.serverURL = PARSE_HOST_URL;
+//Your Parse initialization configuration goes here
+const PARSE_APPLICATION_ID = import.meta.env.VITE_PARSE_APPLICATION_ID;
+const PARSE_HOST_URL = import.meta.env.VITE_PARSE_HOST_URL;
+const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
+Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
+Parse.serverURL = PARSE_HOST_URL;
 import MainLayout from "./layouts/MainLayout";
+import AdminPanel from "./features/AdminPanel/AdminPanel";
+import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
 import Menu from "./features/Menu/Menu";
 import HomePage from "./features/HomePage/HomePage";
 import MapSearch from "./features/MapSearch/MapSearch";
-import AddProperty from "./features/AddProperty/AddProperty";
+// import AddProperty from "./features/AddProperty/AddProperty";
 import Login from "./features/Authentication/Login";
 import Signup from "./features/Authentication/Signup";
 import AddAgent from "./features/AdminPanel/AddAgent";
+import AddAgency from "./features/AdminPanel/AddAgency";
+import AddProperty from "./features/AdminPanel/AddProperty";
+import { userData } from "./store/appState";
 export function App() {
   const rtlCache = createEmotionCache({
     key: "mantine-rtl",
@@ -46,6 +51,15 @@ export function App() {
     document.dir = i18n.dir();
   }, [i18n, i18n.language]);
 
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const currentUser = await Parse.User.current();
+      userData.value = currentUser;
+      console.log(currentUser);
+      return true;
+    };
+    getCurrentUser();
+  }, []);
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
@@ -55,7 +69,12 @@ export function App() {
           <Route path="/add" element={<AddProperty />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/addAgent" element={<AddAgent />} />
+          <Route path="/adminpanel/addagent" element={<AddAgent />} />
+          <Route path="/adminpanel/addagency" element={<AddAgency />} />
+          <Route path="/adminpanel/addproperty" element={<AddProperty />} />
+          {/* <Route element={<AdminPanel />}>
+            <Route path="/adminpanel/addagent" element={<AddAgent />} />
+          </Route> */}
         </Route>
       </>
     )

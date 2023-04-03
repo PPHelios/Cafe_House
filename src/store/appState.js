@@ -1,5 +1,5 @@
 import { signal, computed, effect } from "@preact/signals";
-
+import Parse from "parse/dist/parse.min.js";
 export const themeColor = signal("light");
 export const residentialSaleDb = signal([
   {
@@ -11,7 +11,7 @@ export const residentialSaleDb = signal([
         area: 210,
         rooms: 4,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house1","house2","house3","house4"],        
+        images: ["house1", "house2", "house3", "house4"],
         price: 2000000,
         coordinates: { lng: 31.53812, lat: 30.00387 },
       },
@@ -22,7 +22,7 @@ export const residentialSaleDb = signal([
         area: 210,
         rooms: 4,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house5","house2","house3","house4"],
+        images: ["house5", "house2", "house3", "house4"],
         price: 3000000,
         coordinates: { lng: 31.53705, lat: 30.00288 },
       },
@@ -33,7 +33,7 @@ export const residentialSaleDb = signal([
         area: 260,
         rooms: 5,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house6","house2","house3","house4"],
+        images: ["house6", "house2", "house3", "house4"],
         price: 4000000,
         coordinates: { lng: 31.51857, lat: 29.99948 },
       },
@@ -44,7 +44,7 @@ export const residentialSaleDb = signal([
         area: 400,
         rooms: 6,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house7","house2","house3","house4"],
+        images: ["house7", "house2", "house3", "house4"],
         price: 11000000,
         coordinates: { lng: 31.51738, lat: 29.99898 },
       },
@@ -55,7 +55,7 @@ export const residentialSaleDb = signal([
         area: 150,
         rooms: 3,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house8","house2","house3","house4"],
+        images: ["house8", "house2", "house3", "house4"],
         price: 3000000,
         coordinates: { lng: 31.51669, lat: 30.01159 },
       },
@@ -66,7 +66,7 @@ export const residentialSaleDb = signal([
         area: 200,
         rooms: 4,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house9","house2","house3","house4"],
+        images: ["house9", "house2", "house3", "house4"],
         price: 4000000,
         coordinates: { lng: 31.51515, lat: 30.01142 },
       },
@@ -81,7 +81,7 @@ export const residentialSaleDb = signal([
         area: 210,
         rooms: 4,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house1","house2","house3","house4"],
+        images: ["house1", "house2", "house3", "house4"],
         price: 5000000,
         coordinates: { lng: 31.53743, lat: 30.0056 },
       },
@@ -92,7 +92,7 @@ export const residentialSaleDb = signal([
         area: 240,
         rooms: 5,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house5","house2","house3","house4"],
+        images: ["house5", "house2", "house3", "house4"],
         price: 6000000,
         coordinates: { lng: 31.54058, lat: 30.00441 },
       },
@@ -103,7 +103,7 @@ export const residentialSaleDb = signal([
         area: 300,
         rooms: 4,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house6","house2","house3","house4"],
+        images: ["house6", "house2", "house3", "house4"],
         price: 10000000,
         coordinates: { lng: 31.52401, lat: 30.00251 },
       },
@@ -114,7 +114,7 @@ export const residentialSaleDb = signal([
         area: 500,
         rooms: 6,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house7","house2","house3","house4"],
+        images: ["house7", "house2", "house3", "house4"],
         price: 13000000,
         coordinates: { lng: 31.51672, lat: 30.00266 },
       },
@@ -125,7 +125,7 @@ export const residentialSaleDb = signal([
         area: 240,
         rooms: 4,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house8","house2","house3","house4"],
+        images: ["house8", "house2", "house3", "house4"],
         price: 4000000,
         coordinates: { lng: 31.516, lat: 30.0093 },
       },
@@ -136,13 +136,14 @@ export const residentialSaleDb = signal([
         area: 200,
         rooms: 3,
         description: "A northside park that is home to the Lincoln Park Zoo",
-        images:["house9","house2","house3","house4"],
+        images: ["house9", "house2", "house3", "house4"],
         price: 3000000,
         coordinates: { lng: 31.51272, lat: 30.01151 },
       },
     ],
   },
 ]);
+export const userData = signal({});
 export const searchOptions = signal([
   "New Cairo",
   "Mivida",
@@ -163,7 +164,7 @@ export const stateSearchValues = signal({
 export const filteredData = signal([]);
 
 export const search = effect(() => {
-  console.log(stateSearchValues.value);
+  // console.log(stateSearchValues.value);
   const searchValues = stateSearchValues.value.searchValue.map((item) =>
     item.toLowerCase()
   );
@@ -198,6 +199,47 @@ export const changethemeColor = () => {
   }
 };
 
+export const logout = async () => {
+  await Parse.User.logOut();
+  userData.value = {};
+  console.log("loggedout");
+  console.log(userData.value);
+};
+
+export const queryAgency = async () => {
+  let agencyQuery = new Parse.Query("Agency");
+  agencyQuery.equalTo("name", userData.value.attributes.agencyName);
+  let agencyQueryResult = await agencyQuery.first();
+
+  console.log(agencyQueryResult);
+  return agencyQueryResult;
+};
+export const queryAgentsInAgency = async () => {
+  let agencyQuery = new Parse.Query("Agency");
+  agencyQuery.equalTo("name", userData.value.attributes.name);
+  let agencyQueryResult = await agencyQuery.first();
+  const parseQuery = new Parse.Query("Agents");
+
+  parseQuery.equalTo("agency", agencyQueryResult);
+  let queryResults = await parseQuery.find();
+  console.log(queryResults);
+  return queryResults;
+};
+export const queryAgentAgency = async () => {
+  const agentQuery = new Parse.Query("Agents");
+  agentQuery.equalTo("email", userData.value.attributes.email);
+  let searchRes = await agentQuery.find();
+  const agencyName = await searchRes[0].get("agency").get("name");
+  console.log(agencyName);
+  return agencyName;
+};
+export const queryAgent = async () => {
+  let agentQuery = new Parse.Query("Agents");
+  agentQuery.equalTo("name", userData.value.attributes.agent);
+  let agentQueryResult = await agentQuery.first();
+  console.log(`agent: ${agentQueryResult}`);
+  return agentQueryResult;
+};
 // import { deepSignal } from "@deepsignal/preact";
 // export const appState = {
 //   themeColor: deepSignal({ color: "light" }),

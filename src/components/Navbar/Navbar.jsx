@@ -17,19 +17,17 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconWorld } from "@tabler/icons-preact";
-
+import { userData, logout } from "../../store/appState";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 
 import logo from "../../assets/images/logo.png";
 
 const useStyles = createStyles((theme) => ({
   inner: {
+    position: "relative",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    [theme.fn.smallerThan("sm")]: {
-      justifyContent: "flex-start",
-    },
   },
 
   links: {
@@ -46,6 +44,9 @@ const useStyles = createStyles((theme) => ({
 
   burger: {
     marginRight: theme.spacing.md,
+    [theme.fn.largerThan("sm")]: {
+      display: "none",
+    },
   },
 
   link: {
@@ -111,7 +112,7 @@ export function Navbar() {
   return (
     <>
       <Header>
-        <Container className={classes.inner} h={80} fluid>
+        <Container className={classes.inner} h={80}>
           <Burger
             opened={opened}
             onClick={() => {
@@ -120,16 +121,14 @@ export function Navbar() {
             }}
             size="sm"
             className={classes.burger}
-            mr="auto"
           />
 
           <Group
-            mr="auto"
-            pl={280}
             spacing={3}
             position="center"
             component={Link}
             to="/"
+            td="none"
           >
             <Text c="blue" ff="Times New Roman" fz={40}>
               My{" "}
@@ -150,7 +149,11 @@ export function Navbar() {
             position="center"
             noWrap
           >
-            <Group spacing={2}>{items}</Group>
+            {!userData.value?.id ? (
+              <Group spacing={2}>{items}</Group>
+            ) : (
+              <text>Hi, {userData.value?.attributes?.firstName}</text>
+            )}
             <ActionIcon size="lg">
               <IconWorld size="2rem" stroke={1.5} />
             </ActionIcon>
@@ -175,9 +178,10 @@ export function Navbar() {
         <Text c="blue" component={Link} to="/add">
           Add Property
         </Text>
-        <Text c="blue" component={Link} to="/addAgent">
+        <Text c="blue" component={Link} to="/adminpanel/addagent">
           Add Agent
         </Text>
+        <Button onClick={() => logout()}>logout</Button>
       </Drawer>
     </>
   );

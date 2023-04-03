@@ -1,6 +1,5 @@
 import { Button, Group } from "@mantine/core";
-import GoogleIcon from "../../assets/images/googleIcon.svg";
-import FacebookIcon from "../../assets/images/facebookIcon.svg";
+
 import { IconBrandGoogle, IconBrandFacebookFilled } from "@tabler/icons-preact";
 export function GoogleButton(props) {
   return (

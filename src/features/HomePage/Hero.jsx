@@ -29,6 +29,7 @@ import { stateSearchValues, searchOptions } from "../../store/appState";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
+    height: rem(600),
     position: "relative",
     paddingTop: rem(120),
     paddingBottom: rem(130),
@@ -84,7 +85,7 @@ const SelectItem = forwardRef(
     <Box ref={ref} {...others}>
       <Group>
         <Text>{label}</Text>
-        <Text size="xs" color="dimmed">
+        <Text size={{ base: "xs", sm: "md" }} color="dimmed">
           {name}
         </Text>
       </Group>
@@ -140,8 +141,7 @@ export function Hero() {
 
         <Box
           display="flex"
-          w={{ base: "90%", sm: "70%" }}
-          h={300}
+          w={{ base: "94%", sm: "100%" }}
           maw={650}
           mx="auto"
           p={0}
@@ -153,105 +153,106 @@ export function Hero() {
             gap: "1rem",
           }}
         >
-          <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-            <Group h={90} spacing={0}>
-              <Select
-                size="xl"
-                w={{ base: "20%", sm: "15%" }}
-                {...form.getInputProps("searchPurpose")}
-                data={["Buy", "Rent"]}
-                display="inline-block"
-                placeholder="pick search type"
-                aria-label="pick search type"
-                sx={(theme) => ({
-                  "& .mantine-Select-input": {
-                    paddingRight: 20,
-                    textAlign: "center",
-                    color: theme.white,
-                    backgroundColor: theme.colors.blue[4],
-                    border: "none",
-                    borderRadius: "50px 0px  0px 50px",
-                    "&:hover": {
-                      backgroundColor: theme.colors.blue[5],
+          <MultiSelect
+            w="100%"
+            size="xl"
+            radius="xl"
+            {...form.getInputProps("searchValue")}
+            maxDropdownHeight={300}
+            data={searchOptions.value}
+            itemComponent={SelectItem}
+            clearable
+            clearButtonProps={{ "aria-label": "Clear selection" }}
+            maxSelectedValues={3}
+            limit={3}
+            // creatable
+            // getCreateLabel={(query) => `${query}`}
+            // onCreate={(query) => {
+            //   const item = { value: query, label: query };
+            //   setSearchData((current) => [...current, item]);
+            //   return item;
+            // }}
+            searchable
+            filter={(searchValue, selected, item) => {
+              return (
+                !selected &&
+                item.label
+                  .toLowerCase()
+                  .includes(searchValue.toLowerCase().trim())
+              );
+            }}
+            nothingFound="Nothing found"
+            placeholder="search for property"
+            aria-label="search for property"
+            sx={{
+              display: "inline-block",
+              flexGrow: 1,
+              "& .mantine-MultiSelect-input": {
+                paddingRight: 40,
+              },
+              "& .mantine-MultiSelect-label": { color: "white" },
+            }}
+          />
+
+          <Box width="100%" px={40}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+              <Group position="center" mb={5}>
+                <Button
+                  px={10}
+                  size="md"
+                  variant="filled"
+                  color="blue.4"
+                  title=" Advanced Search"
+                  aria-label=" Advanced Search"
+                  rightIcon={opened ? <IconChevronUp /> : <IconChevronDown />}
+                  onClick={toggle}
+                >
+                  Advanced Search
+                </Button>
+
+                <Select
+                  size="md"
+                  w={88}
+                  {...form.getInputProps("searchPurpose")}
+                  data={["Buy", "Rent"]}
+                  display="inline-block"
+                  placeholder="pick search type"
+                  aria-label="pick search type"
+                  sx={(theme) => ({
+                    "& .mantine-Select-input": {
+                      paddingRight: 20,
+                      textAlign: "center",
+                      color: theme.white,
+                      backgroundColor: theme.colors.blue[4],
+                      border: "none",
+
+                      "&:hover": {
+                        backgroundColor: theme.colors.blue[5],
+                      },
                     },
-                  },
-                })}
-              />
-              <MultiSelect
-                size="xl"
-                w={{ base: "60%", sm: "70%" }}
-                {...form.getInputProps("searchValue")}
-                maxDropdownHeight={300}
-                data={searchOptions.value}
-                itemComponent={SelectItem}
-                clearable
-                clearButtonProps={{ "aria-label": "Clear selection" }}
-                maxSelectedValues={3}
-                limit={3}
-                // creatable
-                // getCreateLabel={(query) => `${query}`}
-                // onCreate={(query) => {
-                //   const item = { value: query, label: query };
-                //   setSearchData((current) => [...current, item]);
-                //   return item;
-                // }}
-                searchable
-                filter={(searchValue, selected, item) => {
-                  return (
-                    !selected &&
-                    item.label
-                      .toLowerCase()
-                      .includes(searchValue.toLowerCase().trim())
-                  );
-                }}
-                nothingFound="Nothing found"
-                placeholder="search for property"
-                aria-label="search for property"
-                sx={{
-                  display: "inline-block",
-                  flexGrow: 1,
-                  "& .mantine-MultiSelect-input": {
-                    paddingRight: 40,
-                    borderRadius: "0px",
-                  },
-                  "& .mantine-MultiSelect-label": { color: "white" },
-                }}
-              />
-              <ActionIcon
-                type="submit"
-                w={{ base: "20%", sm: "15%" }}
-                h={60}
-                variant="filled"
-                color="blue.4"
-                title="Search"
-                aria-label="Search"
-                sx={{ borderRadius: "0px 50px 50px 0px" }}
-              >
-                <IconSearch size="2rem" />
-              </ActionIcon>
-            </Group>
-          </form>
-          <Box w="100%">
-            <Group position="right" mb={5}>
-              <Button
-                variant="filled"
-                ml="auto"
-                color="blue.4"
-                title=" Advanced Search"
-                aria-label=" Advanced Search"
-                rightIcon={opened ? <IconChevronDown /> : <IconChevronUp />}
-                onClick={toggle}
-              >
-                Advanced Search
-              </Button>
-            </Group>
+                  })}
+                />
+
+                <ActionIcon
+                  type="submit"
+                  w={{ base: "100%", sm: 60 }}
+                  h={42}
+                  variant="filled"
+                  color="blue.4"
+                  title="Search"
+                  aria-label="Search"
+                >
+                  <IconSearch size="1rem" />
+                </ActionIcon>
+              </Group>
+            </form>
             <Collapse in={opened}>
               <Paper shadow="xs" p="xs" ta="center">
                 <form onSubmit={form.onSubmit((values) => console.log(values))}>
+                  {/* /// svg error */}
                   <Select
-                    w={140}
+                    w={{ base: 110, sm: 140 }}
                     m={5}
-                    size="xs"
                     data={["Apartment", "Villa"]}
                     display="inline-block"
                     {...form.getInputProps("propertyType")}
@@ -266,13 +267,12 @@ export function Hero() {
                   />
 
                   <Select
-                    size="xs"
-                    w={140}
+                    w={{ base: 110, sm: 140 }}
                     m={5}
                     data={["1", "2", "3", "4", "5"]}
                     display="inline-block"
                     {...form.getInputProps("propertyRooms")}
-                    placeholder="Number Of Rooms"
+                    placeholder="Rooms"
                     aria-label="property Number of Rooms"
                     sx={(theme) => ({
                       "& .mantine-Select-input": {
@@ -283,8 +283,7 @@ export function Hero() {
                   />
 
                   <TextInput
-                    size="xs"
-                    w={140}
+                    w={{ base: 110, sm: 140 }}
                     m={5}
                     display="inline-block"
                     {...form.getInputProps("propertyminArea")}
@@ -292,8 +291,7 @@ export function Hero() {
                     aria-label="property min Area"
                   />
                   <TextInput
-                    size="xs"
-                    w={140}
+                    w={{ base: 110, sm: 140 }}
                     m={5}
                     display="inline-block"
                     {...form.getInputProps("propertymaxArea")}
@@ -301,8 +299,7 @@ export function Hero() {
                     aria-label="property max Area"
                   />
                   <TextInput
-                    size="xs"
-                    w={140}
+                    w={{ base: 110, sm: 140 }}
                     m={5}
                     display="inline-block"
                     {...form.getInputProps("propertyminPrice")}
@@ -310,8 +307,7 @@ export function Hero() {
                     aria-label="property min Price"
                   />
                   <TextInput
-                    size="xs"
-                    w={140}
+                    w={{ base: 110, sm: 140 }}
                     m={5}
                     display="inline-block"
                     {...form.getInputProps("propertymaxPrice")}

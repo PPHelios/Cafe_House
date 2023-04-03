@@ -1,4 +1,5 @@
 import { useToggle, upperFirst } from "@mantine/hooks";
+import Parse from "parse/dist/parse.min.js";
 import { useForm } from "@mantine/form";
 import {
   TextInput,
@@ -12,15 +13,16 @@ import {
   Anchor,
   Stack,
 } from "@mantine/core";
-import { GoogleButton, TwitterButton } from "./SocialButtons";
-import Backendless from "backendless";
+import { GoogleButton, FacebookButton } from "./SocialButtons";
+//import Backendless from "backendless";
+import { userData } from "../../store/appState";
 export default function Login(props) {
   const [type, toggle] = useToggle(["login", "register"]);
   const form = useForm({
     initialValues: {
       email: "",
-      name: "",
       password: "",
+      role: "viewer",
       terms: true,
     },
 
@@ -32,66 +34,49 @@ export default function Login(props) {
       //     : null,
     },
   });
-  const handleGoogleAuth = async () => {
-    const res = await fetch(
-      "https://sageaddition.backendless.app/api/users/oauth/facebook/request_url",
 
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        // body: JSON.stringify(formData),
+  const handleSubmit = async (values) => {
+    if (type === "register") {
+      try {
+        // Since the signUp method returns a Promise, we need to call it using await
+        const createdUser = await Parse.User.signUp(
+          values.email,
+          values.password
+        );
+        createdUser.set("firstName", values.firstName);
+        createdUser.set("lastName", values.lastName);
+        const saveAgent = await createdUser.save();
+        userData.value = loggedInUser;
+        console.log(saveAgent);
+        return true;
+      } catch (error) {
+        // signUp can fail if any parameter is blank or failed an uniqueness check on the server
+        if (error.code == 209) logout(await Parse.User.logOut());
+        alert(`Error! ${error}`);
+        return false;
       }
-    );
-    if (!res.ok) {
-      console.log(res);
-      const err = await res.json();
-      throw new Error(err.message);
-    } else {
-      console.log(res);
-      const data = await res.json();
-      console.log(data);
     }
-  };
-  const handleGoogleAuth2 = async () => {
-    const res = await fetch(
-      "https://sageaddition.backendless.app/api/users/oauth/facebook/login",
-      {
-        method: "POST",
+    try {
+      const loggedInUser = await Parse.User.logIn(
+        values.email,
+        values.password
+      );
+      // logIn returns the corresponding ParseUser object
+      alert(
+        `Success! User ${loggedInUser.get(
+          "username"
+        )} has successfully signed in!`
+      );
+      // Clear input fields
 
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        // body: JSON.stringify(formData),
-      }
-    );
-    if (!res.ok) {
-      console.log(res);
-      const err = await res.json();
-      throw new Error(err.message);
-    } else {
-      console.log(res);
-      const data = await res.json();
-      console.log(data);
+      // Update state variable holding current user
+      userData.value = loggedInUser;
+      return true;
+    } catch (error) {
+      // Error can be caused by wrong parameters or lack of Internet connection
+      alert(`Error! ${error.message}`);
+      return false;
     }
-  };
-  const handleSubmit = (data) => {
-    const onSuccess = (user) => {
-      console.log("User has been logged in:\n", user);
-    };
-
-    const onError = (error) => {
-      console.error("Server reported an error: ", error.message);
-      console.error("error code: ", error.code);
-      console.error("http status: ", error.status);
-    };
-
-    Backendless.UserService.login(data.email, data.password)
-      .then(onSuccess)
-      .catch(onError);
   };
   return (
     <Paper w={700} mt={100} mx="auto" radius="md" p="xl" withBorder {...props}>
@@ -100,11 +85,9 @@ export default function Login(props) {
       </Text>
 
       <Group grow mb="md" mt="md">
-        <button onClick={handleGoogleAuth}>
-          <GoogleButton radius="xl">Google</GoogleButton>
-        </button>
+        <GoogleButton radius="xl">Google</GoogleButton>
 
-        <TwitterButton radius="xl">Twitter</TwitterButton>
+        <FacebookButton radius="xl">Facebook</FacebookButton>
       </Group>
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
@@ -112,15 +95,28 @@ export default function Login(props) {
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Stack>
           {type === "register" && (
-            <TextInput
-              label="Name"
-              placeholder="Your name"
-              value={form.values.name}
-              onChange={(event) =>
-                form.setFieldValue("name", event.currentTarget.value)
-              }
-              radius="md"
-            />
+            <>
+              <TextInput
+                required
+                label="First Name"
+                placeholder="Your First Name"
+                value={form.values.firstName}
+                onChange={(event) =>
+                  form.setFieldValue("firstName", event.currentTarget.value)
+                }
+                radius="md"
+              />
+              <TextInput
+                required
+                label="Last Name"
+                placeholder="Your Last Name"
+                value={form.values.lastName}
+                onChange={(event) =>
+                  form.setFieldValue("lastName", event.currentTarget.value)
+                }
+                radius="md"
+              />
+            </>
           )}
 
           <TextInput
@@ -176,7 +172,6 @@ export default function Login(props) {
           <Button type="submit" radius="xl">
             {upperFirst(type)}
           </Button>
-          <Button onClick={() => handleGoogleAuth2()}>test auth</Button>
         </Group>
       </form>
     </Paper>
