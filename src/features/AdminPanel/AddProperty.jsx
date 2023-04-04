@@ -70,22 +70,20 @@ export default function AddProperty() {
     // const parseQuery = new Parse.Query("Person");
     let files = [];
     try {
-      let agencyQueryResult = awaitqueryAgentAgency();
-      console.log(`agency: ${agencyQueryResult}`);
-
-      let agentQueryResult = awaitqueryAgent();
-
       let numberOfPics =
         values.pics.length < maxNumberOfPics
           ? values.pics.length
           : maxNumberOfPics;
-      for (let i = 0; i < numberOfPics; i++) {
-        const typeIsValid = validFileType(values.pics[i]);
-        const fileSize = returnFileSize(values.pics[i].size);
-        console.log(typeIsValid);
-        console.log(fileSize);
-        const parseFile = new Parse.File("img.jpeg", values.pics[i]);
-        files.push(parseFile);
+      if (values.pics.length > 0) {
+        for (let i = 0; i < numberOfPics; i++) {
+          const typeIsValid = validFileType(values.pics[i]);
+          const fileSize = returnFileSize(values.pics[i].size);
+          console.log(typeIsValid);
+          console.log(fileSize);
+
+          const parseFile = new Parse.File("img.jpeg", values.pics[i]);
+          files.push(parseFile);
+        }
       }
 
       let property = new Parse.Object("Property");
@@ -93,18 +91,20 @@ export default function AddProperty() {
       property.set("adNameAr", values.adNameAr);
       property.set("description", values.description);
       property.set("descriptionAr", values.descriptionAr);
-      property.set("agent", agentQueryResult);
-      property.set("agency", agencyQueryResult);
-
-      for (let i = 0; i < numberOfPics; i++) {
-        property.set(`pic${i}`, files[i]);
+      property.set("area", values.area);
+      property.set("room", values.room);
+      property.set("bath", values.bath);
+      property.set("agentPointer", Parse.User.current().toPointer());
+      property.set(
+        "agencyPointer",
+        Parse.User.current().get("agencyPointer").toPointer()
+      );
+      if (values.pics.length > 0) {
+        for (let i = 0; i < numberOfPics; i++) {
+          property.set(`pic${i}`, files[i]);
+        }
       }
-
-      // save it on Back4App Data Store
       const saveproperty = await property.save();
-      // Be aware that empty or invalid queries return as an empty array
-      // Set results to state variable
-      //Book.set("isbd", ISBD);
       console.log(saveproperty);
       setResult(saveproperty);
       return true;
@@ -113,31 +113,6 @@ export default function AddProperty() {
       alert(`Error! ${error.message}`);
       return false;
     }
-    // try {
-    //   // create a new Parse Object instance
-    //   const Person = new Parse.Object("User");
-    //   // define the attributes you want for your Object
-    //   Person.set("name", "John");
-    //   Person.set("email", "john@back4app.com");
-    //   // save it on Back4App Data Store
-    //   await Person.save();
-    //   alert("Person saved!");
-    // } catch (error) {
-    //   console.log("Error saving new person: ", error);
-    // }
-  }
-
-  async function fetchPerson() {
-    // create your Parse Query using the Person Class you've created
-    const query = new Parse.Query("Property");
-    // use the equalTo filter to look for user which the name is John. this filter can be used in any data type
-    query.equalTo("adName", "qq");
-    // run the query
-    const Person = await query.find();
-    // access the Parse Object attributes
-
-    console.log("adName: ", Person);
-    // setPerson(Person);
   }
 
   return (
@@ -151,11 +126,71 @@ export default function AddProperty() {
           <Stack>
             <TextInput
               required
-              label="name"
-              placeholder="Enter Property Name"
-              value={form.values.email}
+              label="Ad. name"
+              placeholder="Enter Ad. Name"
+              value={form.values.adName}
               onChange={(event) =>
                 form.setFieldValue("adName", event.currentTarget.value)
+              }
+              radius="md"
+            />
+            <TextInput
+              required
+              label="Ad. nameAr"
+              placeholder="Enter Property NameAr"
+              value={form.values.adNameAr}
+              onChange={(event) =>
+                form.setFieldValue("adNameAr", event.currentTarget.value)
+              }
+              radius="md"
+            />
+            <TextInput
+              required
+              label="Description"
+              placeholder="Enter Property Description"
+              value={form.values.description}
+              onChange={(event) =>
+                form.setFieldValue("description", event.currentTarget.value)
+              }
+              radius="md"
+            />
+            <TextInput
+              required
+              label="DescriptionAr"
+              placeholder="Enter Property DescriptionAr"
+              value={form.values.descriptionAr}
+              onChange={(event) =>
+                form.setFieldValue("descriptionAr", event.currentTarget.value)
+              }
+              radius="md"
+            />
+            <TextInput
+              required
+              label="Area"
+              placeholder="Enter Property Area"
+              value={form.values.area}
+              onChange={(event) =>
+                form.setFieldValue("area", event.currentTarget.value)
+              }
+              radius="md"
+            />
+            <TextInput
+              required
+              label="Room"
+              placeholder="Enter Property Room"
+              value={form.values.room}
+              onChange={(event) =>
+                form.setFieldValue("room", event.currentTarget.value)
+              }
+              radius="md"
+            />
+            <TextInput
+              required
+              label="Bath"
+              placeholder="Enter Property Bath"
+              value={form.values.bath}
+              onChange={(event) =>
+                form.setFieldValue("bath", event.currentTarget.value)
               }
               radius="md"
             />
@@ -179,7 +214,7 @@ export default function AddProperty() {
           </Group>
         </form>
       </Paper>
-      <button onClick={fetchPerson}>fetch pic</button>
+
       {result?.attributes?.pic0 && (
         <Box h={100} w={100}>
           <Image src={`${result?.attributes?.pic0._url}`} />
@@ -195,6 +230,8 @@ export default function AddProperty() {
           <Image src={`${result?.attributes?.pic2._url}`} />
         </Box>
       )}
+      <p>{result?.attributes?.adName}</p>
+      <p>{result?.attributes?.room}</p>
     </>
   );
 }

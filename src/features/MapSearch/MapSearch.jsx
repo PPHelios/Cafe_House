@@ -19,28 +19,28 @@ import { filteredData } from "../../store/appState";
 function MapSearch() {
   const [popupInfo, setPopupInfo] = useState(null);
 
-  const itemsRef = useRef(null);
-  const containerRef = useRef(null);
-  function scrollToId(itemId) {
-    const map = getMap();
-    const node = map.get(itemId);
-    node.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-      inline: "nearest",
-    });
-  }
+  // const itemsRef = useRef(null);
+  // const containerRef = useRef(null);
+  // function scrollToId(itemId) {
+  //   const map = getMap();
+  //   const node = map.get(itemId);
+  //   node.scrollIntoView({
+  //     behavior: "smooth",
+  //     block: "start",
+  //     inline: "nearest",
+  //   });
+  // }
 
-  function getMap() {
-    if (!itemsRef.current) {
-      // Initialize the Map on first usage.
-      itemsRef.current = new Map();
-    }
-    return itemsRef.current;
-  }
+  // function getMap() {
+  //   if (!itemsRef.current) {
+  //     // Initialize the Map on first usage.
+  //     itemsRef.current = new Map();
+  //   }
+  //   return itemsRef.current;
+  // }
 
   return (
-    <Flex py={30}  h={600}>
+    <Flex py={30} h={600}>
       <Box w="68vw" h={600}>
         <AppMap
           popupInfo={popupInfo}
@@ -48,20 +48,24 @@ function MapSearch() {
           scrollToId={(i) => scrollToId(i)}
         />
       </Box>
-      <Box  w="30vw" px={9} bg="gray.3" ref={containerRef} sx={{ overflowY: "auto",overflowX: "hidden" }}>
+      <Box
+        w="30vw"
+        px={9}
+        bg="gray.3"
+        // ref={containerRef}
+        sx={{ overflowY: "auto", overflowX: "hidden" }}
+      >
         {filteredData.value.map((item, i) => (
           <Box
-           
             mt={10}
-            
-            ref={(node) => {
-              const map = getMap();
-              if (node) {
-                map.set(i, node);
-              } else {
-                map.delete(i);
-              }
-            }}
+            // ref={(node) => {
+            //   const map = getMap();
+            //   if (node) {
+            //     map.set(i, node);
+            //   } else {
+            //     map.delete(i);
+            //   }
+            // }}
             key={i}
           >
             <PlaceDetails

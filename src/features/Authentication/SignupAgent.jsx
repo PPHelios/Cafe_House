@@ -14,16 +14,11 @@ import {
   Stack,
 } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-preact";
-import {
-  userData,
-  queryAgency,
-  queryAgentsInAgency,
-  queryAgentAgency,
-  queryAgent,
-} from "../../store/appState";
-export default function AddAgent() {
+import { queryAgency, userData } from "../../store/appState";
+export default function SignupAgent() {
   const form = useForm({
     initialValues: {
+      agencyName: "",
       firstName: "",
       lastName: "",
       firstNameAr: "",
@@ -49,37 +44,38 @@ export default function AddAgent() {
       parseFile = new Parse.File("img.jpeg", values.profilePic);
     }
     try {
-      const newAgentQuery = new Parse.Query("User");
-      newAgentQuery.equalTo("username", values.email);
-      let agentQueryResult = await newAgentQuery.first();
-      let agentProfile = new Parse.Query("Agent");
+      const agency = await queryAgency(values.agencyName);
+      if (agency === undefined) {
+        throw new Error("no such Agency");
+      }
+
+      const createdUser = await Parse.User.signUp(
+        values.email,
+        values.password
+      );
+
+      let agentProfile = new Parse.Object("Agent");
+      agentProfile.set("agencyName", values.agencyName);
       agentProfile.set("firstName", values.firstName);
       agentProfile.set("lastName", values.lastName);
-      agentProfile.set("firstNameAr", values.firstNameAr);
-      agentProfile.set("lastNameAr", values.lastNameAr);
+      agentProfile.set("email", values.email);
       agentProfile.set("bio", values.bio);
       agentProfile.set("bioAr", values.bioAr);
-      agentProfile.set("agencyName", Parse.User.current().get("name"));
       agentProfile.set("role", values.role);
-      agentProfile.set("userPointer", agentQueryResult.toPointer());
-
-      // agentQueryResult.set("userProfile", agentQueryResult.toPointer());
       agentProfile.set("phoneNumber", values.phoneNumber);
       if (values.profilePic) agentProfile.set("profilePic", parseFile);
-      // save it on Back4App Data Store
-      // const agentQueryResult = await User.save();
-      // agentQueryResult.set("firstName", values.firstName);
-      // agentQueryResult.set("lastName", values.lastName);
-      // agentQueryResult.set("agencyName", agencyQueryResult);
-      // agentQueryResult.set("agentProfile", saveAgent.toPointer());
+      agentProfile.set("userPointer", createdUser.toPointer());
+      agentProfile.set("agencyPointer", agency.toPointer());
+      const updateAgency = await agentProfile.save();
 
-      const updateAgentProfile = await agentProfile.save();
-      //agencyQueryResult.set(agents)
-      // Be aware that empty or invalid queries return as an empty array
-      // Set results to state variable
-      //Book.set("isbd", ISBD);
-      // console.log(saveAgent);
-      console.log(updateAgentProfile);
+      console.log(updateAgency);
+      createdUser.set("firstName", values.firstName);
+      createdUser.set("lastName", values.lastName);
+      createdUser.set("email", values.email);
+      createdUser.set("agencyPointer", agency.toPointer());
+      const saveAgent = await createdUser.save();
+      userData.value = saveAgent;
+      console.log(saveAgent);
       return true;
     } catch (error) {
       // Error can be caused by lack of Internet connection
@@ -92,19 +88,18 @@ export default function AddAgent() {
     <>
       <Paper w={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
         <Text size="lg" weight={500}>
-          Add An Agent
+          Create An Agent
         </Text>
         <form onSubmit={form.onSubmit((values) => addAgent(values))}>
           <Stack>
             <TextInput
               required
-              label="Email"
-              placeholder="Enter Your Email"
-              value={form.values.email}
+              label="Agency Name"
+              placeholder="Your Agency Name"
+              value={form.values.agencyName}
               onChange={(event) =>
-                form.setFieldValue("email", event.currentTarget.value)
+                form.setFieldValue("agencyName", event.currentTarget.value)
               }
-              error={form.errors.email && "Invalid email"}
               radius="md"
             />
             <TextInput
@@ -147,10 +142,34 @@ export default function AddAgent() {
               }
               radius="md"
             />
-
+            <TextInput
+              required
+              label="Agent Account Email"
+              placeholder="Enter Agent Account Email"
+              value={form.values.email}
+              onChange={(event) =>
+                form.setFieldValue("email", event.currentTarget.value)
+              }
+              error={form.errors.email && "Invalid email"}
+              radius="md"
+            />
+            <PasswordInput
+              required
+              label="Password"
+              placeholder="Your password"
+              value={form.values.password}
+              onChange={(event) =>
+                form.setFieldValue("password", event.currentTarget.value)
+              }
+              error={
+                form.errors.password &&
+                "Password should include at least 6 characters"
+              }
+              radius="md"
+            />
             <FileInput
               label="Upload files"
-              placeholder="Upload files"
+              placeholder="Agency Logo"
               value={form.values.profilePic}
               accept="image/png,image/jpeg"
               onChange={(event) => {
@@ -166,30 +185,6 @@ export default function AddAgent() {
             </Button>
           </Group>
         </form>
-        <Stack>
-          <button style={{ dispaly: "block" }} onClick={() => queryAgency()}>
-            queryAgency
-          </button>
-
-          <button
-            style={{ dispaly: "block" }}
-            onClick={() => queryAgentAgency()}
-          >
-            queryAgentAgency
-          </button>
-          <button
-            style={{ dispaly: "block" }}
-            onClick={() => queryAgentsInAgency()}
-          >
-            queryAgentsInAgency
-          </button>
-          <button
-            style={{ dispaly: "block" }}
-            onClick={() => console.log(Parse.User.current().get("name"))}
-          >
-            current
-          </button>
-        </Stack>
       </Paper>
     </>
   );

@@ -175,11 +175,17 @@ export function Navbar() {
         }}
         title="My Home"
       >
-        <Text c="blue" component={Link} to="/add">
+        <Text c="blue" component={Link} to="adminpanel/addproperty">
           Add Property
         </Text>
-        <Text c="blue" component={Link} to="/adminpanel/addagent">
+        <Text c="blue" component={Link} to="/signupagent">
           Add Agent
+        </Text>
+        <Text c="blue" component={Link} to="/signupagency">
+          Add Agency
+        </Text>
+        <Text c="blue" component={Link} to="/login">
+          login
         </Text>
         <Button onClick={() => logout()}>logout</Button>
       </Drawer>

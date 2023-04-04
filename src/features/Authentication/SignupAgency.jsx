@@ -1,5 +1,6 @@
 import Parse from "parse/dist/parse.min.js";
 import { useForm } from "@mantine/form";
+import { userData, queryAgency } from "../../store/appState";
 import {
   TextInput,
   PasswordInput,
@@ -12,14 +13,15 @@ import {
 } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-preact";
 
-export default function AddAgency() {
+export default function SignupAgency() {
   const form = useForm({
     initialValues: {
-      name: "",
+      agencyName: "",
       firstName: "",
       lastName: "",
       email: "",
       password: "",
+      phoneNumber: "1234",
       bio: "dfgdfg",
       bioAr: "fgdfg",
       role: "agency",
@@ -40,22 +42,18 @@ export default function AddAgency() {
       parseFile = new Parse.File("img.jpeg", values.profilePic);
     }
     try {
+      const agency = await queryAgency(values.agencyName);
+      if (agency !== undefined) {
+        throw new Error("Agency Name Already Exists");
+      }
       const createdUser = await Parse.User.signUp(
         values.email,
         values.password
       );
-      createdUser.set("firstName", values.firstName);
-      createdUser.set("lastName", values.lastName);
-      createdUser.set("email", values.email);
-      if (parseFile !== null) {
-        console.log("adding file");
-        createdUser.set("profilePic", parseFile);
-      }
-      const saveAgent = await createdUser.save();
-      userData.value = saveAgent;
-      console.log(saveAgent);
+
+      console.log(createdUser);
       let agencyProfile = new Parse.Object("Agency");
-      agencyProfile.set("name", values.name);
+      agencyProfile.set("agencyName", values.agencyName);
       agencyProfile.set("firstName", values.firstName);
       agencyProfile.set("lastName", values.lastName);
       agencyProfile.set("email", values.email);
@@ -64,10 +62,17 @@ export default function AddAgency() {
       agencyProfile.set("role", values.role);
       agencyProfile.set("phoneNumber", values.phoneNumber);
       if (values.profilePic) agencyProfile.set("profilePic", parseFile);
-      agencyProfile.set("userPointer", saveAgent.toPointer());
+      agencyProfile.set("userPointer", createdUser.toPointer());
       const updateAgency = await agencyProfile.save();
 
       console.log(updateAgency);
+      createdUser.set("firstName", values.firstName);
+      createdUser.set("lastName", values.lastName);
+      createdUser.set("email", values.email);
+      createdUser.set("agencyPointer", updateAgency.toPointer());
+      const saveAgent = await createdUser.save();
+      userData.value = saveAgent;
+      console.log(saveAgent);
       return true;
     } catch (error) {
       // Error can be caused by lack of Internet connection
@@ -88,9 +93,9 @@ export default function AddAgency() {
               required
               label="Agency Name"
               placeholder="Agency Name"
-              value={form.values.name}
+              value={form.values.agencyName}
               onChange={(event) =>
-                form.setFieldValue("name", event.currentTarget.value)
+                form.setFieldValue("agencyName", event.currentTarget.value)
               }
               radius="md"
             />

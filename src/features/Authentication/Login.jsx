@@ -12,7 +12,9 @@ import {
   Checkbox,
   Anchor,
   Stack,
+  FileInput,
 } from "@mantine/core";
+import { IconUpload } from "@tabler/icons-preact";
 import { GoogleButton, FacebookButton } from "./SocialButtons";
 //import Backendless from "backendless";
 import { userData } from "../../store/appState";
@@ -20,9 +22,12 @@ export default function Login(props) {
   const [type, toggle] = useToggle(["login", "register"]);
   const form = useForm({
     initialValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       role: "viewer",
+      profilePic: null,
       terms: true,
     },
 
@@ -37,6 +42,12 @@ export default function Login(props) {
 
   const handleSubmit = async (values) => {
     if (type === "register") {
+      console.log(values.profilePic);
+      let parseFile = null;
+      if (values.profilePic !== null) {
+        parseFile = new Parse.File("img.jpeg", values.profilePic);
+      }
+
       try {
         // Since the signUp method returns a Promise, we need to call it using await
         const createdUser = await Parse.User.signUp(
@@ -45,8 +56,13 @@ export default function Login(props) {
         );
         createdUser.set("firstName", values.firstName);
         createdUser.set("lastName", values.lastName);
+        createdUser.set("email", values.email);
+        if (parseFile !== null) {
+          console.log("adding file");
+          createdUser.set("profilePic", parseFile);
+        }
         const saveAgent = await createdUser.save();
-        userData.value = loggedInUser;
+        userData.value = saveAgent;
         console.log(saveAgent);
         return true;
       } catch (error) {
@@ -147,13 +163,25 @@ export default function Login(props) {
           />
 
           {type === "register" && (
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) =>
-                form.setFieldValue("terms", event.currentTarget.checked)
-              }
-            />
+            <>
+              <FileInput
+                label="Upload files"
+                placeholder="Agency Logo"
+                value={form.values.profilePic}
+                accept="image/png,image/jpeg"
+                onChange={(event) => {
+                  form.setFieldValue("profilePic", event);
+                }}
+                icon={<IconUpload size="1rem" />}
+              />
+              <Checkbox
+                label="I accept terms and conditions"
+                checked={form.values.terms}
+                onChange={(event) =>
+                  form.setFieldValue("terms", event.currentTarget.checked)
+                }
+              />
+            </>
           )}
         </Stack>
 

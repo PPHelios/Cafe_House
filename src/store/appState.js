@@ -206,9 +206,10 @@ export const logout = async () => {
   console.log(userData.value);
 };
 
-export const queryAgency = async () => {
+export const queryAgency = async (agencyName) => {
+  console.log(agencyName);
   let agencyQuery = new Parse.Query("Agency");
-  agencyQuery.equalTo("name", userData.value.attributes.agencyName);
+  agencyQuery.equalTo("agencyName", agencyName);
   let agencyQueryResult = await agencyQuery.first();
 
   console.log(agencyQueryResult);
