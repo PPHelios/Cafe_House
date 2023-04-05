@@ -131,7 +131,7 @@ export function Hero() {
     <div className={classes.wrapper}>
       <Overlay color="#000" opacity={0.25} zIndex={1} />
 
-      <div className={classes.inner}>
+      <main className={classes.inner}>
         <Title className={classes.title}>
           Find your home with the people{" "}
           <Text component="span" inherit className={classes.highlight}>
@@ -181,7 +181,7 @@ export function Hero() {
                   .includes(searchValue.toLowerCase().trim())
               );
             }}
-            nothingFound="Nothing found"
+            nothingFound="Nothing Found"
             placeholder="search for property"
             aria-label="search for property"
             sx={{
@@ -190,15 +190,13 @@ export function Hero() {
               "& .mantine-MultiSelect-input": {
                 paddingRight: 40,
               },
-              "& .mantine-MultiSelect-label": { color: "white" },
             }}
           />
 
-          <Box width="100%" px={40}>
+          <Box px={20}>
             <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
               <Group position="center" mb={5}>
                 <Button
-                  px={10}
                   size="md"
                   variant="filled"
                   color="blue.4"
@@ -212,7 +210,7 @@ export function Hero() {
 
                 <Select
                   size="md"
-                  w={88}
+                  w={{ base: 98, xs: "fit-content" }}
                   {...form.getInputProps("searchPurpose")}
                   data={["Buy", "Rent"]}
                   display="inline-block"
@@ -235,7 +233,7 @@ export function Hero() {
 
                 <ActionIcon
                   type="submit"
-                  w={{ base: "100%", sm: 60 }}
+                  w={{ base: 314, sm: 90 }}
                   h={42}
                   variant="filled"
                   color="blue.4"
@@ -319,7 +317,7 @@ export function Hero() {
             </Collapse>
           </Box>
         </Box>
-      </div>
+      </main>
     </div>
   );
 }

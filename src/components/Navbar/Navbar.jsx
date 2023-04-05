@@ -14,9 +14,22 @@ import {
   Image,
   Text,
   Drawer,
+  Avatar,
+  UnstyledButton,
+  Menu,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconWorld } from "@tabler/icons-preact";
+import {
+  IconWorld,
+  IconLogout,
+  IconHeart,
+  IconStar,
+  IconHomeEdit,
+  IconSettings,
+  IconSwitchHorizontal,
+  IconChevronDown,
+  IconUserCircle,
+} from "@tabler/icons-preact";
 import { userData, logout } from "../../store/appState";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
 
@@ -41,7 +54,26 @@ const useStyles = createStyles((theme) => ({
       display: "none",
     },
   },
+  user: {
+    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
+    padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
+    borderRadius: theme.radius.sm,
+    transition: "background-color 100ms ease",
 
+    "&:hover": {
+      backgroundColor:
+        theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white,
+    },
+
+    [theme.fn.smallerThan("xs")]: {
+      display: "none",
+    },
+  },
+
+  userActive: {
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white,
+  },
   burger: {
     marginRight: theme.spacing.md,
     [theme.fn.largerThan("sm")]: {
@@ -91,8 +123,10 @@ export function Navbar() {
   const [opened, { toggle }] = useDisclosure(false);
   const [opened2, { open, close }] = useDisclosure(false);
   const [active, setActive] = useState(links[0].label);
-  const { classes, cx } = useStyles();
-
+  const { classes, theme, cx } = useStyles();
+  const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const avatarUrl = userData.value?.attributes?.profilePicUrl;
+  const role = userData.value?.attributes?.role;
   const items = links.map((link) => (
     <Box
       component={Link}
@@ -152,24 +186,112 @@ export function Navbar() {
             {!userData.value?.id ? (
               <Group spacing={2}>{items}</Group>
             ) : (
-              <text>Hi, {userData.value?.attributes?.firstName}</text>
+              <Menu
+                width={260}
+                position="bottom-end"
+                transitionProps={{ transition: "pop-top-right" }}
+                onClose={() => setUserMenuOpened(false)}
+                onOpen={() => setUserMenuOpened(true)}
+                withinPortal
+              >
+                <Menu.Target>
+                  <UnstyledButton
+                    className={cx(classes.user, {
+                      [classes.userActive]: userMenuOpened,
+                    })}
+                  >
+                    <Group spacing={7}>
+                      {avatarUrl ? (
+                        <Avatar
+                          src={avatarUrl}
+                          alt="user avatar picture"
+                          radius="xl"
+                          size={42}
+                        />
+                      ) : (
+                        <IconUserCircle size={22} />
+                      )}
+                      <Text
+                        weight={500}
+                        size="sm"
+                        sx={{ lineHeight: 1 }}
+                        mr={3}
+                      >
+                        Hi, {userData.value?.attributes?.firstName}
+                      </Text>
+                      <IconChevronDown size={rem(12)} stroke={1.5} />
+                    </Group>
+                  </UnstyledButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    icon={
+                      <IconHeart
+                        size="0.9rem"
+                        color={theme.colors.red[6]}
+                        stroke={1.5}
+                      />
+                    }
+                  >
+                    Liked Properties
+                  </Menu.Item>
+                  <Menu.Item
+                    icon={
+                      <IconStar
+                        size="0.9rem"
+                        color={theme.colors.yellow[6]}
+                        stroke={1.5}
+                      />
+                    }
+                  >
+                    Saved Searches
+                  </Menu.Item>
+                  {role !== "viewer" && (
+                    <Menu.Item
+                      icon={
+                        <IconHomeEdit
+                          size="0.9rem"
+                          color={theme.colors.blue[6]}
+                          stroke={1.5}
+                        />
+                      }
+                    >
+                      Manage Ads.
+                    </Menu.Item>
+                  )}
+
+                  <Menu.Label>Settings</Menu.Label>
+                  <Menu.Item icon={<IconSettings size="0.9rem" stroke={1.5} />}>
+                    Account settings
+                  </Menu.Item>
+
+                  <Menu.Item
+                    icon={<IconLogout size="0.9rem" stroke={1.5} />}
+                    onClick={() => logout()}
+                  >
+                    Logout
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             )}
             <ActionIcon size="lg">
               <IconWorld size="2rem" stroke={1.5} />
             </ActionIcon>
             <ThemeToggler />
             <Button
+              component={Link}
+              to="/Listwithus"
               variant="gradient"
               gradient={{ from: "indigo", to: "cyan" }}
             >
-              Advertise
+              List With Us
             </Button>
           </Group>
         </Container>
       </Header>
       <Drawer
         opened={opened2}
-size="xs"
+        size={300}
         onClose={() => {
           close();
           toggle();

@@ -59,20 +59,21 @@ export default function SignupAgency() {
       agencyProfile.set("email", values.email);
       agencyProfile.set("bio", values.bio);
       agencyProfile.set("bioAr", values.bioAr);
-      agencyProfile.set("role", values.role);
       agencyProfile.set("phoneNumber", values.phoneNumber);
       if (values.profilePic) agencyProfile.set("profilePic", parseFile);
       agencyProfile.set("userPointer", createdUser.toPointer());
-      const updateAgency = await agencyProfile.save();
+      const addAgency = await agencyProfile.save();
 
-      console.log(updateAgency);
+      console.log(addAgency);
       createdUser.set("firstName", values.firstName);
       createdUser.set("lastName", values.lastName);
       createdUser.set("email", values.email);
-      createdUser.set("agencyPointer", updateAgency.toPointer());
-      const saveAgent = await createdUser.save();
-      userData.value = saveAgent;
-      console.log(saveAgent);
+      createdUser.set("profilePicUrl", addAgency?.attributes?.profilePic?._url);
+      createdUser.set("role", values.role);
+      createdUser.set("agencyPointer", addAgency.toPointer());
+      const updateAgency = await createdUser.save();
+      userData.value = updateAgency;
+      console.log(updateAgency);
       return true;
     } catch (error) {
       // Error can be caused by lack of Internet connection
@@ -83,7 +84,7 @@ export default function SignupAgency() {
 
   return (
     <>
-      <Paper w={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
+      <Paper w="90%" maw={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
         <Text size="lg" weight={500}>
           Create An Agency
         </Text>
@@ -147,8 +148,8 @@ export default function SignupAgency() {
               radius="md"
             />
             <FileInput
-              label="Upload files"
-              placeholder="Agency Logo"
+              label="Agency Logo"
+              placeholder="Upload Agency Logo"
               value={form.values.profilePic}
               accept="image/png,image/jpeg"
               onChange={(event) => {

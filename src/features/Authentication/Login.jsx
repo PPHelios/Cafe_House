@@ -28,8 +28,6 @@ export default function Login(props) {
       email: "",
       password: "",
       role: "viewer",
-      profilePic: null,
-      terms: true,
     },
 
     validate: {
@@ -43,12 +41,6 @@ export default function Login(props) {
 
   const handleSubmit = async (values) => {
     if (type === "register") {
-      console.log(values.profilePic);
-      let parseFile = null;
-      if (values.profilePic !== null) {
-        parseFile = new Parse.File("img.jpeg", values.profilePic);
-      }
-
       try {
         // Since the signUp method returns a Promise, we need to call it using await
         const createdUser = await Parse.User.signUp(
@@ -58,13 +50,10 @@ export default function Login(props) {
         createdUser.set("firstName", values.firstName);
         createdUser.set("lastName", values.lastName);
         createdUser.set("email", values.email);
-        if (parseFile !== null) {
-          console.log("adding file");
-          createdUser.set("profilePic", parseFile);
-        }
-        const saveAgent = await createdUser.save();
-        userData.value = saveAgent;
-        console.log(saveAgent);
+        createdUser.set("role", values.role);
+        const saveUser = await createdUser.save();
+        userData.value = saveUser;
+        console.log(saveUser);
         return true;
       } catch (error) {
         // signUp can fail if any parameter is blank or failed an uniqueness check on the server
@@ -96,113 +85,119 @@ export default function Login(props) {
     }
   };
   return (
-    <Paper w={700} mt={100} mx="auto" radius="md" p="xl" withBorder {...props}>
-      <Text size="lg" weight={500}>
-        Welcome to My Home, {type} with
-      </Text>
+    <>
+      {!userData?.value?.id ? (
+        <Paper
+          w="90%"
+          maw={700}
+          mt={100}
+          mx="auto"
+          radius="md"
+          p="xl"
+          withBorder
+          {...props}
+        >
+          <Text size="lg" weight={500}>
+            Welcome to My Home, {type} with
+          </Text>
 
-      <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl">Google</GoogleButton>
+          <Group grow mb="md" mt="md">
+            <GoogleButton radius="xl">Google</GoogleButton>
 
-        <FacebookButton radius="xl">Facebook</FacebookButton>
-      </Group>
+            <FacebookButton radius="xl">Facebook</FacebookButton>
+          </Group>
 
-      <Divider label="Or continue with email" labelPosition="center" my="lg" />
+          <Divider
+            label="Or continue with email"
+            labelPosition="center"
+            my="lg"
+          />
 
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Stack>
-          {type === "register" && (
-            <>
+          <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+            <Stack>
+              {type === "register" && (
+                <>
+                  <TextInput
+                    required
+                    label="First Name"
+                    placeholder="Your First Name"
+                    value={form.values.firstName}
+                    onChange={(event) =>
+                      form.setFieldValue("firstName", event.currentTarget.value)
+                    }
+                    radius="md"
+                  />
+                  <TextInput
+                    required
+                    label="Last Name"
+                    placeholder="Your Last Name"
+                    value={form.values.lastName}
+                    onChange={(event) =>
+                      form.setFieldValue("lastName", event.currentTarget.value)
+                    }
+                    radius="md"
+                  />
+                </>
+              )}
+
               <TextInput
                 required
-                label="First Name"
-                placeholder="Your First Name"
-                value={form.values.firstName}
+                label="Email"
+                placeholder="Enter Your Email"
+                value={form.values.email}
                 onChange={(event) =>
-                  form.setFieldValue("firstName", event.currentTarget.value)
+                  form.setFieldValue("email", event.currentTarget.value)
+                }
+                error={form.errors.email && "Invalid email"}
+                radius="md"
+              />
+
+              <PasswordInput
+                required
+                label="Password"
+                placeholder="Your password"
+                value={form.values.password}
+                onChange={(event) =>
+                  form.setFieldValue("password", event.currentTarget.value)
+                }
+                error={
+                  form.errors.password &&
+                  "Password should include at least 6 characters"
                 }
                 radius="md"
               />
-              <TextInput
-                required
-                label="Last Name"
-                placeholder="Your Last Name"
-                value={form.values.lastName}
-                onChange={(event) =>
-                  form.setFieldValue("lastName", event.currentTarget.value)
-                }
-                radius="md"
-              />
-            </>
-          )}
+            </Stack>
 
-          <TextInput
-            required
-            label="Email"
-            placeholder="Enter Your Email"
-            value={form.values.email}
-            onChange={(event) =>
-              form.setFieldValue("email", event.currentTarget.value)
+            <Group position="apart" mt="xl">
+              <Anchor
+                component="button"
+                type="button"
+                color="dimmed"
+                onClick={() => toggle()}
+                size="xs"
+              >
+                {type === "register"
+                  ? "Already have an account? Login"
+                  : "Don't have an account? Register"}
+              </Anchor>
+              <Button type="submit" radius="xl">
+                {upperFirst(type)}
+              </Button>
+            </Group>
+          </form>
+        </Paper>
+      ) : (
+        <>
+          <p>You Are Logged In {userData.value.get("firstName")}</p>
+          {/* <button
+            onClick={() =>
+              console.log(Parse.User.current().get("agencyPointer"))
             }
-            error={form.errors.email && "Invalid email"}
-            radius="md"
-          />
-
-          <PasswordInput
-            required
-            label="Password"
-            placeholder="Your password"
-            value={form.values.password}
-            onChange={(event) =>
-              form.setFieldValue("password", event.currentTarget.value)
-            }
-            error={
-              form.errors.password &&
-              "Password should include at least 6 characters"
-            }
-            radius="md"
-          />
-
-          {type === "register" && (
-            <>
-              <FileInput
-                label="Upload files"
-                placeholder="Agency Logo"
-                value={form.values.profilePic}
-                accept="image/png,image/jpeg"
-                onChange={(event) => {
-                  form.setFieldValue("profilePic", event);
-                }}
-                icon={<IconUpload size="1rem" />}
-              />
-              <Checkbox
-                label="I accept terms and conditions"
-                checked={form.values.terms}
-                onChange={(event) =>
-                  form.setFieldValue("terms", event.currentTarget.checked)
-                }
-              />
-            </>
-          )}
-        </Stack>
-
-        <Group position="apart" mt="xl">
-          <Anchor
-            component="button"
-            type="button"
-            color="dimmed"
-            onClick={() => toggle()}
-            size="xs"
           >
-            {type === "register"
-              ? "Already have an account? Login"
-              : "Don't have an account? Register"}
-          </Anchor>
-          <Button type="submit" radius="xl">
-            {upperFirst(type)}
-          </Button>
-        </Group>
-      </form>
-    </Paper>
+            pic
+          </button> */}
+        </>
+      )}
+    </>
   );
 }

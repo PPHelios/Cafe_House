@@ -78,7 +78,7 @@ export default function AddAgency() {
 
   return (
     <>
-      <Paper w={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
+      <Paper w="90%" maw={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
         <Text size="lg" weight={500}>
           Create An Agency
         </Text>

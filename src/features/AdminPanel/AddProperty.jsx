@@ -1,7 +1,10 @@
 import { useState } from "preact/hooks";
+import { forwardRef } from "preact/compat";
 import { useToggle, upperFirst } from "@mantine/hooks";
 import Parse from "parse/dist/parse.min.js";
 import { useForm } from "@mantine/form";
+import AppMap from "../Map/AppMap";
+import { searchOptions } from "../../store/appState";
 import {
   TextInput,
   FileInput,
@@ -11,7 +14,7 @@ import {
   Button,
   Box,
   Image,
-  Anchor,
+  MultiSelect,
   Stack,
 } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-preact";
@@ -22,19 +25,36 @@ import {
   queryAgency,
   queryAgent,
 } from "../../store/appState";
+
+const SelectItem = forwardRef(
+  ({ value, color, label, name, ...others }, ref) => (
+    <Box ref={ref} {...others}>
+      <Group>
+        <Text>{label}</Text>
+        <Text size={{ base: "xs", sm: "md" }} color="dimmed">
+          {name}
+        </Text>
+      </Group>
+    </Box>
+  )
+);
+
 export default function AddProperty() {
   const [result, setResult] = useState({});
+  const [propertLocation, setPropertLocation] = useState({});
+
   const maxNumberOfPics = 15;
   const form = useForm({
     initialValues: {
       adName: "",
-      adNameAr: "rrrr",
-      description: "dfgdfg",
-      descriptionAr: "fgdfg",
+      adNameAr: "",
+      description: "",
+      descriptionAr: "",
       area: "",
       room: "",
       bath: "",
       pics: [],
+      locationTags: [],
     },
 
     validate: {
@@ -94,11 +114,16 @@ export default function AddProperty() {
       property.set("area", values.area);
       property.set("room", values.room);
       property.set("bath", values.bath);
-      property.set("agentPointer", Parse.User.current().toPointer());
       property.set(
-        "agencyPointer",
-        Parse.User.current().get("agencyPointer").toPointer()
+        "location",
+        new Parse.GeoPoint(
+          propertLocation.onDragEnd.lat,
+          propertLocation.onDragEnd.lng
+        )
       );
+      property.set("locationTags", values.locationTags);
+      property.set("agentPointer", Parse.User.current().get("agentPointer"));
+      property.set("agencyPointer", Parse.User.current().get("agencyPointer"));
       if (values.pics.length > 0) {
         for (let i = 0; i < numberOfPics; i++) {
           property.set(`pic${i}`, files[i]);
@@ -117,7 +142,7 @@ export default function AddProperty() {
 
   return (
     <>
-      <Paper w={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
+      <Paper w="90%" maw={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
         <Text size="lg" weight={500}>
           Add New Property
         </Text>
@@ -135,9 +160,8 @@ export default function AddProperty() {
               radius="md"
             />
             <TextInput
-              required
-              label="Ad. nameAr"
-              placeholder="Enter Property NameAr"
+              label="Ad. Arabic Name"
+              placeholder="Enter Ad. Arabic Name"
               value={form.values.adNameAr}
               onChange={(event) =>
                 form.setFieldValue("adNameAr", event.currentTarget.value)
@@ -146,7 +170,7 @@ export default function AddProperty() {
             />
             <TextInput
               required
-              label="Description"
+              label="Property Description"
               placeholder="Enter Property Description"
               value={form.values.description}
               onChange={(event) =>
@@ -156,8 +180,8 @@ export default function AddProperty() {
             />
             <TextInput
               required
-              label="DescriptionAr"
-              placeholder="Enter Property DescriptionAr"
+              label="Property Arabic Description"
+              placeholder="Enter Property Arabic Description"
               value={form.values.descriptionAr}
               onChange={(event) =>
                 form.setFieldValue("descriptionAr", event.currentTarget.value)
@@ -166,7 +190,7 @@ export default function AddProperty() {
             />
             <TextInput
               required
-              label="Area"
+              label="Property Area"
               placeholder="Enter Property Area"
               value={form.values.area}
               onChange={(event) =>
@@ -176,8 +200,8 @@ export default function AddProperty() {
             />
             <TextInput
               required
-              label="Room"
-              placeholder="Enter Property Room"
+              label="Number Of Rooms"
+              placeholder="Enter Number Of Rooms"
               value={form.values.room}
               onChange={(event) =>
                 form.setFieldValue("room", event.currentTarget.value)
@@ -186,8 +210,8 @@ export default function AddProperty() {
             />
             <TextInput
               required
-              label="Bath"
-              placeholder="Enter Property Bath"
+              label="Number Of Baths"
+              placeholder="Enter Number Of Baths"
               value={form.values.bath}
               onChange={(event) =>
                 form.setFieldValue("bath", event.currentTarget.value)
@@ -196,8 +220,8 @@ export default function AddProperty() {
             />
             <FileInput
               multiple
-              label="Upload files"
-              placeholder="Upload files"
+              label="Upload Property Photos"
+              placeholder="Upload Property Photos"
               value={form.values.pics}
               accept="image/png,image/jpeg"
               onChange={(event) => {
@@ -205,14 +229,48 @@ export default function AddProperty() {
               }}
               icon={<IconUpload size="1rem" />}
             />
+
+            <MultiSelect
+              {...form.getInputProps("locationTags")}
+              maxDropdownHeight={300}
+              data={searchOptions.value}
+              itemComponent={SelectItem}
+              clearable
+              clearButtonProps={{ "aria-label": "Clear selection" }}
+              maxSelectedValues={4}
+              limit={4}
+              searchable
+              filter={(searchValue, selected, item) => {
+                return (
+                  !selected &&
+                  item.label
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase().trim())
+                );
+              }}
+              label="Location Tags"
+              nothingFound="Nothing Found"
+              placeholder="Add Location Tags"
+              aria-label="Add Location Tags"
+              sx={{
+                display: "inline-block",
+                flexGrow: 1,
+                "& .mantine-MultiSelect-input": {
+                  paddingRight: 40,
+                },
+              }}
+            />
           </Stack>
 
-          <Group position="apart" mt="xl">
+          <Group position="center" mt="xl">
             <Button type="submit" radius="xl">
               Add
             </Button>
           </Group>
         </form>
+        <Box w="80%" h={400} mx="auto">
+          <AppMap add={true} setPropertLocation={setPropertLocation} />
+        </Box>
       </Paper>
 
       {result?.attributes?.pic0 && (

@@ -21,12 +21,11 @@ import { themeColor } from "./store/appState";
 import Parse from "parse/dist/parse.min.js";
 
 //Your Parse initialization configuration goes here
-
-Parse.initialize(
-  "huv2fcNzWboe9j84Tvb2aX4sM6tq9zH8EDTZC8Gj",
-  "ZEDRclnN9lOA34OOgIgZ4ITvWIxLGp5qD9uMBTA3"
-);
-Parse.serverURL = "https://parseapi.back4app.com/";
+const PARSE_APPLICATION_ID = import.meta.env.VITE_PARSE_APPLICATION_ID;
+const PARSE_HOST_URL = import.meta.env.VITE_PARSE_HOST_URL;
+const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
+Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
+Parse.serverURL = PARSE_HOST_URL;
 import MainLayout from "./layouts/MainLayout";
 import AdminPanel from "./features/AdminPanel/AdminPanel";
 import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
@@ -36,13 +35,14 @@ import MapSearch from "./features/MapSearch/MapSearch";
 // import AddProperty from "./features/AddProperty/AddProperty";
 import Login from "./features/Authentication/Login";
 
-import AddAgent from "./features/AdminPanel/AddAgent";
-import AddAgency from "./features/AdminPanel/AddAgency";
+// import AddAgent from "./features/AdminPanel/AddAgent";
+// import AddAgency from "./features/AdminPanel/AddAgency";
 import AddProperty from "./features/AdminPanel/AddProperty";
-import { userData } from "./store/appState";
+import { userData, searchOptions } from "./store/appState";
 import SignupAgency from "./features/Authentication/SignupAgency";
 import SignupAgent from "./features/Authentication/SignupAgent";
 import NotFound404 from "./features/NotFound404/NotFound404";
+import ListWithUs from "./features/ListWithUs/ListWithUs";
 export function App() {
   const rtlCache = createEmotionCache({
     key: "mantine-rtl",
@@ -58,7 +58,12 @@ export function App() {
   useEffect(() => {
     const getCurrentUser = async () => {
       const currentUser = await Parse.User.current();
+      const searchOptionsQuery = new Parse.Query("searchOptions");
+      searchOptionsQuery.contains("name", "englishOptions");
+      let queryResult = await searchOptionsQuery.first();
+      console.log(queryResult.get("options"));
       userData.value = currentUser;
+      searchOptions.value = queryResult.get("options");
       console.log(currentUser);
       return true;
     };
@@ -70,12 +75,13 @@ export function App() {
         <Route path="/" element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<MapSearch />} />
-          <Route path="/add" element={<AddProperty />} />
+          <Route path="/addproperty" element={<AddProperty />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/Listwithus" element={<ListWithUs />} />
           <Route path="/signupagency" element={<SignupAgency />} />
           <Route path="/signupagent" element={<SignupAgent />} />
-          <Route path="/adminpanel/addagent" element={<AddAgent />} />
-          <Route path="/adminpanel/addagency" element={<AddAgency />} />
+          {/* <Route path="/adminpanel/addagent" element={<AddAgent />} />
+          <Route path="/adminpanel/addagency" element={<AddAgency />} /> */}
           <Route path="/adminpanel/addproperty" element={<AddProperty />} />
           {/* <Route element={<AdminPanel />}>
             <Route path="/adminpanel/addagent" element={<AddAgent />} />

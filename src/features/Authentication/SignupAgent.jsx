@@ -61,21 +61,25 @@ export default function SignupAgent() {
       agentProfile.set("email", values.email);
       agentProfile.set("bio", values.bio);
       agentProfile.set("bioAr", values.bioAr);
-      agentProfile.set("role", values.role);
+
       agentProfile.set("phoneNumber", values.phoneNumber);
       if (values.profilePic) agentProfile.set("profilePic", parseFile);
       agentProfile.set("userPointer", createdUser.toPointer());
       agentProfile.set("agencyPointer", agency.toPointer());
-      const updateAgency = await agentProfile.save();
+      const addAgent = await agentProfile.save();
 
-      console.log(updateAgency);
+      console.log(addAgent);
+
       createdUser.set("firstName", values.firstName);
       createdUser.set("lastName", values.lastName);
       createdUser.set("email", values.email);
+      createdUser.set("role", values.role);
+      createdUser.set("profilePicUrl", addAgent?.attributes?.profilePic?._url);
       createdUser.set("agencyPointer", agency.toPointer());
-      const saveAgent = await createdUser.save();
-      userData.value = saveAgent;
-      console.log(saveAgent);
+      createdUser.set("agentPointer", addAgent.toPointer());
+      const updateAgent = await createdUser.save();
+      userData.value = updateAgent;
+      console.log(updateAgent);
       return true;
     } catch (error) {
       // Error can be caused by lack of Internet connection
@@ -86,7 +90,7 @@ export default function SignupAgent() {
 
   return (
     <>
-      <Paper w={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
+      <Paper w="90%" maw={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
         <Text size="lg" weight={500}>
           Create An Agent
         </Text>
@@ -168,8 +172,8 @@ export default function SignupAgent() {
               radius="md"
             />
             <FileInput
-              label="Upload files"
-              placeholder="Agency Logo"
+              label="Profile Picture"
+              placeholder="Upload Your Profile Picture"
               value={form.values.profilePic}
               accept="image/png,image/jpeg"
               onChange={(event) => {

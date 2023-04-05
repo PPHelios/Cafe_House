@@ -20,7 +20,7 @@ import {
   queryAgentsInAgency,
   queryAgentAgency,
   queryAgent,
-} from "../../store/appState";
+} from "../../../store/appState";
 export default function AddAgent() {
   const form = useForm({
     initialValues: {
@@ -90,7 +90,7 @@ export default function AddAgent() {
 
   return (
     <>
-      <Paper w={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
+      <Paper w="90%" maw={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
         <Text size="lg" weight={500}>
           Add An Agent
         </Text>

@@ -144,12 +144,7 @@ export const residentialSaleDb = signal([
   },
 ]);
 export const userData = signal({});
-export const searchOptions = signal([
-  "New Cairo",
-  "Mivida",
-  "Katameia Dunes",
-  "East Town Sodic",
-]);
+export const searchOptions = signal([]);
 export const stateSearchValues = signal({
   searchValue: [],
   searchPurpose: "Buy",

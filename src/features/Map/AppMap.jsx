@@ -12,13 +12,25 @@ import PropertyModal from "../MapSearch/PropertyModal";
 
 // Map.accessToken = import.meta.env.VITE_MAP_BOX_TOKEN
 
-const AppMap = ({ popupInfo, setPopupInfo, scrollToId, add }) => {
+const AppMap = ({
+  popupInfo,
+  setPopupInfo,
+  scrollToId,
+  add,
+  setPropertLocation,
+}) => {
   const [viewState, setViewState] = useState({
     longitude: 31.53824,
     latitude: 30.00624,
     zoom: 12,
   });
   const modalData = useSignal(null);
+  const [marker, setMarker] = useState({
+    latitude: 30.00629,
+    longitude: 31.5385,
+  });
+  // const [events, logEvents] = useState({});
+
   const [opened, { open, close }] = useDisclosure(false);
   const mapRef = useRef(null);
   // function onMapLoad() {
@@ -70,23 +82,21 @@ const AppMap = ({ popupInfo, setPopupInfo, scrollToId, add }) => {
   );
   // location marker
 
-  const [marker, setMarker] = useState({
-    latitude: 30.00629,
-    longitude: 31.5385,
-  });
-  const [events, logEvents] = useState({});
+  // const onMarkerDrag = useCallback((event) => {
+  //   logEvents((_events) => ({ ..._events, onDrag: event.lngLat }));
 
-  const onMarkerDrag = useCallback((event) => {
-    logEvents((_events) => ({ ..._events, onDrag: event.lngLat }));
+  //   setMarker({
+  //     longitude: event.lngLat.lng,
+  //     latitude: event.lngLat.lat,
+  //   });
+  // }, []);
 
+  const onMarkerDragEnd = useCallback((event) => {
+    setPropertLocation((_events) => ({ ..._events, onDragEnd: event.lngLat }));
     setMarker({
       longitude: event.lngLat.lng,
       latitude: event.lngLat.lat,
     });
-  }, []);
-
-  const onMarkerDragEnd = useCallback((event) => {
-    logEvents((_events) => ({ ..._events, onDragEnd: event.lngLat }));
   }, []);
   return (
     <>
@@ -141,13 +151,13 @@ const AppMap = ({ popupInfo, setPopupInfo, scrollToId, add }) => {
           latitude={marker.latitude}
           anchor="bottom"
           draggable
-          onDrag={onMarkerDrag}
+          // onDrag={onMarkerDrag}
           onDragEnd={onMarkerDragEnd}
         >
           <Pin size={20} />
         </Marker>
       </Map>
-      {add && <ControlPanel events={events} />}
+      {/* {add && <ControlPanel events={events} />} */}
       <PropertyModal
         modalData={modalData.value}
         opened={opened}

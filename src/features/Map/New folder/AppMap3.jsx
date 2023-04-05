@@ -2,7 +2,7 @@ import maplibregl from "maplibre-gl";
 import { useSignal } from "@preact/signals";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 
-import ControlPanel from "./control-panel";
+import ControlPanel from "../control-panel";
 import {
   useState,
   useMemo,
@@ -10,11 +10,11 @@ import {
   useCallback,
   useEffect,
 } from "preact/hooks";
-import { filteredData } from "../../store/appState";
+import { filteredData } from "../../../store/appState";
 import { Box, Image, Text, Group, Paper } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import Pin from "./pin";
-import PropertyModal from "../MapSearch/PropertyModal";
+import Pin from "../pin";
+import PropertyModal from "../../MapSearch/PropertyModal";
 
 // Map.accessToken = import.meta.env.VITE_MAP_BOX_TOKEN
 
