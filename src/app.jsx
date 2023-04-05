@@ -21,11 +21,12 @@ import { themeColor } from "./store/appState";
 import Parse from "parse/dist/parse.min.js";
 
 //Your Parse initialization configuration goes here
-const PARSE_APPLICATION_ID = import.meta.env.VITE_PARSE_APPLICATION_ID;
-const PARSE_HOST_URL = import.meta.env.VITE_PARSE_HOST_URL;
-const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
-Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
-Parse.serverURL = PARSE_HOST_URL;
+
+Parse.initialize(
+  "huv2fcNzWboe9j84Tvb2aX4sM6tq9zH8EDTZC8Gj",
+  "ZEDRclnN9lOA34OOgIgZ4ITvWIxLGp5qD9uMBTA3"
+);
+Parse.serverURL = "https://parseapi.back4app.com/";
 import MainLayout from "./layouts/MainLayout";
 import AdminPanel from "./features/AdminPanel/AdminPanel";
 import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
