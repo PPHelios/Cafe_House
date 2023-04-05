@@ -41,6 +41,7 @@ import AddProperty from "./features/AdminPanel/AddProperty";
 import { userData } from "./store/appState";
 import SignupAgency from "./features/Authentication/SignupAgency";
 import SignupAgent from "./features/Authentication/SignupAgent";
+import NotFound404 from "./features/NotFound404/NotFound404";
 export function App() {
   const rtlCache = createEmotionCache({
     key: "mantine-rtl",
@@ -78,6 +79,7 @@ export function App() {
           {/* <Route element={<AdminPanel />}>
             <Route path="/adminpanel/addagent" element={<AddAgent />} />
           </Route> */}
+          <Route path="*" element={<NotFound404 />} />
         </Route>
       </>
     )

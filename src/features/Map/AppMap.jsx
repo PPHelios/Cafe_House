@@ -1,4 +1,5 @@
 import Map, { Marker, Popup, NavigationControl } from "react-map-gl";
+import maplibregl from "maplibre-gl";
 import { useSignal } from "@preact/signals";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import ControlPanel from "./control-panel";
@@ -90,6 +91,7 @@ const AppMap = ({ popupInfo, setPopupInfo, scrollToId, add }) => {
   return (
     <>
       <Map
+        mapLib={maplibregl}
         {...viewState}
         // onLoad={onMapLoad}
         ref={mapRef}
@@ -97,7 +99,6 @@ const AppMap = ({ popupInfo, setPopupInfo, scrollToId, add }) => {
         onMove={(evt) => setViewState(evt.viewState)}
         style={{ width: "100%", height: "100%" }}
         mapStyle="https://api.maptiler.com/maps/cbe8b2a4-35f8-4e67-8da7-756e800105fb/style.json?key=Md8YyiA86Xu6krfSho9R"
-        mapboxAccessToken={import.meta.env.VITE_MAP_BOX_TOKEN}
         attributionControl={true}
       >
         {pins}
