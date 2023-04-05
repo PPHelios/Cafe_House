@@ -169,6 +169,7 @@ export function Navbar() {
       </Header>
       <Drawer
         opened={opened2}
+size="xs"
         onClose={() => {
           close();
           toggle();
