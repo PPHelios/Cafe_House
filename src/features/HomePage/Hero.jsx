@@ -29,7 +29,7 @@ import { search, searchOptions } from "../../store/appState";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    height: rem(600),
+    height: rem(700),
     position: "relative",
     paddingTop: rem(120),
     paddingBottom: rem(130),
