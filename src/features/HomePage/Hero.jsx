@@ -101,8 +101,8 @@ export function Hero() {
   const form = useForm({
     initialValues: {
       searchValue: "",
-      listingType: "Buy",
-      propertyType: "Apartment",
+      listingType: "",
+      propertyType: "",
       propertyRooms: "",
       propertyBaths: "",
       propertyarea: "",
@@ -124,7 +124,7 @@ export function Hero() {
 
   const handleSubmit = (values) => {
     search(values);
-   // navigate("/search");
+    navigate("/search");
   };
 
   return (
@@ -182,7 +182,7 @@ export function Hero() {
               );
             }}
             nothingFound="Nothing Found"
-            placeholder="search for property"
+            placeholder="Search For Property"
             aria-label="search for property"
             sx={{
               display: "inline-block",
@@ -196,10 +196,34 @@ export function Hero() {
           <Box px={20}>
             <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
               <Group position="center" mb={5}>
+              <Select
+                  size="lg"
+                  w={{ base: 98, xs: "fit-content" }}
+                  {...form.getInputProps("listingType")}
+                  data={["Buy", "Rent"]}
+                  display="inline-block"
+                  placeholder="Pick listing Type"
+                  aria-label="pick search type"
+                  sx={(theme) => ({
+                    "& .mantine-Select-nothingFound":{
+                      color: theme.white,
+                    },
+                    "& .mantine-Select-input": {
+                      paddingRight: 20,
+                      textAlign: "center",
+                      // color: theme.white,
+                      // backgroundColor: theme.colors.blue[1],
+                      border: "none",
+                      "&:hover": {
+                        // backgroundColor: theme.colors.blue[5],
+                      },
+                    },
+                  })}
+                />
                 <Button
                   size="lg"
                   variant="filled"
-                  color="blue.4"
+                  color="gradient"
                   title=" Advanced Search"
                   aria-label=" Advanced Search"
                   rightIcon={opened ? <IconChevronUp /> : <IconChevronDown />}
@@ -208,35 +232,14 @@ export function Hero() {
                   Advanced Search
                 </Button>
 
-                <Select
-                  size="lg"
-                  w={{ base: 98, xs: "fit-content" }}
-                  {...form.getInputProps("listingType")}
-                  data={["Buy", "Rent"]}
-                  display="inline-block"
-                  placeholder="pick search type"
-                  aria-label="pick search type"
-                  sx={(theme) => ({
-                    "& .mantine-Select-input": {
-                      paddingRight: 20,
-                      textAlign: "center",
-                      color: theme.white,
-                      backgroundColor: theme.colors.blue[4],
-                      border: "none",
-
-                      "&:hover": {
-                        backgroundColor: theme.colors.blue[5],
-                      },
-                    },
-                  })}
-                />
+               
 
                 <ActionIcon
                   type="submit"
                   w={{ base: 314, sm: 84 }}
                   h={50}
-                  variant="filled"
-                  color="blue.4"
+                  variant="gradient"
+                  color="blue.5"
                   title="Search"
                   aria-label="Search"
                 >
@@ -247,7 +250,7 @@ export function Hero() {
             <Collapse in={opened}>
               <Paper shadow="xs" p="xs" ta="center">
                 <form onSubmit={form.onSubmit((values) => console.log(values))}>
-                  {/* /// svg error */}
+                
                   <Select
                     w={{ base: 110, sm: 140 }}
                     m={5}
@@ -267,7 +270,7 @@ export function Hero() {
                   <Select
                     w={{ base: 110, sm: 140 }}
                     m={5}
-                    data={["1", "2", "3", "4", "5"]}
+                    data={["1", "2", "3", "4", "5","6","7"]}
                     display="inline-block"
                     {...form.getInputProps("propertyRooms")}
                     placeholder="Rooms"

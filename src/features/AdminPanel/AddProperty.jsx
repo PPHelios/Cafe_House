@@ -333,7 +333,7 @@ console.log(saveproperty);
           
           </Stack>
   <Box w="100%" mt={50} h={400} mx="auto">
-          <AppMap add={true} setPropertLocation={setPropertLocation} />
+          <AppMap add={false} setPropertLocation={setPropertLocation} />
         </Box>
           <Group position="center" mt="xl">
             <Button type="submit" radius="xl">

@@ -46,6 +46,7 @@ function MapSearch() {
           popupInfo={popupInfo}
           setPopupInfo={(item) => setPopupInfo(item)}
           scrollToId={(i) => scrollToId(i)}
+          add={true}
         />
       </Box>
       <Box
@@ -55,7 +56,7 @@ function MapSearch() {
         // ref={containerRef}
         sx={{ overflowY: "auto", overflowX: "hidden" }}
       >
-        {filteredData.value.map((item, i) => (
+        {filteredData?.value.map((item, i) => (
           <Box
             mt={10}
             // ref={(node) => {

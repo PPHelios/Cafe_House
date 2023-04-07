@@ -67,10 +67,10 @@ function ContactIcon({
 
 
 const MOCKDATA = [
-  { title: 'Email', description: 'hello@mantine.dev', icon: IconAt },
-  { title: 'Phone', description: '+49 (800) 335 35 35', icon: IconPhone },
-  { title: 'Address', description: '844 Morris Park avenue', icon: IconMapPin },
-  { title: 'Working hours', description: '8 a.m. – 11 p.m.', icon: IconSun },
+  { title: 'Email', description: 'contact@myhome.com', icon: IconAt },
+  { title: 'Phone', description: '+02 01001100001', icon: IconPhone },
+  { title: 'Address', description: 'My Home', icon: IconMapPin },
+  { title: 'Working hours', description: '10 a.m. – 6 p.m.', icon: IconSun },
 ];
 
 export function ContactIconsList({ data = MOCKDATA, variant }) {

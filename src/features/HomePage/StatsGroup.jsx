@@ -63,14 +63,14 @@ const data= [
     "description": "24% more than in the same month last year, 33% more that two years ago"
   },
   {
-    "title": "New users",
-    "stats": "2,175",
+    "title": "Listed Ads",
+    "stats": "25,175",
     "description": "13% less compared to last month, new user engagement up by 6%"
   },
   {
-    "title": "Completed orders",
-    "stats": "1,994",
-    "description": "1994 orders were completed this month, 97% satisfaction rate"
+    "title": "Sold Properties",
+    "stats": "10,994",
+    "description": "3994 Properties were sold this month"
   }
 ]
 

@@ -15,17 +15,18 @@ function PlaceDetails({ item, setPopupInfo }) {
     <Paper p={10}  onClick={() => {
       setPopupInfo(item)
     }}>
-      <Text fz="lg"> {item.title}</Text>
+      <Text fz="lg"> {item?.get("adName")}</Text>
                 <Group>
               <Box w="100%">
-              <Image  src={new URL(`../../assets/images/${item.images[0]}HQ.webp`, import.meta.url).href} alt="vv"
+              <Image  src={item?.get("pic0")?._url} alt="property picture"
               
               />
              </Box>
              <Box>
-             <Text fz="sm" >Price: {item.price} LE</Text>
-             <Text fz="sm" >Area: {item.area} sqm</Text>
-             <Text fz="sm" >Rooms: {item.rooms}</Text>
+             <Text fz="sm" >Price: {item?.get("price")} LE</Text>
+             <Text fz="sm" >Area: {item?.get("area")} m</Text>
+             <Text fz="sm" >Rooms: {item?.get("room")}</Text>
+             <Text fz="sm" >Baths: {item?.get("bath")}</Text>
              </Box>
             </Group>
       </Paper>

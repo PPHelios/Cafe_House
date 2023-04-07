@@ -25,10 +25,10 @@ const AppMap = ({
     zoom: 12,
   });
   const modalData = useSignal(null);
-  const [marker, setMarker] = useState({
-    latitude: 30.00629,
-    longitude: 31.5385,
-  });
+  // const [marker, setMarker] = useState({
+  //   latitude: 30.00629,
+  //   longitude: 31.5385,
+  // });
   // const [events, logEvents] = useState({});
 
   const [opened, { open, close }] = useDisclosure(false);
@@ -50,8 +50,8 @@ const AppMap = ({
       filteredData.value.map((item, i) => (
         <Marker
           key={`marker-${i}`}
-          longitude={item.coordinates.lng}
-          latitude={item.coordinates.lat}
+          longitude={item.get("location")._longitude}
+          latitude={item.get("location")._latitude}
           anchor="bottom"
           onClick={(e) => {
             // If we let the click event propagates to the map, it will immediately close the popup
@@ -91,13 +91,7 @@ const AppMap = ({
   //   });
   // }, []);
 
-  const onMarkerDragEnd = useCallback((event) => {
-    setPropertLocation((_events) => ({ ..._events, onDragEnd: event.lngLat }));
-    setMarker({
-      longitude: event.lngLat.lng,
-      latitude: event.lngLat.lat,
-    });
-  }, []);
+
   return (
     <>
       <Map
@@ -116,37 +110,32 @@ const AppMap = ({
         {popupInfo && (
           <Popup
             anchor="top"
-            longitude={popupInfo.coordinates.lng}
-            latitude={popupInfo.coordinates.lat}
+            longitude={popupInfo.get("location")._longitude}
+          latitude={popupInfo.get("location")._latitude}
             onClose={() => setPopupInfo(null)}
           >
             <Paper>
               <Text fz="lg" ta="center">
                 {" "}
-                {popupInfo.title}
+                {popupInfo.get("adName")}
               </Text>
               <Group>
                 <Box w={80}>
                   <Image
-                    src={
-                      new URL(
-                        `../../assets/images/${popupInfo.images[0]}.webp`,
-                        import.meta.url
-                      ).href
-                    }
-                    alt="vv"
+                   src={popupInfo.get("pic0")._url} alt="property picture"
                   />
                 </Box>
                 <Box>
-                  <Text fz="sm">Price: {popupInfo.price} LE</Text>
-                  <Text fz="sm">Area: {popupInfo.area} sqm</Text>
-                  <Text fz="sm">Rooms: {popupInfo.rooms}</Text>
+                <Text fz="sm" >Price: {popupInfo.get("price")} LE</Text>
+             <Text fz="sm" >Area: {popupInfo.get("area")} m</Text>
+             <Text fz="sm" >Rooms: {popupInfo.get("room")}</Text>
+             <Text fz="sm" >Baths: {popupInfo.get("bath")}</Text>
                 </Box>
               </Group>
             </Paper>
           </Popup>
         )}
-        <Marker
+        {/* <Marker
           longitude={marker.longitude}
           latitude={marker.latitude}
           anchor="bottom"
@@ -155,14 +144,14 @@ const AppMap = ({
           onDragEnd={onMarkerDragEnd}
         >
           <Pin size={20} />
-        </Marker>
+        </Marker> */}
       </Map>
       {/* {add && <ControlPanel events={events} />} */}
-      <PropertyModal
+    { add && <PropertyModal
         modalData={modalData.value}
         opened={opened}
         close={close}
-      />
+      />}
     </>
   );
 };
