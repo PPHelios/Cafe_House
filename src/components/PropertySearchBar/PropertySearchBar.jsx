@@ -14,6 +14,7 @@ import {
   ActionIcon,
   Button,
   TextInput,
+  Text
 } from "@mantine/core";
 import {
   IconSearch,
@@ -129,6 +130,7 @@ function PropertySearchBar() {
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Group position="center" mb={5}>
         <Select
+        radius="md"
             size="lg"
             w={218}
             {...form.getInputProps("listingType")}
@@ -143,9 +145,10 @@ function PropertySearchBar() {
               "& .mantine-Select-input": {
                 paddingRight: 20,
                 textAlign: "center",
+                borderRadius:"8px",
                 // color: theme.white,
-                // backgroundColor: theme.colors.blue[1],
-                border: "none",
+                 border: `1px solid ${theme.colors.blue[4]}`,
+               
                 "&:hover": {
                   // backgroundColor: theme.colors.blue[5],
                 },

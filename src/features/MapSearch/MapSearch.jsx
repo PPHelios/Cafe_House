@@ -4,7 +4,6 @@ import {
   Box,
   Flex,
 } from "@mantine/core";
-import { IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight } from '@tabler/icons-preact';
 import PlaceDetails from "../../components/PlaceDetails/PlaceDetails";
 import AppMap from "../Map/AppMap";
 import { filteredData } from "../../store/appState";
@@ -55,7 +54,7 @@ function MapSearch() {
         sx={{ overflowY: "auto", overflowX: "hidden" }}
       >
         <PropertiesFilterMenu/>
-        {filteredData?.value.map((item, i) => (
+        {filteredData.value && filteredData.value.map((item, i) => (
           <Box
             mt={10}
             // ref={(node) => {
