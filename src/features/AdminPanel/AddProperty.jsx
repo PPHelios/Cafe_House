@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import { forwardRef } from "preact/compat";
-import { useToggle, upperFirst } from "@mantine/hooks";
+
 import Parse from "parse/dist/parse.min.js";
 import { useForm } from "@mantine/form";
 import AppMap from "../Map/AppMap";
@@ -13,20 +13,13 @@ import {
   Group,
   Button,
   Box,
-  Image,
   MultiSelect,
   Select,
   Stack,
-  Title
+  Title,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-preact";
-import {
-  userData,
-  queryAgentAgency,
-  queryAgentsInAgency,
-  queryAgency,
-  queryAgent,
-} from "../../store/appState";
 
 const SelectItem = forwardRef(
   ({ value, color, label, name, ...others }, ref) => (
@@ -42,8 +35,8 @@ const SelectItem = forwardRef(
 );
 
 export default function AddProperty() {
-  const [result, setResult] = useState({});
   const [propertLocation, setPropertLocation] = useState({});
+  console.log(propertLocation);
   const maxNumberOfPics = 15;
   const form = useForm({
     initialValues: {
@@ -52,14 +45,14 @@ export default function AddProperty() {
       description: "",
       descriptionAr: "",
       propertyType: "",
-        listingType:"",
-      price:"",
+      listingType: "",
+      price: "",
       area: "",
       room: "",
       bath: "",
       pics: [],
-      isFeatured:false,
-      adStatus:"",
+      isFeatured: false,
+      adStatus: "",
       locationTags: [],
     },
 
@@ -76,14 +69,14 @@ export default function AddProperty() {
       description: values.description,
       descriptionAr: values.descriptionAr,
       propertyType: values.propertyType || "Apartment",
-      listingType:values.listingType || "Buy",
-      price:Number(values.price) ||1,
-      area: Number(values.area)||1,
-      room: Number(values.room)||1,
-      bath: Number(values.bath)||1,
-      pics:values.pics,
-      isFeatured:values.isFeatured || false,
-      adStatus:values.adStatus ||"pending",
+      listingType: values.listingType || "Buy",
+      price: Number(values.price) || 1,
+      area: Number(values.area) || 1,
+      room: Number(values.room) || 1,
+      bath: Number(values.bath) || 1,
+      pics: values.pics,
+      isFeatured: values.isFeatured || false,
+      adStatus: values.adStatus || "pending",
       locationTags: values.locationTags,
     }),
   });
@@ -111,6 +104,9 @@ export default function AddProperty() {
   async function addnewProperty(values) {
     // const parseQuery = new Parse.Query("Person");
     let files = [];
+    if (!propertLocation?.onDrag) {
+      alert("Please Select A Location");
+    }
     try {
       let numberOfPics =
         values.pics.length < maxNumberOfPics
@@ -144,8 +140,8 @@ export default function AddProperty() {
       property.set(
         "location",
         new Parse.GeoPoint(
-          propertLocation.onDragEnd.lat,
-          propertLocation.onDragEnd.lng
+          propertLocation.onDrag.lat,
+          propertLocation.onDrag.lng
         )
       );
       property.set("locationTags", values.locationTags);
@@ -157,20 +153,27 @@ export default function AddProperty() {
         }
       }
       const saveproperty = await property.save();
-      alert("done")
-console.log(saveproperty);
-//       let PicsUrls=[]
+      notifications.show({
+        title: "Property Added Successfully",
+      });
+      console.log(saveproperty);
 
+      //       let PicsUrls=[]
 
-//       saveproperty.set("PicsUrls", PicsUrls);
-// const savePicsUrls = await property.save();
+      //       saveproperty.set("PicsUrls", PicsUrls);
+      // const savePicsUrls = await property.save();
 
-// console.log(savePicsUrls);
-      setResult(saveproperty);
+      // console.log(savePicsUrls);
+
       return true;
     } catch (error) {
       // Error can be caused by lack of Internet connection
-      alert(`Error! ${error.message}`);
+      notifications.show({
+        title: "Error",
+        message: `Error! ${error.message} 🤥`,
+        color: 'red',
+      });
+
       return false;
     }
   }
@@ -178,11 +181,9 @@ console.log(saveproperty);
   return (
     <>
       <Title my={30} order={1} weight={700} ta="center" c="blue.4">
-          Add New Property
-        </Title>
-      <Paper w="90%" maw={700}  mx="auto" radius="md" p="xl" withBorder>
-      
-
+        Add New Property
+      </Title>
+      <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
         <form onSubmit={form.onSubmit((values) => addnewProperty(values))}>
           <Stack>
             <TextInput
@@ -224,31 +225,29 @@ console.log(saveproperty);
               }
               radius="md"
             />
-             <Select
-                     required
-                
-                    m={5}
-                    data={["Apartment", "Villa"]}
-                    display="inline-block"
-                    {...form.getInputProps("propertyType")}
-                    label="Property Type"
-                    placeholder="Property Type"
-                    aria-label="pick property type "
-                    radius="md"
-                  />
             <Select
-                  required
-              
-                  {...form.getInputProps("listingType")}
-                  data={["Buy", "Rent"]}
-                  display="inline-block"
-                 label="pick Listing Type"
-                  placeholder="pick Listing Type"
-                  aria-label="pick Listing Type"
-                  radius="md"
-                />
-                
-                 <TextInput
+              required
+              m={5}
+              data={["Apartment", "Villa"]}
+              display="inline-block"
+              {...form.getInputProps("propertyType")}
+              label="Property Type"
+              placeholder="Property Type"
+              aria-label="pick property type "
+              radius="md"
+            />
+            <Select
+              required
+              {...form.getInputProps("listingType")}
+              data={["Buy", "Rent"]}
+              display="inline-block"
+              label="pick Listing Type"
+              placeholder="pick Listing Type"
+              aria-label="pick Listing Type"
+              radius="md"
+            />
+
+            <TextInput
               required
               label="Property price"
               placeholder="Enter Property price"
@@ -330,37 +329,17 @@ console.log(saveproperty);
                 },
               }}
             />
-          
           </Stack>
-  <Box w="100%" mt={50} h={400} mx="auto">
-          <AppMap add={false} setPropertLocation={setPropertLocation} />
-        </Box>
+          <Box w="100%" mt={50} h={400} mx="auto">
+            <AppMap add={false} setPropertLocation={setPropertLocation} />
+          </Box>
           <Group position="center" mt="xl">
             <Button type="submit" radius="xl">
               Add
             </Button>
           </Group>
         </form>
-        
       </Paper>
-
-      {result?.attributes?.pic0 && (
-        <Box h={100} w={100}>
-          <Image src={`${result?.attributes?.pic0._url}`} />
-        </Box>
-      )}
-      {result?.attributes?.pic1 && (
-        <Box h={100} w={100}>
-          <Image src={`${result?.attributes?.pic1._url}`} />
-        </Box>
-      )}
-      {result?.attributes?.pic2 && (
-        <Box h={100} w={100}>
-          <Image src={`${result?.attributes?.pic2._url}`} />
-        </Box>
-      )}
-      <p>{result?.attributes?.adName}</p>
-      <p>{result?.attributes?.room}</p>
     </>
   );
 }

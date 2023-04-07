@@ -279,7 +279,7 @@ export function Navbar() {
                       />
                     }
                   >
-                  <Text component={Link} to="\user/likedproperties"> Liked Properties</Text>
+                  <Text component={Link} to="/user/likedproperties"> Liked Properties</Text>
                   </Menu.Item>
                   <Menu.Item
                     icon={
@@ -290,7 +290,7 @@ export function Navbar() {
                       />
                     }
                   >
-                     <Text component={Link} to="\user/savedsearches"> Saved Searches</Text>
+                     <Text component={Link} to="/user/savedsearches"> Saved Searches</Text>
                    
                   </Menu.Item>
                   {role !== "viewer" && (
@@ -303,14 +303,14 @@ export function Navbar() {
                         />
                       }
                     >
-                     <Text component={Link} to="\adminpanel/addproperty"> Manage Ads.</Text>
+                     <Text component={Link} to="/adminpanel/addproperty"> Manage Ads.</Text>
 
                     </Menu.Item>
                   )}
 
                   <Menu.Label>Settings</Menu.Label>
                   <Menu.Item icon={<IconSettings size="0.9rem" stroke={1.5} />}>
-                  <Text component={Link} to="\user/accountsettings">Account settings</Text>
+                  <Text component={Link} to="/user/accountsettings">Account settings</Text>
 
                   </Menu.Item>
 
@@ -482,12 +482,12 @@ export function Navbar() {
       <List>
                     <List.Item
  className={classes.burgerProfileLinks}>
-                  <Text component={Link} to="\signupagency">Agency</Text>
+                  <Box component={Link} to="/signupagency">Agency</Box>
 
  </List.Item>
  <List.Item
  className={classes.burgerProfileLinks}>
-                  <Text component={Link} to="\signupagent">Agent</Text>
+                  <Box component={Link} to="/signupagent">Agent</Box>
 
  </List.Item>
                     </List>
@@ -501,17 +501,17 @@ export function Navbar() {
           </Box>
                     <List.Item
  className={classes.burgerProfileLinks}>
-                  <Text component={Link} to="\">Buy</Text>
+                  <Text component={Link} to="/">Buy</Text>
 
  </List.Item>
  <List.Item
  className={classes.burgerProfileLinks}>
-                  <Text component={Link} to="\">Sell</Text>
+                  <Text component={Link} to="/">Sell</Text>
 
  </List.Item>
  <List.Item
  className={classes.burgerProfileLinks}>
-                  <Text component={Link} to="\contactus">Contact Us</Text>
+                  <Text component={Link} to="/contactus">Contact Us</Text>
 
  </List.Item>
                     </List>

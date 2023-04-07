@@ -1,4 +1,4 @@
-import {useState} from "preact/hooks";
+import { useState } from "preact/hooks";
 import Parse from "parse/dist/parse.min.js";
 
 import { useForm } from "@mantine/form";
@@ -12,15 +12,14 @@ import {
   Title,
   Anchor,
   Stack,
-
 } from "@mantine/core";
-
+import { notifications } from "@mantine/notifications";
 import { GoogleButton, FacebookButton } from "./SocialButtons";
 //import Backendless from "backendless";
 import { userData } from "../../store/appState";
 import { Link, useNavigate } from "react-router-dom";
 export default function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
@@ -41,7 +40,6 @@ export default function Login() {
   });
 
   const handleSubmit = async (values) => {
-   
     try {
       const loggedInUser = await Parse.User.logIn(
         values.email,
@@ -57,32 +55,28 @@ export default function Login() {
 
       // Update state variable holding current user
       userData.value = loggedInUser;
-      navigate("/")
+      notifications.show({
+        title: "Logged In Successfully",
+      });
+      navigate("/");
       return true;
     } catch (error) {
       // Error can be caused by wrong parameters or lack of Internet connection
-      alert(`Error! ${error.message}`);
+      notifications.show({
+        title: "Error",
+        message: `Error! ${error.message} 🤥`,
+        color: 'red',
+      });
       return false;
     }
   };
   return (
     <>
-    <Title my={30} order={1} weight={700} ta="center" c="blue.4">
-    Welcome to My Home, Login with
-        </Title>
+      <Title my={30} order={1} weight={700} ta="center" c="blue.4">
+        Welcome to My Home, Login with
+      </Title>
       {!userData?.value?.id ? (
-        <Paper
-          w="90%"
-          maw={700}
-         
-          mx="auto"
-          radius="md"
-          p="xl"
-          withBorder
-         
-        >
-
-
+        <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
           <Group grow mb="md" mt="md">
             <GoogleButton radius="xl">Google</GoogleButton>
 
@@ -97,8 +91,6 @@ export default function Login() {
 
           <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Stack>
-             
-
               <TextInput
                 required
                 label="Email"
@@ -133,14 +125,12 @@ export default function Login() {
                 to="/signup"
                 type="button"
                 color="dimmed"
-               
                 size="xs"
               >
-               
-                   Don't have an account? Register
+                Don't have an account? Register
               </Anchor>
               <Button type="submit" radius="xl">
-               Login
+                Login
               </Button>
             </Group>
           </form>

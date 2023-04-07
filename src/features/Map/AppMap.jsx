@@ -25,11 +25,11 @@ const AppMap = ({
     zoom: 12,
   });
   const modalData = useSignal(null);
-  // const [marker, setMarker] = useState({
-  //   latitude: 30.00629,
-  //   longitude: 31.5385,
-  // });
-  // const [events, logEvents] = useState({});
+  const [marker, setMarker] = useState({
+    latitude: 30.00629,
+    longitude: 31.5385,
+  });
+  const [events, logEvents] = useState({});
 
   const [opened, { open, close }] = useDisclosure(false);
   const mapRef = useRef(null);
@@ -82,14 +82,14 @@ const AppMap = ({
   );
   // location marker
 
-  // const onMarkerDrag = useCallback((event) => {
-  //   logEvents((_events) => ({ ..._events, onDrag: event.lngLat }));
+  const onMarkerDrag = useCallback((event) => {
+    setPropertLocation((_events) => ({ ..._events, onDrag: event.lngLat }));
 
-  //   setMarker({
-  //     longitude: event.lngLat.lng,
-  //     latitude: event.lngLat.lat,
-  //   });
-  // }, []);
+    setMarker({
+      longitude: event.lngLat.lng,
+      latitude: event.lngLat.lat,
+    });
+  }, []);
 
 
   return (
@@ -135,16 +135,16 @@ const AppMap = ({
             </Paper>
           </Popup>
         )}
-        {/* <Marker
+      { !add && <Marker
           longitude={marker.longitude}
           latitude={marker.latitude}
           anchor="bottom"
           draggable
           // onDrag={onMarkerDrag}
-          onDragEnd={onMarkerDragEnd}
+          onDragEnd={onMarkerDrag}
         >
           <Pin size={20} />
-        </Marker> */}
+        </Marker>}
       </Map>
       {/* {add && <ControlPanel events={events} />} */}
     { add && <PropertyModal

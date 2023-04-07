@@ -1,5 +1,6 @@
 import { signal, computed, effect } from "@preact/signals";
 import Parse from "parse/dist/parse.min.js";
+import { notifications } from "@mantine/notifications";
 export const themeColor = signal("light");
 export const residentialSaleDb = signal([
   {
@@ -161,35 +162,41 @@ export const stateSearchValues = signal({
 });
 
 export const filteredData = signal([]);
-console.log(filteredData)
-export const sortHeightToLow=()=>{
-  const sortedData = filteredData.value.sort((a, b)=>b.get("price") - a.get("price"))
+console.log(filteredData);
+export const sortHeightToLow = () => {
+  const sortedData = filteredData.value.sort(
+    (a, b) => b.get("price") - a.get("price")
+  );
 
-  const clearArray = ()=>filteredData.value=[]
-  clearArray()
-   filteredData.value=sortedData
- }
- export const sortLowToHeigh=()=>{
-   const sortedData = filteredData.value.sort((a, b)=> a.get("price") - b.get("price") )
+  const clearArray = () => (filteredData.value = []);
+  clearArray();
+  filteredData.value = sortedData;
+};
+export const sortLowToHeigh = () => {
+  const sortedData = filteredData.value.sort(
+    (a, b) => a.get("price") - b.get("price")
+  );
 
-   const clearArray = ()=>filteredData.value=[]
-  clearArray()
-    filteredData.value=sortedData
-  }
-  export const sortByArea=()=>{
-    const sortedData = filteredData.value.sort((a, b)=>b.get("area") - a.get("area"))
+  const clearArray = () => (filteredData.value = []);
+  clearArray();
+  filteredData.value = sortedData;
+};
+export const sortByArea = () => {
+  const sortedData = filteredData.value.sort(
+    (a, b) => b.get("area") - a.get("area")
+  );
 
-    const clearArray = ()=>filteredData.value=[]
-    clearArray()
-     filteredData.value=sortedData
-   }
+  const clearArray = () => (filteredData.value = []);
+  clearArray();
+  filteredData.value = sortedData;
+};
 
 export const search = async (values) => {
   console.log(values);
   if (values.searchValue.length > 0) {
     try {
       let parseQuery = new Parse.Query("Property");
-     // parseQuery.containedIn('locationTags', values.locationTags);
+      parseQuery.containedIn("locationTags", values.searchValue);
       parseQuery.contains("listingType", values.listingType);
       parseQuery.contains("propertyType", values.propertyType);
       parseQuery.greaterThan("room", values.propertyRooms - 1);
@@ -197,14 +204,18 @@ export const search = async (values) => {
       parseQuery.greaterThan("area", values.propertyarea - 1);
       parseQuery.greaterThan("price", +values.propertyminPrice - 1);
       parseQuery.lessThan("price", +values.propertymaxPrice + 1);
+
       let queryResults = await parseQuery.find();
-      const shuffledResults =queryResults.sort(function() {
-        return Math.random() - .5;
+      const shuffledResults = queryResults.sort(function () {
+        return Math.random() - 0.5;
       });
-      filteredData.value = shuffledResults
-      console.log(queryResults);
+      filteredData.value = shuffledResults;
     } catch (err) {
-      console.log(err.message);
+      notifications.show({
+        title: "Error",
+        message: `Error! ${err.message} 🤥`,
+        color: 'red',
+      });
     }
   }
 };
@@ -250,9 +261,15 @@ export const logout = async () => {
     await Parse.User.logOut();
     userData.value = {};
     console.log("loggedout");
-    console.log(userData.value);
+    notifications.show({
+      title: "Logged Out Successfully",
+    });
   } catch (err) {
-    console.log(err.message);
+    notifications.show({
+      title: "Error",
+      message: `Error! ${err.message} 🤥`,
+      color: 'red',
+    });
   }
 };
 

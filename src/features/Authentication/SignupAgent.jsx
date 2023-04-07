@@ -13,6 +13,7 @@ import {
   FileInput,
   Stack,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-preact";
 import { queryAgency, userData } from "../../store/appState";
 export default function SignupAgent() {
@@ -81,11 +82,17 @@ export default function SignupAgent() {
       createdUser.set("agentPointer", addAgent.toPointer());
       const updateAgent = await createdUser.save();
       userData.value = updateAgent;
-      console.log(updateAgent);
+      notifications.show({
+        title: "Signed Up Successfully",
+      });
       return true;
     } catch (error) {
       // Error can be caused by lack of Internet connection
-      alert(`Error! ${error.message}`);
+      notifications.show({
+        title: "Error",
+        message: `Error! ${error.message} 🤥`,
+        color: 'red',
+      });
       return false;
     }
   }

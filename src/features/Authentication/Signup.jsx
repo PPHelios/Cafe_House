@@ -10,19 +10,17 @@ import {
   Group,
   Button,
   Divider,
-
   Anchor,
   Stack,
-
 } from "@mantine/core";
-
+import { notifications } from "@mantine/notifications";
 import { GoogleButton, FacebookButton } from "./SocialButtons";
 //import Backendless from "backendless";
 import { userData } from "../../store/appState";
 export default function Login() {
-  const navigate = useNavigate()
-const signup = true
- const header = "Signup"
+  const navigate = useNavigate();
+  const signup = true;
+  const header = "Signup";
   const form = useForm({
     initialValues: {
       firstName: "",
@@ -42,49 +40,41 @@ const signup = true
   });
 
   const handleSubmit = async (values) => {
-   
-      try {
-        // Since the signUp method returns a Promise, we need to call it using await
-        const createdUser = await Parse.User.signUp(
-          values.email,
-          values.password
-        );
-        createdUser.set("firstName", values.firstName);
-        createdUser.set("lastName", values.lastName);
-        createdUser.set("email", values.email);
-        createdUser.set("role", values.role);
-        const saveUser = await createdUser.save();
-        userData.value = saveUser;
-        console.log(saveUser);
-        navigate("/")
-        return true;
-      } catch (error) {
-        // signUp can fail if any parameter is blank or failed an uniqueness check on the server
-        if (error.code == 209) logout(await Parse.User.logOut());
-        alert(`Error! ${error}`);
-        return false;
-      }
-    
-    
+    try {
+      // Since the signUp method returns a Promise, we need to call it using await
+      const createdUser = await Parse.User.signUp(
+        values.email,
+        values.password
+      );
+      createdUser.set("firstName", values.firstName);
+      createdUser.set("lastName", values.lastName);
+      createdUser.set("email", values.email);
+      createdUser.set("role", values.role);
+      const saveUser = await createdUser.save();
+      userData.value = saveUser;
+      notifications.show({
+        title: "Signed Up Successfully",
+      });
+      navigate("/");
+      return true;
+    } catch (error) {
+      // signUp can fail if any parameter is blank or failed an uniqueness check on the server
+      if (error.code == 209) logout(await Parse.User.logOut());
+      notifications.show({
+        title: "Error",
+        message: `Error! ${error.message} 🤥`,
+        color: 'red',
+      });
+      return false;
+    }
   };
   return (
     <>
       <Title my={30} order={1} weight={700} ta="center" c="blue.4">
-    Welcome to My Home, Signup with
-        </Title>
+        Welcome to My Home, Signup with
+      </Title>
       {!userData?.value?.id ? (
-        <Paper
-          w="90%"
-          maw={700}
-        
-          mx="auto"
-          radius="md"
-          p="xl"
-          withBorder
-         
-        >
-        
-
+        <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
           <Group grow mb="md" mt="md">
             <GoogleButton radius="xl">Google</GoogleButton>
 
@@ -154,8 +144,8 @@ const signup = true
 
             <Group position="apart" mt="xl">
               <Anchor
-                  component={Link}
-                  to="/login"
+                component={Link}
+                to="/login"
                 type="button"
                 color="dimmed"
                 onClick={() => toggle()}

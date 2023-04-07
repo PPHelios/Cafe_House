@@ -10,7 +10,7 @@ import {
 //import { mantineTheme } from "./utils/mantineTheme";
 import { useTranslation } from "react-i18next";
 import { themeColor } from "./store/appState";
-
+import { Notifications } from '@mantine/notifications';
 // BACKENDLESS
 // import Backendless from "backendless";
 // Backendless.initApp(
@@ -104,6 +104,7 @@ export function App() {
     <MantineProvider
       withGlobalStyles
       withNormalizeCSS
+      
       emotionCache={docDir === "rtl" ? rtlCache : undefined}
       theme={{
         colorScheme: themeColor.value,
@@ -117,6 +118,7 @@ export function App() {
         },
       }}
     >
+      <Notifications />
       <RouterProvider router={router} />
     </MantineProvider>
   );

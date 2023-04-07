@@ -11,6 +11,7 @@ import {
   FileInput,
   Stack,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-preact";
 
 export default function SignupAgency() {
@@ -76,11 +77,17 @@ export default function SignupAgency() {
       createdUser.set("agencyPointer", addAgency.toPointer());
       const updateAgency = await createdUser.save();
       userData.value = updateAgency;
-      console.log(updateAgency);
+      notifications.show({
+        title: "Signed Up Successfully",
+      });
       return true;
     } catch (error) {
       // Error can be caused by lack of Internet connection
-      alert(`Error! ${error.message}`);
+      notifications.show({
+        title: "Error",
+        message: `Error! ${error.message} 🤥`,
+        color: 'red',
+      });
       return false;
     }
   }
