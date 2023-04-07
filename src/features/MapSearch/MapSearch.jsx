@@ -1,20 +1,15 @@
 import { useState, useRef } from "preact/hooks";
 
 import {
-  createStyles,
-  Text,
-  Container,
-  ActionIcon,
-  Group,
-  rem,
-  Image,
   Box,
-  Stack,
   Flex,
 } from "@mantine/core";
+import { IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight } from '@tabler/icons-preact';
 import PlaceDetails from "../../components/PlaceDetails/PlaceDetails";
 import AppMap from "../Map/AppMap";
 import { filteredData } from "../../store/appState";
+import PropertySearchBar from "../../components/PropertySearchBar/PropertySearchBar";
+import PropertiesFilterMenu from "../../components/PropertiesFilterMenu/PropertiesFilterMenu";
 
 function MapSearch() {
   const [popupInfo, setPopupInfo] = useState(null);
@@ -40,8 +35,10 @@ function MapSearch() {
   // }
 
   return (
-    <Flex py={30} h={600}>
-      <Box w="68vw" h={600}>
+   <Box>
+    <PropertySearchBar/>
+    <Flex py={30} h={700}>
+      <Box w="68vw" h={700} >
         <AppMap
           popupInfo={popupInfo}
           setPopupInfo={(item) => setPopupInfo(item)}
@@ -51,11 +48,13 @@ function MapSearch() {
       </Box>
       <Box
         w="30vw"
+        h={700}
         px={9}
         bg="gray.3"
         // ref={containerRef}
         sx={{ overflowY: "auto", overflowX: "hidden" }}
       >
+        <PropertiesFilterMenu/>
         {filteredData?.value.map((item, i) => (
           <Box
             mt={10}
@@ -77,6 +76,7 @@ function MapSearch() {
         ))}
       </Box>
     </Flex>
+    </Box>
   );
 }
 
