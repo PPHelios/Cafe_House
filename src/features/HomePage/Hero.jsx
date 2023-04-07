@@ -29,17 +29,20 @@ import { search, searchOptions } from "../../store/appState";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    height: rem(700),
+    height: rem(600),
     position: "relative",
     paddingTop: rem(120),
     paddingBottom: rem(130),
     backgroundImage: `url(${hero})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
-
+    [theme.fn.smallerThan("sm")]:{
+      height: rem(700),
+    },
     [theme.fn.smallerThan("xs")]: {
       paddingTop: rem(80),
       paddingBottom: rem(50),
+      height: rem(700),
     },
   },
 
