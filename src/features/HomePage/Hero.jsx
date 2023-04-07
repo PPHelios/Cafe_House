@@ -198,7 +198,7 @@ export function Hero() {
               <Group position="center" mb={5}>
               <Select
                   size="lg"
-                  w={{ base: 78, sm: "fit-content" }}
+                  w={218}
                   {...form.getInputProps("listingType")}
                   data={["Buy", "Rent"]}
                   display="inline-block"
