@@ -34,7 +34,7 @@ import HomePage from "./features/HomePage/HomePage";
 import MapSearch from "./features/MapSearch/MapSearch";
 // import AddProperty from "./features/AddProperty/AddProperty";
 import Login from "./features/Authentication/Login";
-
+import Signup from "./features/Authentication/Signup";
 // import AddAgent from "./features/AdminPanel/AddAgent";
 // import AddAgency from "./features/AdminPanel/AddAgency";
 import AddProperty from "./features/AdminPanel/AddProperty";
@@ -56,18 +56,26 @@ export function App() {
   }, [i18n, i18n.language]);
 
   useEffect(() => {
-    const getCurrentUser = async () => {
+    const initialData = async () => {
+      try{
+
+      
       const currentUser = await Parse.User.current();
-      const searchOptionsQuery = new Parse.Query("searchOptions");
-      searchOptionsQuery.contains("name", "englishOptions");
-      let queryResult = await searchOptionsQuery.first();
-      console.log(queryResult.get("options"));
       userData.value = currentUser;
-      searchOptions.value = queryResult.get("options");
       console.log(currentUser);
-      return true;
+      // const searchOptionsQuery = new Parse.Query("searchOptions");
+      // searchOptionsQuery.contains("name", "englishOptions");
+      // let queryResult = await searchOptionsQuery.first();
+      // console.log(queryResult.get("options"));
+      
+      // searchOptions.value = queryResult.get("options");
+    
+      return true
+    }catch(error){
+      alert(`Error! ${error.message}`);
+    }
     };
-    getCurrentUser();
+    initialData();
   }, []);
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -77,6 +85,7 @@ export function App() {
           <Route path="/search" element={<MapSearch />} />
           <Route path="/addproperty" element={<AddProperty />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup  />} />
           <Route path="/Listwithus" element={<ListWithUs />} />
           <Route path="/signupagency" element={<SignupAgency />} />
           <Route path="/signupagent" element={<SignupAgent />} />

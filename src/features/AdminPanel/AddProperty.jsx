@@ -15,7 +15,9 @@ import {
   Box,
   Image,
   MultiSelect,
+  Select,
   Stack,
+  Title
 } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-preact";
 import {
@@ -42,7 +44,6 @@ const SelectItem = forwardRef(
 export default function AddProperty() {
   const [result, setResult] = useState({});
   const [propertLocation, setPropertLocation] = useState({});
-
   const maxNumberOfPics = 15;
   const form = useForm({
     initialValues: {
@@ -50,10 +51,15 @@ export default function AddProperty() {
       adNameAr: "",
       description: "",
       descriptionAr: "",
+      propertyType: "",
+        listingType:"",
+      price:"",
       area: "",
       room: "",
       bath: "",
       pics: [],
+      isFeatured:false,
+      adStatus:"",
       locationTags: [],
     },
 
@@ -64,6 +70,22 @@ export default function AddProperty() {
       //     ? "Password should include at least 6 characters"
       //     : null,
     },
+    transformValues: (values) => ({
+      adName: values.adName,
+      adNameAr: values.adNameAr,
+      description: values.description,
+      descriptionAr: values.descriptionAr,
+      propertyType: values.propertyType || "Apartment",
+      listingType:values.listingType || "Buy",
+      price:Number(values.price) ||1,
+      area: Number(values.area)||1,
+      room: Number(values.room)||1,
+      bath: Number(values.bath)||1,
+      pics:values.pics,
+      isFeatured:values.isFeatured || false,
+      adStatus:values.adStatus ||"pending",
+      locationTags: values.locationTags,
+    }),
   });
   const fileTypes = [
     "image/apng",
@@ -111,9 +133,14 @@ export default function AddProperty() {
       property.set("adNameAr", values.adNameAr);
       property.set("description", values.description);
       property.set("descriptionAr", values.descriptionAr);
+      property.set("listingType", values.listingType);
+      property.set("propertyType", values.propertyType);
+      property.set("price", values.price);
       property.set("area", values.area);
       property.set("room", values.room);
       property.set("bath", values.bath);
+      property.set("isFeatured", values.isFeatured);
+      property.set("adStatus", values.adStatus);
       property.set(
         "location",
         new Parse.GeoPoint(
@@ -130,7 +157,15 @@ export default function AddProperty() {
         }
       }
       const saveproperty = await property.save();
-      console.log(saveproperty);
+      alert("done")
+console.log(saveproperty);
+//       let PicsUrls=[]
+
+
+//       saveproperty.set("PicsUrls", PicsUrls);
+// const savePicsUrls = await property.save();
+
+// console.log(savePicsUrls);
       setResult(saveproperty);
       return true;
     } catch (error) {
@@ -142,10 +177,11 @@ export default function AddProperty() {
 
   return (
     <>
-      <Paper w="90%" maw={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
-        <Text size="lg" weight={500}>
+      <Title my={30} order={1} weight={700} ta="center" c="blue.4">
           Add New Property
-        </Text>
+        </Title>
+      <Paper w="90%" maw={700}  mx="auto" radius="md" p="xl" withBorder>
+      
 
         <form onSubmit={form.onSubmit((values) => addnewProperty(values))}>
           <Stack>
@@ -185,6 +221,40 @@ export default function AddProperty() {
               value={form.values.descriptionAr}
               onChange={(event) =>
                 form.setFieldValue("descriptionAr", event.currentTarget.value)
+              }
+              radius="md"
+            />
+             <Select
+                     required
+                
+                    m={5}
+                    data={["Apartment", "Villa"]}
+                    display="inline-block"
+                    {...form.getInputProps("propertyType")}
+                    label="Property Type"
+                    placeholder="Property Type"
+                    aria-label="pick property type "
+                    radius="md"
+                  />
+            <Select
+                  required
+              
+                  {...form.getInputProps("listingType")}
+                  data={["Buy", "Rent"]}
+                  display="inline-block"
+                 label="pick Listing Type"
+                  placeholder="pick Listing Type"
+                  aria-label="pick Listing Type"
+                  radius="md"
+                />
+                
+                 <TextInput
+              required
+              label="Property price"
+              placeholder="Enter Property price"
+              value={form.values.price}
+              onChange={(event) =>
+                form.setFieldValue("price", event.currentTarget.value)
               }
               radius="md"
             />
@@ -260,17 +330,18 @@ export default function AddProperty() {
                 },
               }}
             />
+          
           </Stack>
-
+  <Box w="100%" mt={50} h={400} mx="auto">
+          <AppMap add={true} setPropertLocation={setPropertLocation} />
+        </Box>
           <Group position="center" mt="xl">
             <Button type="submit" radius="xl">
               Add
             </Button>
           </Group>
         </form>
-        <Box w="80%" h={400} mx="auto">
-          <AppMap add={true} setPropertLocation={setPropertLocation} />
-        </Box>
+        
       </Paper>
 
       {result?.attributes?.pic0 && (

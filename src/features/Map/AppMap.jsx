@@ -1,7 +1,7 @@
 import Map, { Marker, Popup, NavigationControl } from "react-map-gl";
 import maplibregl from "maplibre-gl";
 import { useSignal } from "@preact/signals";
-import MapboxLanguage from "@mapbox/mapbox-gl-language";
+//import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import ControlPanel from "./control-panel";
 import { useState, useMemo, useRef, useCallback } from "preact/hooks";
 import { filteredData } from "../../store/appState";
@@ -108,7 +108,7 @@ const AppMap = ({
         reuseMaps
         onMove={(evt) => setViewState(evt.viewState)}
         style={{ width: "100%", height: "100%" }}
-        mapStyle="https://api.maptiler.com/maps/cbe8b2a4-35f8-4e67-8da7-756e800105fb/style.json?key=Md8YyiA86Xu6krfSho9R"
+        mapStyle={`https://api.maptiler.com/maps/cbe8b2a4-35f8-4e67-8da7-756e800105fb/style.json?key=${import.meta.env.VITE_MAP_TILER_KEY}`}
         attributionControl={true}
       >
         {pins}

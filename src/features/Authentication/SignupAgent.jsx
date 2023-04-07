@@ -61,7 +61,6 @@ export default function SignupAgent() {
       agentProfile.set("email", values.email);
       agentProfile.set("bio", values.bio);
       agentProfile.set("bioAr", values.bioAr);
-
       agentProfile.set("phoneNumber", values.phoneNumber);
       if (values.profilePic) agentProfile.set("profilePic", parseFile);
       agentProfile.set("userPointer", createdUser.toPointer());
@@ -73,6 +72,9 @@ export default function SignupAgent() {
       createdUser.set("firstName", values.firstName);
       createdUser.set("lastName", values.lastName);
       createdUser.set("email", values.email);
+      agentProfile.set("bio", values.bio);
+      agentProfile.set("bioAr", values.bioAr);
+      agentProfile.set("phoneNumber", values.phoneNumber);
       createdUser.set("role", values.role);
       createdUser.set("profilePicUrl", addAgent?.attributes?.profilePic?._url);
       createdUser.set("agencyPointer", agency.toPointer());

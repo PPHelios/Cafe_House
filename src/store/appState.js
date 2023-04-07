@@ -144,47 +144,74 @@ export const residentialSaleDb = signal([
   },
 ]);
 export const userData = signal({});
-export const searchOptions = signal([]);
+export const searchOptions = signal([
+  "New Cairo",
+  "Mivida",
+  "Katameia Dunes",
+  "East Town Sodic",
+]);
 export const stateSearchValues = signal({
   searchValue: [],
   searchPurpose: "Buy",
   propertyType: "",
   propertyRooms: "",
-  propertyminArea: "",
-  propertymaxArea: "",
+  propertyarea: "",
   propertyminPrice: "",
   propertymaxPrice: "",
 });
 
 export const filteredData = signal([]);
 
-export const search = effect(() => {
-  // console.log(stateSearchValues.value);
-  const searchValues = stateSearchValues.value.searchValue.map((item) =>
-    item.toLowerCase()
-  );
-  if (searchValues.length > 0) {
-    const filtered = residentialSaleDb.value.map((item) => {
-      const company = Object.keys(item);
-      return item[company].filter((item) =>
-        searchValues.some(
-          (element) =>
-            item.location.map((loc) => loc.toLowerCase()).includes(element) &&
-            +item.rooms >= stateSearchValues.value.propertyRooms &&
-            +item.price >= stateSearchValues.value.propertyminPrice &&
-            +item.price <= stateSearchValues.value.propertymaxPrice &&
-            +item.area >= stateSearchValues.value.propertyminArea &&
-            +item.area <= stateSearchValues.value.propertymaxArea
-        )
-      );
-    });
-    //  && +stateSearchValues.propertyRooms > 2
-
-    const data = filtered.flat();
-    console.log(data);
-    filteredData.value = data;
+export const search = async (values) => {
+  console.log(values);
+  if (values.searchValue.length > 0) {
+ 
+    try {
+      let parseQuery = new Parse.Query("Property");
+      // parseQuery.contains('locationTags', values.locationTags);
+      parseQuery.contains("listingType", values.listingType);
+      parseQuery.contains("propertyType", values.propertyType);
+        parseQuery.greaterThan('room', values.propertyRooms - 1);
+        parseQuery.greaterThan('bath', values.propertyBaths - 1);
+        parseQuery.greaterThan('area', values.propertyarea - 1);
+      
+       parseQuery.greaterThan('price', +values.propertyminPrice-1);
+       parseQuery.lessThan('price', +values.propertymaxPrice+1);
+      let queryResults = await parseQuery.find();
+      console.log(queryResults);
+    } catch (err) {
+      console.log(err.message);
+    }
   }
-});
+};
+
+// export const search = effect(() => {
+//   // console.log(stateSearchValues.value);
+//   const searchValues = stateSearchValues.value.searchValue.map((item) =>
+//     item.toLowerCase()
+//   );
+//   if (searchValues.length > 0) {
+//     const filtered = residentialSaleDb.value.map((item) => {
+//       const company = Object.keys(item);
+//       return item[company].filter((item) =>
+//         searchValues.some(
+//           (element) =>
+//             item.location.map((loc) => loc.toLowerCase()).includes(element) &&
+//             +item.rooms >= stateSearchValues.value.propertyRooms &&
+//             +item.price >= stateSearchValues.value.propertyminPrice &&
+//             +item.price <= stateSearchValues.value.propertymaxPrice &&
+//             +item.area >= stateSearchValues.value.propertyminArea &&
+//             +item.area <= stateSearchValues.value.propertymaxArea
+//         )
+//       );
+//     });
+//  && +stateSearchValues.propertyRooms > 2
+
+//     const data = filtered.flat();
+//     console.log(data);
+//     filteredData.value = data;
+//   }
+// });
 
 export const changethemeColor = () => {
   if (themeColor.value === "light") {
@@ -195,22 +222,34 @@ export const changethemeColor = () => {
 };
 
 export const logout = async () => {
-  await Parse.User.logOut();
+  try{
+    await Parse.User.logOut();
   userData.value = {};
   console.log("loggedout");
   console.log(userData.value);
+  }catch (err) {
+    console.log(err.message);
+  }
+  
 };
 
 export const queryAgency = async (agencyName) => {
   console.log(agencyName);
+  try{
+
+ 
   let agencyQuery = new Parse.Query("Agency");
   agencyQuery.equalTo("agencyName", agencyName);
   let agencyQueryResult = await agencyQuery.first();
 
   console.log(agencyQueryResult);
   return agencyQueryResult;
+  }catch (err) {
+    console.log(err.message);
+  }
 };
 export const queryAgentsInAgency = async () => {
+  try{
   let agencyQuery = new Parse.Query("Agency");
   agencyQuery.equalTo("name", userData.value.attributes.name);
   let agencyQueryResult = await agencyQuery.first();
@@ -220,21 +259,33 @@ export const queryAgentsInAgency = async () => {
   let queryResults = await parseQuery.find();
   console.log(queryResults);
   return queryResults;
+  }catch (err) {
+    console.log(err.message);
+  }
 };
 export const queryAgentAgency = async () => {
+  try{
+
   const agentQuery = new Parse.Query("Agents");
   agentQuery.equalTo("email", userData.value.attributes.email);
   let searchRes = await agentQuery.find();
   const agencyName = await searchRes[0].get("agency").get("name");
   console.log(agencyName);
   return agencyName;
+  }catch (err) {
+    console.log(err.message);
+  }
 };
 export const queryAgent = async () => {
+  try{
   let agentQuery = new Parse.Query("Agents");
   agentQuery.equalTo("name", userData.value.attributes.agent);
   let agentQueryResult = await agentQuery.first();
   console.log(`agent: ${agentQueryResult}`);
   return agentQueryResult;
+  }catch (err) {
+    console.log(err.message);
+  }
 };
 // import { deepSignal } from "@deepsignal/preact";
 // export const appState = {

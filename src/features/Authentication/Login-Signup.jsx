@@ -1,27 +1,26 @@
-import {useState} from "preact/hooks";
+import { useToggle, upperFirst } from "@mantine/hooks";
 import Parse from "parse/dist/parse.min.js";
 
 import { useForm } from "@mantine/form";
 import {
   TextInput,
   PasswordInput,
+  Text,
   Paper,
   Group,
   Button,
   Divider,
-  Title,
+  Checkbox,
   Anchor,
   Stack,
-
+  FileInput,
 } from "@mantine/core";
-
-import { GoogleButton, FacebookButton } from "./SocialButtons";
+import { IconUpload } from "@tabler/icons-preact";
+import { GoogleButton, FacebookButton } from "../SocialButtons";
 //import Backendless from "backendless";
-import { userData } from "../../store/appState";
-import { Link, useNavigate } from "react-router-dom";
+import { userData } from "../../../store/appState";
 export default function Login() {
-  const navigate = useNavigate()
-
+  const [type, toggle] = useToggle(["login", "register"]);
   const form = useForm({
     initialValues: {
       firstName: "",
@@ -41,23 +40,43 @@ export default function Login() {
   });
 
   const handleSubmit = async (values) => {
-   
+    if (type === "register") {
+      try {
+        // Since the signUp method returns a Promise, we need to call it using await
+        const createdUser = await Parse.User.signUp(
+          values.email,
+          values.password
+        );
+        createdUser.set("firstName", values.firstName);
+        createdUser.set("lastName", values.lastName);
+        createdUser.set("email", values.email);
+        createdUser.set("role", values.role);
+        const saveUser = await createdUser.save();
+        userData.value = saveUser;
+        console.log(saveUser);
+        return true;
+      } catch (error) {
+        // signUp can fail if any parameter is blank or failed an uniqueness check on the server
+        if (error.code == 209) logout(await Parse.User.logOut());
+        alert(`Error! ${error}`);
+        return false;
+      }
+    }
     try {
       const loggedInUser = await Parse.User.logIn(
         values.email,
         values.password
       );
       // logIn returns the corresponding ParseUser object
-      // alert(
-      //   `Success! User ${loggedInUser.get(
-      //     "username"
-      //   )} has successfully signed in!`
-      // );
+      alert(
+        `Success! User ${loggedInUser.get(
+          "username"
+        )} has successfully signed in!`
+      );
       // Clear input fields
 
       // Update state variable holding current user
       userData.value = loggedInUser;
-      navigate("/")
       return true;
     } catch (error) {
       // Error can be caused by wrong parameters or lack of Internet connection
@@ -67,21 +86,20 @@ export default function Login() {
   };
   return (
     <>
-    <Title my={30} order={1} weight={700} ta="center" c="blue.4">
-    Welcome to My Home, Login with
-        </Title>
       {!userData?.value?.id ? (
         <Paper
           w="90%"
           maw={700}
-         
+          mt={100}
           mx="auto"
           radius="md"
           p="xl"
           withBorder
          
         >
-
+          <Text size="lg" weight={500}>
+            Welcome to My Home, {type} with
+          </Text>
 
           <Group grow mb="md" mt="md">
             <GoogleButton radius="xl">Google</GoogleButton>
@@ -97,7 +115,30 @@ export default function Login() {
 
           <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Stack>
-             
+              {type === "register" && (
+                <>
+                  <TextInput
+                    required
+                    label="First Name"
+                    placeholder="Your First Name"
+                    value={form.values.firstName}
+                    onChange={(event) =>
+                      form.setFieldValue("firstName", event.currentTarget.value)
+                    }
+                    radius="md"
+                  />
+                  <TextInput
+                    required
+                    label="Last Name"
+                    placeholder="Your Last Name"
+                    value={form.values.lastName}
+                    onChange={(event) =>
+                      form.setFieldValue("lastName", event.currentTarget.value)
+                    }
+                    radius="md"
+                  />
+                </>
+              )}
 
               <TextInput
                 required
@@ -129,18 +170,18 @@ export default function Login() {
 
             <Group position="apart" mt="xl">
               <Anchor
-                component={Link}
-                to="/signup"
+                component="button"
                 type="button"
                 color="dimmed"
-               
+                onClick={() => toggle()}
                 size="xs"
               >
-               
-                   Don't have an account? Register
+                {type === "register"
+                  ? "Already have an account? Login"
+                  : "Don't have an account? Register"}
               </Anchor>
               <Button type="submit" radius="xl">
-               Login
+                {upperFirst(type)}
               </Button>
             </Group>
           </form>

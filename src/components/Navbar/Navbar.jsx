@@ -17,6 +17,9 @@ import {
   Avatar,
   UnstyledButton,
   Menu,
+  Collapse,
+  List,
+  ThemeIcon,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -26,9 +29,11 @@ import {
   IconStar,
   IconHomeEdit,
   IconSettings,
-  IconSwitchHorizontal,
   IconChevronDown,
   IconUserCircle,
+  IconChevronLeft, IconChevronRight ,
+  IconAirBalloon ,
+  IconHeartHandshake 
 } from "@tabler/icons-preact";
 import { userData, logout } from "../../store/appState";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
@@ -113,7 +118,44 @@ const useStyles = createStyles((theme) => ({
         .color,
     },
   },
+  control: {
+    fontWeight: 500,
+    display: 'block',
+    width: '100%',
+    padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+    fontSize: theme.fontSizes.sm,
+
+    '&:hover': {
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+      color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    },
+  },
+
+  burgerProfileLinks: {
+    fontWeight: 500,
+    display: 'block',
+    textDecoration: 'none',
+    padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+    paddingLeft: rem(31),
+    marginLeft: rem(30),
+    fontSize: theme.fontSizes.sm,
+    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
+    borderLeft: `${rem(1)} solid ${
+      theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
+    }`,
+
+    '&:hover': {
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+      color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    },
+  },
+
+  chevron: {
+    transition: 'transform 200ms ease',
+  },
 }));
+
 
 const links = [
   { label: "login", link: "/login" },
@@ -122,11 +164,15 @@ const links = [
 export function Navbar() {
   const [opened, { toggle }] = useDisclosure(false);
   const [opened2, { open, close }] = useDisclosure(false);
+  const [opened3, setOpened] = useState( false);
+  const [listWithUsOpened, setListWithUsOpened] = useState( false);
   const [active, setActive] = useState(links[0].label);
   const { classes, theme, cx } = useStyles();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const avatarUrl = userData.value?.attributes?.profilePicUrl;
   const role = userData.value?.attributes?.role;
+  const ChevronIcon = theme.dir === 'ltr' ? IconChevronRight : IconChevronLeft;
+
   const items = links.map((link) => (
     <Box
       component={Link}
@@ -233,7 +279,7 @@ export function Navbar() {
                       />
                     }
                   >
-                    Liked Properties
+                  <Text component={Link} to="\user/likedproperties"> Liked Properties</Text>
                   </Menu.Item>
                   <Menu.Item
                     icon={
@@ -244,7 +290,8 @@ export function Navbar() {
                       />
                     }
                   >
-                    Saved Searches
+                     <Text component={Link} to="\user/savedsearches"> Saved Searches</Text>
+                   
                   </Menu.Item>
                   {role !== "viewer" && (
                     <Menu.Item
@@ -256,13 +303,15 @@ export function Navbar() {
                         />
                       }
                     >
-                      Manage Ads.
+                     <Text component={Link} to="\adminpanel/addproperty"> Manage Ads.</Text>
+
                     </Menu.Item>
                   )}
 
                   <Menu.Label>Settings</Menu.Label>
                   <Menu.Item icon={<IconSettings size="0.9rem" stroke={1.5} />}>
-                    Account settings
+                  <Text component={Link} to="\user/accountsettings">Account settings</Text>
+
                   </Menu.Item>
 
                   <Menu.Item
@@ -298,19 +347,174 @@ export function Navbar() {
         }}
         title="My Home"
       >
-        <Text c="blue" component={Link} to="adminpanel/addproperty">
-          Add Property
-        </Text>
-        <Text c="blue" component={Link} to="/signupagent">
-          Add Agent
-        </Text>
-        <Text c="blue" component={Link} to="/signupagency">
-          Add Agency
-        </Text>
-        <Text c="blue" component={Link} to="/login">
-          login
-        </Text>
-        <Button onClick={() => logout()}>logout</Button>
+        {!userData.value?.id ? <Group position="center" my="0.4rem" spacing={42}>{items}</Group>:
+                <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control}>
+                    <Group position="apart" spacing={0} pl={10}>
+                      <Group>
+
+                         {avatarUrl ? (
+                        <Avatar
+                          src={avatarUrl}
+                          alt="user avatar picture"
+                          radius="xl"
+                          size={42}
+                        />
+                      ) : (
+                        <IconUserCircle size={22} />
+                      )}
+                      <Text
+                        weight={500}
+                        size="sm"
+                        sx={{ lineHeight: 1 }}
+                        mr={3}
+                      >
+                        Hi, {userData.value?.id ? userData.value?.attributes?.firstName : "There"}
+                      </Text>
+                      </Group>
+                     
+                         <ChevronIcon
+              className={classes.chevron}
+              size="1rem"
+              stroke={1.5}
+              style={{
+                transform: opened3 ? `rotate(${theme.dir === 'rtl' ? -90 : 90}deg)` : 'none',
+              }}
+            />
+                    </Group>
+                 
+                    </UnstyledButton>
+}
+                    <Collapse in={opened3}>
+                    <List>
+                    <List.Item
+                    className={classes.burgerProfileLinks}
+        icon={
+          <IconHeart
+            size="1rem"
+            color={theme.colors.yellow[6]}
+            stroke={1.5}
+          />
+        }
+      >
+        <Text component={Link} to="\user/likedproperties"> Liked Properties</Text>
+       
+      </List.Item>
+      <List.Item
+       className={classes.burgerProfileLinks}
+        icon={
+          <IconStar
+          size="1rem"
+          color={theme.colors.yellow[6]}
+          stroke={1.5}
+        />
+        }
+      >
+        <Text component={Link} to="\user/savedsearches"> Saved Searches</Text>
+       
+      </List.Item>
+      {role !== "viewer" &&
+ <List.Item
+ className={classes.burgerProfileLinks}
+  icon={
+    <IconHomeEdit
+    size="1rem"
+    color={theme.colors.yellow[6]}
+    stroke={1.5}
+  />
+  }
+>
+  <Text component={Link} to="\adminpanel/addproperty">Manage Ads.</Text>
+ 
+</List.Item>
+}
+<List.Item
+ className={classes.burgerProfileLinks}
+  icon={
+    <IconSettings
+    size="1rem"
+    color={theme.colors.yellow[6]}
+    stroke={1.5}
+  />
+  }
+>
+  <Text component={Link} to="\user/accountsettings">Account settings</Text>
+ 
+</List.Item>
+<List.Item
+ className={classes.burgerProfileLinks}
+  icon={
+    <IconLogout
+    size="1rem"
+    color={theme.colors.yellow[6]}
+    stroke={1.5}
+  />
+  }
+  onClick={() => logout()}
+>
+  <Text> Logout</Text>
+ 
+</List.Item>
+                    </List>
+                   
+                    </Collapse>
+
+                    <UnstyledButton onClick={() => setListWithUsOpened((o) => !o)} className={classes.control}>
+        <Group position="apart" spacing={0}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <ThemeIcon variant="light" size={30}>
+              <IconHeartHandshake  size="1.1rem" />
+            </ThemeIcon>
+            <Box ml="md">List With Us</Box>
+          </Box>
+        
+            <ChevronIcon
+              className={classes.chevron}
+              size="1rem"
+              stroke={1.5}
+              style={{
+                transform: listWithUsOpened ? `rotate(${theme.dir === 'rtl' ? -90 : 90}deg)` : 'none',
+              }}
+            />
+          
+        </Group>
+      </UnstyledButton>
+      <Collapse in={listWithUsOpened}>
+      <List>
+                    <List.Item
+ className={classes.burgerProfileLinks}>
+                  <Text component={Link} to="\signupagency">Agency</Text>
+
+ </List.Item>
+ <List.Item
+ className={classes.burgerProfileLinks}>
+                  <Text component={Link} to="\signupagent">Agent</Text>
+
+ </List.Item>
+                    </List>
+      </Collapse>
+                    <List>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+            <ThemeIcon variant="light" size={30}>
+              <IconAirBalloon  size="1.1rem" />
+            </ThemeIcon>
+            <Box ml="md">Quick Links</Box>
+          </Box>
+                    <List.Item
+ className={classes.burgerProfileLinks}>
+                  <Text component={Link} to="\">Buy</Text>
+
+ </List.Item>
+ <List.Item
+ className={classes.burgerProfileLinks}>
+                  <Text component={Link} to="\">Sell</Text>
+
+ </List.Item>
+ <List.Item
+ className={classes.burgerProfileLinks}>
+                  <Text component={Link} to="\contactus">Contact Us</Text>
+
+ </List.Item>
+                    </List>
       </Drawer>
     </>
   );

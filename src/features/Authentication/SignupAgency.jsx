@@ -68,8 +68,11 @@ export default function SignupAgency() {
       createdUser.set("firstName", values.firstName);
       createdUser.set("lastName", values.lastName);
       createdUser.set("email", values.email);
-      createdUser.set("profilePicUrl", addAgency?.attributes?.profilePic?._url);
+      agencyProfile.set("bio", values.bio);
+      agencyProfile.set("bioAr", values.bioAr);
+      agencyProfile.set("phoneNumber", values.phoneNumber);
       createdUser.set("role", values.role);
+      createdUser.set("profilePicUrl", addAgency?.attributes?.profilePic?._url);
       createdUser.set("agencyPointer", addAgency.toPointer());
       const updateAgency = await createdUser.save();
       userData.value = updateAgency;

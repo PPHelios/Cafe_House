@@ -25,7 +25,7 @@ import {
   IconChevronDown,
   IconChevronUp,
 } from "@tabler/icons-preact";
-import { stateSearchValues, searchOptions } from "../../store/appState";
+import { search, searchOptions } from "../../store/appState";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -101,30 +101,30 @@ export function Hero() {
   const form = useForm({
     initialValues: {
       searchValue: "",
-      searchPurpose: "Buy",
+      listingType: "Buy",
       propertyType: "Apartment",
       propertyRooms: "",
-      propertyminArea: "",
-      propertymaxArea: "",
+      propertyBaths: "",
+      propertyarea: "",
       propertyminPrice: "",
       propertymaxPrice: "",
     },
 
     transformValues: (values) => ({
       searchValue: values.searchValue || ["New Cairo"],
-      searchPurpose: values.searchPurpose,
+      listingType: values.listingType,
       propertyType: values.propertyType,
-      propertyRooms: Number(values.propertyRooms) || 0,
-      propertyminArea: Number(values.propertyminArea) || 0,
-      propertymaxArea: Number(values.propertymaxArea) || 1000000,
-      propertyminPrice: Number(values.propertyminPrice) || 0,
+      propertyRooms: Number(values.propertyRooms) || 1,
+      propertyBaths: Number(values.propertyBaths) || 1,
+      propertyarea: Number(values.propertyarea) || 1,
+      propertyminPrice: Number(values.propertyminPrice) || 1,
       propertymaxPrice: Number(values.propertymaxPrice) || 1000000000,
     }),
   });
 
   const handleSubmit = (values) => {
-    stateSearchValues.value = values;
-    navigate("/search");
+    search(values);
+   // navigate("/search");
   };
 
   return (
@@ -197,7 +197,7 @@ export function Hero() {
             <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
               <Group position="center" mb={5}>
                 <Button
-                  size="md"
+                  size="lg"
                   variant="filled"
                   color="blue.4"
                   title=" Advanced Search"
@@ -209,9 +209,9 @@ export function Hero() {
                 </Button>
 
                 <Select
-                  size="md"
+                  size="lg"
                   w={{ base: 98, xs: "fit-content" }}
-                  {...form.getInputProps("searchPurpose")}
+                  {...form.getInputProps("listingType")}
                   data={["Buy", "Rent"]}
                   display="inline-block"
                   placeholder="pick search type"
@@ -233,8 +233,8 @@ export function Hero() {
 
                 <ActionIcon
                   type="submit"
-                  w={{ base: 314, sm: 90 }}
-                  h={42}
+                  w={{ base: 314, sm: 84 }}
+                  h={50}
                   variant="filled"
                   color="blue.4"
                   title="Search"
@@ -279,22 +279,29 @@ export function Hero() {
                       },
                     })}
                   />
-
-                  <TextInput
+ <Select
                     w={{ base: 110, sm: 140 }}
                     m={5}
+                    data={["1", "2", "3", "4", "5"]}
                     display="inline-block"
-                    {...form.getInputProps("propertyminArea")}
-                    placeholder="Min Area"
-                    aria-label="property min Area"
+                    {...form.getInputProps("propertyBaths")}
+                    placeholder="Baths"
+                    aria-label="property Number of Baths"
+                    sx={(theme) => ({
+                      "& .mantine-Select-input": {
+                        paddingRight: 20,
+                        textAlign: "center",
+                      },
+                    })}
                   />
+                  
                   <TextInput
                     w={{ base: 110, sm: 140 }}
                     m={5}
                     display="inline-block"
-                    {...form.getInputProps("propertymaxArea")}
-                    placeholder="Max Area"
-                    aria-label="property max Area"
+                    {...form.getInputProps("propertyArea")}
+                    placeholder="Min. Area"
+                    aria-label="propertyArea"
                   />
                   <TextInput
                     w={{ base: 110, sm: 140 }}
