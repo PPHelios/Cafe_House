@@ -1,5 +1,5 @@
 import { useEffect } from "preact/hooks";
-import { lazy } from "preact/compat";
+//import { lazy } from "preact/compat";
 import { MantineProvider, createEmotionCache } from "@mantine/core";
 import rtlPlugin from "stylis-plugin-rtl";
 import {
@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 //import { mantineTheme } from "./utils/mantineTheme";
 import { useTranslation } from "react-i18next";
-import { themeColor } from "./store/appState";
+import { themeColor, queryAgentsInAgency,agents,userData,properties,queryAllProperties } from "./store/appState";
 import { Notifications } from "@mantine/notifications";
 // BACKENDLESS
 // import Backendless from "backendless";
@@ -27,7 +27,6 @@ const PARSE_HOST_URL = import.meta.env.VITE_PARSE_HOST_URL;
 const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
-import { userData } from "./store/appState";
 import MainLayout from "./layouts/MainLayout";
 import AdminPanel from "./layouts/AdminPanel";
 import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
@@ -86,6 +85,9 @@ export function App() {
     };
     initialData();
   }, []);
+
+
+
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
@@ -100,7 +102,16 @@ export function App() {
           {/* <Route path="/adminpanel/addagent" element={<AddAgent />} />
           <Route path="/adminpanel/addagency" element={<AddAgency />} /> */}
 
-          <Route element={<AdminPanel />}>
+          <Route element={<AdminPanel />}  loader = {async()=> {
+                const agentsQuery = await queryAgentsInAgency()
+                console.log(agentsQuery)
+                agents.value = agentsQuery
+                const propertiesQuery = await queryAllProperties()
+                console.log(propertiesQuery)
+                properties.value = propertiesQuery
+
+return true
+              }}>
             <Route path="/adminpanel" element={<AdminHome />} />
             <Route path="/adminpanel/addproperty" element={<AddProperty />} />
             <Route
@@ -110,6 +121,7 @@ export function App() {
             <Route
               path="/adminpanel/agentanalytics"
               element={<AdminPanelAnalytics />}
+             
             />
               <Route path="/adminpanel/agents" element={<Agents />} />
             <Route path="/adminpanel/account" element={<Account />} />

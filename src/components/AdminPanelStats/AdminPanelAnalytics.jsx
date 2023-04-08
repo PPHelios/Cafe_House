@@ -1,6 +1,8 @@
-import { createStyles, Group, Paper, Text, ThemeIcon, SimpleGrid } from '@mantine/core';
+import { createStyles, RingProgress, Text, SimpleGrid, Paper, ThemeIcon, Group, Center } from '@mantine/core';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons-preact';
-import { adminSideBarState } from "../../store/appState";
+import { adminSideBarState, agents, properties } from "../../store/appState";
+console.log(agents.value.length)
+console.log(properties.value.length)
  const data =[
   {
     "title": "Revenue",
@@ -18,7 +20,34 @@ import { adminSideBarState } from "../../store/appState";
     "diff": 18
   }
 ]
+const data2 =  [
+  {
+    "label": "Agents",
+    "stats": agents.value.length,
+    "progress": agents.value.length,
+    "color": "teal",
+    "icon": "up"
+  },
+  {
+    "label": "Ads",
+    "stats": properties.value.length,
+    "progress": properties.value.length,
+    "color": "blue",
+    "icon": "up"
+  },
+  {
+    "label": "Ad. Views",
+    "stats": "4,735",
+    "progress": 52,
+    "color": "red",
+    "icon": "down"
+  }
+]
 
+const icons = {
+  up: IconArrowUpRight,
+  down: IconArrowDownRight,
+};
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -35,8 +64,9 @@ const useStyles = createStyles((theme) => ({
     const { classes } = useStyles();
     const stats = data.map((stat) => {
       const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
-  
+      
       return (
+      
         <Paper withBorder p="md" radius="md" key={stat.title}>
           <Group position="apart">
             <div>
@@ -66,12 +96,46 @@ const useStyles = createStyles((theme) => ({
         </Paper>
       );
     });
+    const stats2 = data2.map((stat) => {
+      const Icon = icons[stat.icon];
+      return (
+        <Paper withBorder radius="md" p="xs" key={stat.label}>
+          <Group>
+            <RingProgress
+              size={80}
+              roundCaps
+              thickness={8}
+              sections={[{ value: stat.progress, color: stat.color }]}
+              label={
+                <Center>
+                  <Icon size="1.4rem" stroke={1.5} />
+                </Center>
+              }
+            />
   
+            <div>
+              <Text color="dimmed" size="xs" transform="uppercase" weight={700}>
+                {stat.label}
+              </Text>
+              <Text weight={700} size="xl">
+                {stat.stats}
+              </Text>
+            </div>
+          </Group>
+        </Paper>
+      );
+    });
     return (
+      <>
+      {agents.value.length && properties.value.length && <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
+      {stats2}
+    </SimpleGrid>}
       <div className={classes.root}>
         <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
           {stats}
         </SimpleGrid>
       </div>
+     
+      </>
     );
   }

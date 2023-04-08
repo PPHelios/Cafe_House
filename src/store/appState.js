@@ -1,4 +1,7 @@
 import { signal, computed, effect } from "@preact/signals";
+// import { create } from "zustand";
+// import produce from "immer";
+
 import Parse from "parse/dist/parse.min.js";
 import { notifications } from "@mantine/notifications";
 export const themeColor = signal("light");
@@ -145,6 +148,8 @@ export const residentialSaleDb = signal([
   },
 ]);
 export const userData = signal({});
+export const agents = signal([]);
+export const properties = signal([]);
 export const adminSideBarState = signal(0); 
 export const searchOptions = signal([
   "New Cairo",
@@ -278,6 +283,7 @@ export const logout = async () => {
 };
 
 export const queryAgency = async (agencyName) => {
+  //used
   console.log(agencyName);
   try {
     let agencyQuery = new Parse.Query("Agency");
@@ -291,16 +297,14 @@ export const queryAgency = async (agencyName) => {
   }
 };
 export const queryAgentsInAgency = async () => {
+    //used
   try {
-    let agencyQuery = new Parse.Query("Agency");
-    agencyQuery.equalTo("name", userData.value.attributes.name);
-    let agencyQueryResult = await agencyQuery.first();
-    const parseQuery = new Parse.Query("Agents");
-
-    parseQuery.equalTo("agency", agencyQueryResult);
-    let queryResults = await parseQuery.find();
-    console.log(queryResults);
-    return queryResults;
+    let agencyQuery = new Parse.Query("Agent");
+    agencyQuery.equalTo("agencyPointer", userData.value.get("agencyPointer"));
+    let agencyQueryResult = await agencyQuery.find();
+    
+    console.log(agencyQueryResult);
+    return agencyQueryResult;
   } catch (err) {
     console.log(err.message);
   }
@@ -317,13 +321,17 @@ export const queryAgentAgency = async () => {
     console.log(err.message);
   }
 };
-export const queryAgent = async () => {
+export const queryAllProperties = async () => {
+ const role = userData.value.get("role")
+ const pointer = role==="agent"?userData.value?.get("agentPointer"):role==="agency" ?userData.value.get("agencyPointer"):null
+  //used
   try {
-    let agentQuery = new Parse.Query("Agents");
-    agentQuery.equalTo("name", userData.value.attributes.agent);
-    let agentQueryResult = await agentQuery.first();
-    console.log(`agent: ${agentQueryResult}`);
-    return agentQueryResult;
+    let propertyQuery = new Parse.Query("Property");
+    propertyQuery.equalTo("agentPointer", pointer);
+    let propertyQueryResult = await propertyQuery.find();
+    console.log(propertyQueryResult);
+    properties.value=propertyQueryResult
+    return propertyQueryResult;
   } catch (err) {
     console.log(err.message);
   }

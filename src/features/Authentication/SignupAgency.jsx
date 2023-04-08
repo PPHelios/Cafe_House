@@ -4,7 +4,7 @@ import { userData, queryAgency } from "../../store/appState";
 import {
   TextInput,
   PasswordInput,
-  Text,
+  Title,
   Paper,
   Group,
   Button,
@@ -94,10 +94,9 @@ export default function SignupAgency() {
 
   return (
     <>
-      <Paper w="90%" maw={700} mt={100} mx="auto" radius="md" p="xl" withBorder>
-        <Text size="lg" weight={500}>
-          Create An Agency
-        </Text>
+    <Title my={30} order={1} weight={700} ta="center" c="blue.4">  Create An Agency</Title>
+      <Paper w="90%" maw={700} mt={10} mx="auto" radius="md" p="xl" withBorder>
+     
         <form onSubmit={form.onSubmit((values) => addAgency(values))}>
           <Stack>
             <TextInput
