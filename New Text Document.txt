@@ -1,0 +1,69 @@
+<Route element={<AdminPanel />}>
+<Route path="/adminpanel" element={<AdminHome />} />
+<Route path="/adminpanel/addproperty" element={<AddProperty />} />
+<Route
+  path="/adminpanel/agentanalytics"
+  element={<AdminPanelAnalytics />}
+/>
+ <Route path="/adminpanel/security" element={<Security />} />
+ <Route path="/adminpanel/settings" element={<Settings />} />
+</Route>
+
+
+const AdminHome = lazy(() => import("./features/AdminPanel/AdminHome"));
+const Security = lazy(() => import("./features/AdminPanel/Security"));
+const Settings = lazy(() => import("./features/AdminPanel/Settings"));
+const AddProperty = lazy(() => import("./features/AdminPanel/AddProperty"));
+const AdminPanelAnalytics = lazy(() =>
+  import("./components/AdminPanelStats/AdminPanelAnalytics")
+);
+
+
+import MainLayout from "./layouts/MainLayout";
+import AdminPanel from "./layouts/AdminPanel";
+import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
+import Menu from "./features/Menu/Menu";
+import HomePage from "./features/HomePage/HomePage";
+import MapSearch from "./features/MapSearch/MapSearch";
+// import AddProperty from "./features/AddProperty/AddProperty";
+import Login from "./features/Authentication/Login";
+import Signup from "./features/Authentication/Signup";
+// import AddAgent from "./features/AdminPanel/AddAgent";
+// import AddAgency from "./features/AdminPanel/AddAgency";
+import AddProperty from "./features/AdminPanel/AddProperty";
+import { userData, searchOptions } from "./store/appState";
+import SignupAgency from "./features/Authentication/SignupAgency";
+import SignupAgent from "./features/Authentication/SignupAgent";
+import NotFound404 from "./features/NotFound404/NotFound404";
+import ListWithUs from "./features/ListWithUs/ListWithUs";
+
+
+
+
+const MainLayout = lazy(() => import("./layouts/MainLayout"));
+
+const AdminPanel = lazy(() => import("./layouts/AdminPanel"));
+import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
+import Menu from "./features/Menu/Menu";
+
+const HomePage = lazy(() => import("./features/HomePage/HomePage"));
+const MapSearch = lazy(() => import("./features/MapSearch/MapSearch"));
+
+// import AddProperty from "./features/AddProperty/AddProperty";
+
+const Login = lazy(() => import("./features/Authentication/Login"));
+
+const Signup = lazy(() => import("./features/Authentication/Signup"));
+// import AddAgent from "./features/AdminPanel/AddAgent";
+// import AddAgency from "./features/AdminPanel/AddAgency";
+import { userData } from "./store/appState";
+const AddProperty = lazy(() => import("./features/AdminPanel/AddProperty"));
+
+
+const SignupAgency = lazy(() => import("./features/Authentication/SignupAgency"));
+
+const SignupAgent = lazy(() => import("./features/Authentication/SignupAgent"));
+
+const NotFound404 = lazy(() => import("./features/NotFound404/NotFound404"));
+
+const ListWithUs = lazy(() => import("./features/ListWithUs/ListWithUs"));

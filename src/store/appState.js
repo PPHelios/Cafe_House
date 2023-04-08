@@ -145,6 +145,7 @@ export const residentialSaleDb = signal([
   },
 ]);
 export const userData = signal({});
+export const adminSideBarState = signal(0); 
 export const searchOptions = signal([
   "New Cairo",
   "Mivida",

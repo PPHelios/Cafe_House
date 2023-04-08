@@ -1,4 +1,5 @@
 import { useEffect } from "preact/hooks";
+import { lazy } from "preact/compat";
 import { MantineProvider, createEmotionCache } from "@mantine/core";
 import rtlPlugin from "stylis-plugin-rtl";
 import {
@@ -10,7 +11,7 @@ import {
 //import { mantineTheme } from "./utils/mantineTheme";
 import { useTranslation } from "react-i18next";
 import { themeColor } from "./store/appState";
-import { Notifications } from '@mantine/notifications';
+import { Notifications } from "@mantine/notifications";
 // BACKENDLESS
 // import Backendless from "backendless";
 // Backendless.initApp(
@@ -26,8 +27,9 @@ const PARSE_HOST_URL = import.meta.env.VITE_PARSE_HOST_URL;
 const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
+import { userData } from "./store/appState";
 import MainLayout from "./layouts/MainLayout";
-import AdminPanel from "./features/AdminPanel/AdminPanel";
+import AdminPanel from "./layouts/AdminPanel";
 import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
 import Menu from "./features/Menu/Menu";
 import HomePage from "./features/HomePage/HomePage";
@@ -38,11 +40,19 @@ import Signup from "./features/Authentication/Signup";
 // import AddAgent from "./features/AdminPanel/AddAgent";
 // import AddAgency from "./features/AdminPanel/AddAgency";
 import AddProperty from "./features/AdminPanel/AddProperty";
-import { userData, searchOptions } from "./store/appState";
+
 import SignupAgency from "./features/Authentication/SignupAgency";
 import SignupAgent from "./features/Authentication/SignupAgent";
 import NotFound404 from "./features/NotFound404/NotFound404";
 import ListWithUs from "./features/ListWithUs/ListWithUs";
+import AdminHome from "./features/AdminPanel/AdminHome";
+
+import AdminPanelAnalytics from "./components/AdminPanelStats/AdminPanelAnalytics";
+import ListedProperties from "./features/AdminPanel/ListedProperties";
+import Account from "./features/AdminPanel/account";
+import Security from "./features/AdminPanel/Security";
+import Settings from "./features/AdminPanel/Settings";
+
 export function App() {
   const rtlCache = createEmotionCache({
     key: "mantine-rtl",
@@ -57,23 +67,21 @@ export function App() {
 
   useEffect(() => {
     const initialData = async () => {
-      try{
+      try {
+        const currentUser = await Parse.User.current();
+        userData.value = currentUser;
+        console.log(currentUser);
+        // const searchOptionsQuery = new Parse.Query("searchOptions");
+        // searchOptionsQuery.contains("name", "englishOptions");
+        // let queryResult = await searchOptionsQuery.first();
+        // console.log(queryResult.get("options"));
 
-      
-      const currentUser = await Parse.User.current();
-      userData.value = currentUser;
-      console.log(currentUser);
-      // const searchOptionsQuery = new Parse.Query("searchOptions");
-      // searchOptionsQuery.contains("name", "englishOptions");
-      // let queryResult = await searchOptionsQuery.first();
-      // console.log(queryResult.get("options"));
-      
-      // searchOptions.value = queryResult.get("options");
-    
-      return true
-    }catch(error){
-      alert(`Error! ${error.message}`);
-    }
+        // searchOptions.value = queryResult.get("options");
+
+        return true;
+      } catch (error) {
+        alert(`Error! ${error.message}`);
+      }
     };
     initialData();
   }, []);
@@ -83,18 +91,29 @@ export function App() {
         <Route path="/" element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<MapSearch />} />
-          <Route path="/addproperty" element={<AddProperty />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup  />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/Listwithus" element={<ListWithUs />} />
           <Route path="/signupagency" element={<SignupAgency />} />
           <Route path="/signupagent" element={<SignupAgent />} />
           {/* <Route path="/adminpanel/addagent" element={<AddAgent />} />
           <Route path="/adminpanel/addagency" element={<AddAgency />} /> */}
-          <Route path="/adminpanel/addproperty" element={<AddProperty />} />
-          {/* <Route element={<AdminPanel />}>
-            <Route path="/adminpanel/addagent" element={<AddAgent />} />
-          </Route> */}
+
+          <Route element={<AdminPanel />}>
+            <Route path="/adminpanel" element={<AdminHome />} />
+            <Route path="/adminpanel/addproperty" element={<AddProperty />} />
+            <Route
+              path="/adminpanel/listedproperties"
+              element={<ListedProperties />}
+            />
+            <Route
+              path="/adminpanel/agentanalytics"
+              element={<AdminPanelAnalytics />}
+            />
+            <Route path="/adminpanel/account" element={<Account />} />
+            <Route path="/adminpanel/security" element={<Security />} />
+            <Route path="/adminpanel/settings" element={<Settings />} />
+          </Route>
           <Route path="*" element={<NotFound404 />} />
         </Route>
       </>
@@ -104,7 +123,6 @@ export function App() {
     <MantineProvider
       withGlobalStyles
       withNormalizeCSS
-      
       emotionCache={docDir === "rtl" ? rtlCache : undefined}
       theme={{
         colorScheme: themeColor.value,

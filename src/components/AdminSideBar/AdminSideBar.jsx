@@ -1,110 +1,95 @@
-import { useState } from "react";
-import {
-  Navbar,
-  Center,
-  Tooltip,
-  UnstyledButton,
-  createStyles,
-  Stack,
-  rem,
-} from "@mantine/core";
+import { adminSideBarState } from '../../store/appState';
+import { Navbar, Box, Tooltip, UnstyledButton, createStyles, Stack, rem } from '@mantine/core';
 import {
   IconHome2,
-  IconGauge,
   IconDeviceDesktopAnalytics,
   IconFingerprint,
-  IconCalendarStats,
+  IconHomeEdit,
   IconUser,
   IconSettings,
   IconLogout,
   IconSwitchHorizontal,
-} from "@tabler/icons-preact";
-import { Link, useNavigate } from "react-router-dom";
+   IconSubtask
+} from '@tabler/icons-preact';
+import { Link } from 'react-router-dom';
+
 
 const useStyles = createStyles((theme) => ({
   link: {
     width: rem(50),
     height: rem(50),
     borderRadius: theme.radius.md,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     color: theme.white,
     opacity: 0.85,
 
-    "&:hover": {
+    '&:hover': {
       opacity: 1,
-      //   backgroundColor: theme.fn.lighten(
-      //     theme.fn.variant({ variant: "filled", color: theme.primaryColor }),
-      //     0.1
-      //   ),
+      backgroundColor: theme.colors.cyan[6]
     },
   },
 
   active: {
     opacity: 1,
-    "&, &:hover": {
-      //   backgroundColor: theme.fn.lighten(
-      //     theme.fn.variant({ variant: "filled", color: theme.primaryColor }),
-      //     0.15
-      //   ),
+    '&, &:hover': {
+      backgroundColor: theme.colors.cyan[4]
     },
   },
 }));
 
-function NavbarLink({ icon: Icon, label, active, onClick }) {
+
+
+function NavbarLink({ icon: Icon, label, active, onClick, to }) {
   const { classes, cx } = useStyles();
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-      <UnstyledButton
-        onClick={onClick}
-        className={cx(classes.link, { [classes.active]: active })}
-      >
+      
+      <UnstyledButton component={Link} to={to} onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
         <Icon size="1.2rem" stroke={1.5} />
       </UnstyledButton>
+     
     </Tooltip>
   );
 }
 
 const mockdata = [
-  { icon: IconHome2, label: "Home" },
-  { icon: IconGauge, label: "Dashboard" },
-  { icon: IconDeviceDesktopAnalytics, label: "Analytics" },
-  { icon: IconCalendarStats, label: "Releases" },
-  { icon: IconUser, label: "Account" },
-  { icon: IconFingerprint, label: "Security" },
-  { icon: IconSettings, label: "Settings" },
+  
+  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' , target:"adminpanel/agentanalytics"},
+  { icon: IconHomeEdit, label: 'Add Property', target:"adminpanel/addproperty" },
+  { icon: IconSubtask, label: 'Listed Properties', target:"adminpanel/listedproperties" },
+  { icon: IconUser, label: 'Account', target:"adminpanel/account" },
+  { icon: IconFingerprint, label: 'Security', target:"adminpanel/security" },
+  { icon: IconSettings, label: 'Settings', target:"adminpanel/settings" },
 ];
 
-export function AdminSideBar() {
-  const [active, setActive] = useState(0);
-  const navigate = useNavigate();
+export default function AdminSideBar() {
+  
+
   const links = mockdata.map((link, index) => (
     <NavbarLink
       {...link}
-      component={Link}
       key={link.label}
-      active={index === active}
-      onClick={() => {
-        setActive(index);
-        navigate("/");
-      }}
+      to={`/${link?.target}`}
+      active={index === adminSideBarState.value}
+      onClick={() => adminSideBarState.value=index}
     />
   ));
 
   return (
     <Navbar
-      height="calc(100vh - 80px)"
+      height={750}
       width={{ base: 80 }}
       p="md"
       sx={(theme) => ({
-        backgroundColor: theme.fn.variant({
-          variant: "filled",
-          color: theme.primaryColor,
-        }).background,
+        backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
+          .background,
       })}
     >
-      <Center>{/* <MantineLogo type="mark" inverted size={30} /> */}</Center>
+      {/* <Center>
+        <MantineLogo type="mark" inverted size={30} />
+      </Center> */}
       <Navbar.Section grow mt={50}>
         <Stack justify="center" spacing={0}>
           {links}

@@ -418,7 +418,7 @@ export function Navbar() {
   />
   }
 >
-  <Text component={Link} to="\adminpanel/addproperty">Manage Ads.</Text>
+  <Text component={Link} to="/adminpanel/addproperty">Manage Ads.</Text>
  
 </List.Item>
 }

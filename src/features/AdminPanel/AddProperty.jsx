@@ -1,10 +1,10 @@
 import { useState } from "preact/hooks";
 import { forwardRef } from "preact/compat";
-
+import { searchOptions, adminSideBarState } from "../../store/appState";
 import Parse from "parse/dist/parse.min.js";
 import { useForm } from "@mantine/form";
 import AppMap from "../Map/AppMap";
-import { searchOptions } from "../../store/appState";
+
 import {
   TextInput,
   FileInput,
@@ -35,8 +35,10 @@ const SelectItem = forwardRef(
 );
 
 export default function AddProperty() {
+
   const [propertLocation, setPropertLocation] = useState({});
-  console.log(propertLocation);
+  adminSideBarState.value=1
+
   const maxNumberOfPics = 15;
   const form = useForm({
     initialValues: {
