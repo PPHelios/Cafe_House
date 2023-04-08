@@ -39,7 +39,7 @@ const useStyles = createStyles((theme) => ({
   actionButtons: {
     display: 'flex',
     justifyContent: 'flex-end',
-    padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+    padding: `${theme.spacing.sm} ${theme.spacing.sm}`,
     borderTop: `${rem(1)} solid ${
       theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
     }`,
@@ -80,7 +80,7 @@ function PlaceDetails({ item, setPopupInfo,modal }) {
 
   return (
     <>
-     <Card withBorder radius="md" p="md" className={classes.card} onClick={() => {
+     <Card withBorder radius="md"  className={classes.card} onClick={() => {
       setPopupInfo(item)
     }}>
       {!modal && <Card.Section  sx={{position:"relative"}}>
