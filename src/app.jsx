@@ -48,7 +48,7 @@ import AdminHome from "./features/AdminPanel/Agents";
 
 import AdminPanelAnalytics from "./components/AdminPanelStats/AdminPanelAnalytics";
 import ListedProperties from "./features/AdminPanel/ListedProperties";
-import Account from "./features/AdminPanel/account";
+import Account from "./features/AdminPanel/Account";
 import Security from "./features/AdminPanel/Security";
 import Settings from "./features/AdminPanel/Settings";
 import Agents from "./features/AdminPanel/Agents";
