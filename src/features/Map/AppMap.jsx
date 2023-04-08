@@ -8,7 +8,7 @@ import { filteredData } from "../../store/appState";
 import { Box, Image, Text, Group, Paper } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Pin from "./pin";
-import PropertyModal from "../MapSearch/PropertyModal";
+import PropertyModal from "../../components/PropertyModal/PropertyModal";
 
 // Map.accessToken = import.meta.env.VITE_MAP_BOX_TOKEN
 

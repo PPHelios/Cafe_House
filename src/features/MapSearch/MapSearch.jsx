@@ -36,8 +36,8 @@ function MapSearch() {
   return (
    <Box>
     <PropertySearchBar/>
-    <Flex py={30} h={700}>
-      <Box w="68vw" h={700} >
+    <Flex py={30}  h={{base:700,xs:600}} direction={{base:"column",xs:"row"}}>
+      <Box  w={{base:"94vw",xs:"68vw"}}  h={{base:500,xs:600}} mx="auto">
         <AppMap
           popupInfo={popupInfo}
           setPopupInfo={(item) => setPopupInfo(item)}
@@ -46,8 +46,9 @@ function MapSearch() {
         />
       </Box>
       <Box
-        w="30vw"
-        h={700}
+        w={{base:"94vw",xs:"30vw"}}
+        h={{base:700,xs:600}}
+        mx="auto"
         px={9}
         bg="gray.3"
         // ref={containerRef}

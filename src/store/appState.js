@@ -156,14 +156,14 @@ export const stateSearchValues = signal({
   searchPurpose: "",
   propertyType: "",
   propertyRooms: "",
-  propertyarea: "",
+  propertyArea: "",
   propertyminPrice: "",
   propertymaxPrice: "",
 });
 
 export const filteredData = signal([]);
 console.log(filteredData);
-export const sortHeightToLow = () => {
+export const sortHighToLow = () => {
   const sortedData = filteredData.value.sort(
     (a, b) => b.get("price") - a.get("price")
   );
@@ -172,7 +172,7 @@ export const sortHeightToLow = () => {
   clearArray();
   filteredData.value = sortedData;
 };
-export const sortLowToHeigh = () => {
+export const sortLowToHigh = () => {
   const sortedData = filteredData.value.sort(
     (a, b) => a.get("price") - b.get("price")
   );
@@ -195,21 +195,24 @@ export const search = async (values) => {
   console.log(values);
   if (values.searchValue.length > 0) {
     try {
+
       let parseQuery = new Parse.Query("Property");
       parseQuery.containedIn("locationTags", values.searchValue);
       parseQuery.contains("listingType", values.listingType);
       parseQuery.contains("propertyType", values.propertyType);
       parseQuery.greaterThan("room", values.propertyRooms - 1);
       parseQuery.greaterThan("bath", values.propertyBaths - 1);
-      parseQuery.greaterThan("area", values.propertyarea - 1);
+      parseQuery.greaterThan("area", values.propertyArea - 1);
       parseQuery.greaterThan("price", +values.propertyminPrice - 1);
       parseQuery.lessThan("price", +values.propertymaxPrice + 1);
-
+      parseQuery.include("agencyPointer");
+      parseQuery.include("agentPointer");
       let queryResults = await parseQuery.find();
       const shuffledResults = queryResults.sort(function () {
         return Math.random() - 0.5;
       });
       filteredData.value = shuffledResults;
+      console.log(shuffledResults);
     } catch (err) {
       notifications.show({
         title: "Error",

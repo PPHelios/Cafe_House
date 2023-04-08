@@ -30,7 +30,6 @@ import {
   IconHomeEdit,
   IconSettings,
   IconChevronDown,
-  IconUserCircle,
   IconChevronLeft, IconChevronRight ,
   IconAirBalloon ,
   IconHeartHandshake 
@@ -247,16 +246,14 @@ export function Navbar() {
                     })}
                   >
                     <Group spacing={7}>
-                      {avatarUrl ? (
+                       
                         <Avatar
                           src={avatarUrl}
                           alt="user avatar picture"
                           radius="xl"
                           size={42}
                         />
-                      ) : (
-                        <IconUserCircle size={22} />
-                      )}
+                     
                       <Text
                         weight={500}
                         size="sm"
@@ -352,16 +349,14 @@ export function Navbar() {
                     <Group position="apart" spacing={0} pl={10}>
                       <Group>
 
-                         {avatarUrl ? (
+                        
                         <Avatar
                           src={avatarUrl}
                           alt="user avatar picture"
                           radius="xl"
                           size={42}
                         />
-                      ) : (
-                        <IconUserCircle size={22} />
-                      )}
+                      
                       <Text
                         weight={500}
                         size="sm"

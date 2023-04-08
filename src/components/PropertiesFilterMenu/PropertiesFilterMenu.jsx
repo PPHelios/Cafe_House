@@ -6,8 +6,8 @@ import {
   IconArrowsSort,
 } from "@tabler/icons-preact";
 import {
-  sortHeightToLow,
-  sortLowToHeigh,
+  sortHighToLow,
+  sortLowToHigh,
   sortByArea,
 } from "../../store/appState";
 
@@ -21,15 +21,15 @@ function PropertiesFilterMenu() {
       <Menu.Dropdown>
         <Menu.Item
           icon={<IconSortDescendingNumbers stroke={1.3} />}
-          onClick={() => sortHeightToLow()}
+          onClick={() => sortHighToLow()}
         >
-          Price (Height To Low)
+          Price (High To Low)
         </Menu.Item>
         <Menu.Item
           icon={<IconSortAscendingNumbers stroke={1.3} />}
-          onClick={() => sortLowToHeigh()}
+          onClick={() => sortLowToHigh()}
         >
-          Price (Low To Height)
+          Price (Low To High)
         </Menu.Item>
         <Menu.Item icon={<IconShape stroke={1.3} />} onClick={() => sortByArea()}>
           Area
