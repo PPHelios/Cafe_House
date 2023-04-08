@@ -9,7 +9,8 @@ import {
   IconSettings,
   IconLogout,
   IconSwitchHorizontal,
-   IconSubtask
+   IconSubtask,
+   IconUsers 
 } from '@tabler/icons-preact';
 import { Link } from 'react-router-dom';
 
@@ -59,6 +60,7 @@ const mockdata = [
   { icon: IconDeviceDesktopAnalytics, label: 'Analytics' , target:"adminpanel/agentanalytics"},
   { icon: IconHomeEdit, label: 'Add Property', target:"adminpanel/addproperty" },
   { icon: IconSubtask, label: 'Listed Properties', target:"adminpanel/listedproperties" },
+  { icon: IconUsers, label: 'Agents', target:"adminpanel/agents" },
   { icon: IconUser, label: 'Account', target:"adminpanel/account" },
   { icon: IconFingerprint, label: 'Security', target:"adminpanel/security" },
   { icon: IconSettings, label: 'Settings', target:"adminpanel/settings" },

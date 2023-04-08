@@ -45,13 +45,14 @@ import SignupAgency from "./features/Authentication/SignupAgency";
 import SignupAgent from "./features/Authentication/SignupAgent";
 import NotFound404 from "./features/NotFound404/NotFound404";
 import ListWithUs from "./features/ListWithUs/ListWithUs";
-import AdminHome from "./features/AdminPanel/AdminHome";
+import AdminHome from "./features/AdminPanel/Agents";
 
 import AdminPanelAnalytics from "./components/AdminPanelStats/AdminPanelAnalytics";
 import ListedProperties from "./features/AdminPanel/ListedProperties";
 import Account from "./features/AdminPanel/account";
 import Security from "./features/AdminPanel/Security";
 import Settings from "./features/AdminPanel/Settings";
+import Agents from "./features/AdminPanel/Agents";
 
 export function App() {
   const rtlCache = createEmotionCache({
@@ -110,6 +111,7 @@ export function App() {
               path="/adminpanel/agentanalytics"
               element={<AdminPanelAnalytics />}
             />
+              <Route path="/adminpanel/agents" element={<Agents />} />
             <Route path="/adminpanel/account" element={<Account />} />
             <Route path="/adminpanel/security" element={<Security />} />
             <Route path="/adminpanel/settings" element={<Settings />} />

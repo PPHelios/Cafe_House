@@ -1,7 +1,7 @@
 import {  adminSideBarState } from "../../store/appState";
 
 function Settings() {
-  adminSideBarState.value=5
+  adminSideBarState.value=6
   return (
     <div>Settings</div>
   )
