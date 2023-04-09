@@ -156,6 +156,7 @@ function PropertySearchBar() {
             })}
           />
           <Button
+          h={50}
             size="lg"
             variant="filled"
             color="gradient"

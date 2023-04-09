@@ -40,6 +40,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   title: {
+    minHeight:rem(52),
     fontWeight: 800,
     fontSize: rem(40),
     letterSpacing: rem(-1),

@@ -200,6 +200,8 @@ export function Navbar() {
             }}
             size="sm"
             className={classes.burger}
+            title="side menu"
+            aria-label="side menu"
           />
 
           <Group
@@ -212,7 +214,7 @@ export function Navbar() {
             <Text c="blue" ff="Times New Roman" fz={40}>
               My{" "}
             </Text>
-            <Box w={60}>
+            <Box w={66} h={60}>
               {" "}
               <Image src={logo} alt="logo" />
             </Box>

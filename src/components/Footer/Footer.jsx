@@ -213,7 +213,7 @@ export function Footer() {
     <footer  className={classes.footer}>
       <Container className={classes.inner}>
         <Stack  className={classes.logo} align="center" spacing="sm" px={{base:"calc((100% - 700px + 32px) / 2)",sm:0}} sx={{alignSelf:"center"}} >
-          <Box w={66} >
+          <Box w={66} h={60}>
             <Image src={logo} alt="logo" />
           </Box>
           <Text size="xs" color="dimmed" className={classes.description}>
