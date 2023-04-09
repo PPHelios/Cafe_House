@@ -1,8 +1,7 @@
 import { createStyles, RingProgress, Text, SimpleGrid, Paper, ThemeIcon, Group, Center } from '@mantine/core';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons-preact';
 import { adminSideBarState, agents, properties } from "../../store/appState";
-console.log(agents.value.length)
-console.log(properties.value.length)
+import {signal, effect } from '@preact/signals';
  const data =[
   {
     "title": "Revenue",
@@ -20,7 +19,7 @@ console.log(properties.value.length)
     "diff": 18
   }
 ]
-const data2 =  [
+let data2 = signal([
   {
     "label": "Agents",
     "stats": agents.value.length,
@@ -42,8 +41,30 @@ const data2 =  [
     "color": "red",
     "icon": "down"
   }
-]
-
+]) 
+effect(() => {
+  data2.value=[{
+    "label": "Agents",
+    "stats": agents.value.length,
+    "progress": agents.value.length,
+    "color": "teal",
+    "icon": "up"
+  },
+  {
+    "label": "Ads",
+    "stats": properties.value.length,
+    "progress": properties.value.length,
+    "color": "blue",
+    "icon": "up"
+  },
+  {
+    "label": "Ad. Views",
+    "stats": "4,735",
+    "progress": 52,
+    "color": "red",
+    "icon": "down"
+  }]
+});
 const icons = {
   up: IconArrowUpRight,
   down: IconArrowDownRight,
@@ -96,7 +117,7 @@ const useStyles = createStyles((theme) => ({
         </Paper>
       );
     });
-    const stats2 = data2.map((stat) => {
+    const stats2 = data2.value.map((stat) => {
       const Icon = icons[stat.icon];
       return (
         <Paper withBorder radius="md" p="xs" key={stat.label}>
