@@ -6,10 +6,15 @@ import {
   Group,
   Card,
   Avatar,
+  Anchor,
 } from "@mantine/core";
-import { IconPhoneCall, IconMail } from "@tabler/icons-preact";
+import { IconPhoneCall, IconMail,IconBrandWhatsapp  } from "@tabler/icons-preact";
 const useStyles = createStyles((theme) => ({
   card: {
+    position: 'sticky',
+    top: 90,
+    overflow:"visible",
+    alignSelf: "flex-start",
     backgroundColor:
       theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
   },
@@ -27,6 +32,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function AgentCard({ item }) {
+  
   const { classes } = useStyles();
   const { firstName, lastName, bio, agencyName, email, phoneNumber } =
     item?.get("agentPointer").attributes;
@@ -38,9 +44,7 @@ function AgentCard({ item }) {
         radius="md"
         p="md"
         className={classes.card}
-        onClick={() => {
-          setPopupInfo(item);
-        }}
+
       >
         <Card.Section>
           <Group position="center">
@@ -88,8 +92,17 @@ function AgentCard({ item }) {
             </ActionIcon>
             <Text fz="md" fw={500}>{email}</Text>
           </Group>
+           <Anchor td="none" target="_blank" href={`https://wa.me/+2${phoneNumber}?text=I'm%20inquiring%20about%20the%20apartment%20listing%${item.get("adName")}`}>  <Group mt={10}>
+           
+            <ActionIcon variant="default" radius="md" size={36} >
+              <IconBrandWhatsapp  size="1.1rem" stroke={1.5} color="blue"/>
+            </ActionIcon>
+            <Text fz="md" fw={500}>{phoneNumber}</Text>
+          </Group></Anchor>
+        
         </Card.Section>
       </Card>
+      
     </>
   );
 }

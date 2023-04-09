@@ -30,6 +30,7 @@ function PropertyModal({ modalData, opened, close }) {
           opened={opened}
           onClose={close}
           scrollAreaComponent={ScrollArea.Autosize}
+        
         >
           <Box>
             <Title order={3}> {modalData?.get("adName")}</Title>
@@ -167,7 +168,6 @@ function PropertyModal({ modalData, opened, close }) {
                  <PlaceDetails item={modalData} modal={true} />
                  <AgentCard item={modalData}/>
               </Flex>
-            
             </Box>
           </Box>
         </Modal>

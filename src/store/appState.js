@@ -1,4 +1,4 @@
-import { signal, computed, effect } from "@preact/signals";
+import { signal} from "@preact/signals";
 // import { create } from "zustand";
 // import produce from "immer";
 
@@ -148,6 +148,7 @@ export const residentialSaleDb = signal([
   },
 ]);
 export const userData = signal({});
+export const userFavorites = signal([]);
 export const agents = signal([]);
 export const properties = signal([]);
 export const adminSideBarState = signal(0); 
@@ -334,8 +335,82 @@ export const queryAllProperties = async () => {
     return propertyQueryResult;
   } catch (err) {
     console.log(err.message);
+    throw new Error("Couldn't Fetch Properties")
   }
 };
+
+
+
+export const getUserFavorites = async(property)=>{
+  try {
+    // Since the signUp method returns a Promise, we need to call it using await
+    let newFavoriteQuery = new Parse.Query("Favorite");
+   
+    newFavoriteQuery.equalTo("userPointer",Parse.User.current().toPointer() );
+    
+    const favorites = await newFavoriteQuery.find();
+    console.log(favorites);
+    userFavorites.value = favorites
+    return true;
+  } catch (error) {
+    // signUp can fail if any parameter is blank or failed an uniqueness check on the server
+    notifications.show({
+      title: "Error",
+      message: `Error! ${error.message} 🤥`,
+      color: 'red',
+    });
+    return false;
+  } 
+}
+
+export const addToFavorites = async(property)=>{
+  try {
+    // Since the signUp method returns a Promise, we need to call it using await
+    let newFavorite = new Parse.Object("Favorite");
+    newFavorite.set("propertyPointer",property.toPointer() );
+    newFavorite.set("userPointer",userData.value );
+    
+    const addFavorite = await newFavorite.save();
+    console.log(addFavorite);
+    notifications.show({
+      title: "Added To Favorites Successfully",
+    });
+    return true;
+  } catch (error) {
+    // signUp can fail if any parameter is blank or failed an uniqueness check on the server
+    notifications.show({
+      title: "Error",
+      message: `Error! ${error.message} 🤥`,
+      color: 'red',
+    });
+    throw new Error(error.message)
+  } 
+}
+export const removeFromFavorites = async(property)=>{
+  try {
+    // Since the signUp method returns a Promise, we need to call it using await
+    let favoriteQuery = new Parse.Query("Favorite");
+    favoriteQuery.equalTo("propertyPointer",property.toPointer() );
+    favoriteQuery.equalTo("userPointer",userData.value );
+    
+    const findFavorite = await favoriteQuery.first();
+    console.log({findFavorite});
+    const deleteFavorite =await findFavorite.destroy()
+    console.log({deleteFavorite});
+    notifications.show({
+      title: "Removed From Favorites Successfully",
+    });
+    return true;
+  } catch (error) {
+    // signUp can fail if any parameter is blank or failed an uniqueness check on the server
+    notifications.show({
+      title: "Error",
+      message: `Error! ${error.message} 🤥`,
+      color: 'red',
+    });
+    throw new Error(error.message)
+  } 
+}
 // import { deepSignal } from "@deepsignal/preact";
 // export const appState = {
 //   themeColor: deepSignal({ color: "light" }),

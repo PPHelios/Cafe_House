@@ -10,7 +10,15 @@ import {
 } from "react-router-dom";
 //import { mantineTheme } from "./utils/mantineTheme";
 import { useTranslation } from "react-i18next";
-import { themeColor, queryAgentsInAgency,agents,userData,properties,queryAllProperties } from "./store/appState";
+import {
+  themeColor,
+  queryAgentsInAgency,
+  agents,
+  userData,
+  properties,
+  queryAllProperties,
+  getUserFavorites,
+} from "./store/appState";
 import { Notifications } from "@mantine/notifications";
 // BACKENDLESS
 // import Backendless from "backendless";
@@ -86,14 +94,19 @@ export function App() {
     initialData();
   }, []);
 
-
-
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
         <Route path="/" element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/search" element={<MapSearch />} />
+          <Route
+            path="/search"
+            element={<MapSearch />}
+            loader={ async() => {
+             const favorites= await getUserFavorites();
+             return true
+            }}
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/Listwithus" element={<ListWithUs />} />
@@ -102,16 +115,19 @@ export function App() {
           {/* <Route path="/adminpanel/addagent" element={<AddAgent />} />
           <Route path="/adminpanel/addagency" element={<AddAgency />} /> */}
 
-          <Route element={<AdminPanel />}  loader = {async()=> {
-                const agentsQuery = await queryAgentsInAgency()
-                console.log(agentsQuery)
-                agents.value = agentsQuery
-                const propertiesQuery = await queryAllProperties()
-                console.log(propertiesQuery)
-                properties.value = propertiesQuery
+          <Route
+            element={<AdminPanel />}
+            loader={async () => {
+              const agentsQuery = await queryAgentsInAgency();
+              console.log(agentsQuery);
+              agents.value = agentsQuery;
+              const propertiesQuery = await queryAllProperties();
+              console.log(propertiesQuery);
+              properties.value = propertiesQuery;
 
-return true
-              }}>
+              return true;
+            }}
+          >
             <Route path="/adminpanel" element={<AdminHome />} />
             <Route path="/adminpanel/addproperty" element={<AddProperty />} />
             <Route
@@ -121,9 +137,8 @@ return true
             <Route
               path="/adminpanel/agentanalytics"
               element={<AdminPanelAnalytics />}
-             
             />
-              <Route path="/adminpanel/agents" element={<Agents />} />
+            <Route path="/adminpanel/agents" element={<Agents />} />
             <Route path="/adminpanel/account" element={<Account />} />
             <Route path="/adminpanel/security" element={<Security />} />
             <Route path="/adminpanel/settings" element={<Settings />} />

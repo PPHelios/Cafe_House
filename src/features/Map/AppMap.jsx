@@ -170,14 +170,14 @@ const AppMap = ({
           close={close}
         />
       )}
-      <button
+      {/* <button
         onClick={async () => {
           const search = await coordinates.search("mivida new cairo");
           console.log(search);
         }}
       >
         test
-      </button>
+      </button> */}
     </>
   );
 };
