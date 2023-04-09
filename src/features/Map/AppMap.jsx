@@ -38,7 +38,7 @@ const AppMap = ({
     latitude: 30.00629,
     longitude: 31.5385,
   });
-  const [events, logEvents] = useState({});
+  //const [events, logEvents] = useState({});
 
   const [opened, { open, close }] = useDisclosure(false);
   const mapRef = useRef(null);

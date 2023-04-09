@@ -228,13 +228,16 @@ export function Footer() {
         </Text>
 
         <Group spacing={0} className={classes.social} position="right" noWrap>
-          <ActionIcon size="lg">
+          <ActionIcon size="lg"  title="twitter link"
+            aria-label="twitter link">
             <IconBrandTwitter size="1.05rem" stroke={1.5} />
           </ActionIcon>
-          <ActionIcon size="lg">
+          <ActionIcon size="lg"  title="youtube link"
+            aria-label="youtube link">
             <IconBrandYoutube size="1.05rem" stroke={1.5} />
           </ActionIcon>
-          <ActionIcon size="lg">
+          <ActionIcon size="lg"  title="instagram link"
+            aria-label="instagram link">
             <IconBrandInstagram size="1.05rem" stroke={1.5} />
           </ActionIcon>
         </Group>

@@ -14,7 +14,8 @@ import {
   ActionIcon,
   Button,
   TextInput,
-  Text
+  Text,
+  SegmentedControl
 } from "@mantine/core";
 import {
   IconSearch,
@@ -45,7 +46,7 @@ function PropertySearchBar() {
   const form = useForm({
     initialValues: {
       searchValue: "",
-      listingType: "",
+      listingType: "Buy",
       propertyType: "",
       propertyRooms: "",
       propertyBaths: "",
@@ -88,7 +89,7 @@ function PropertySearchBar() {
   >
     <MultiSelect
       w="100%"
-      size="xl"
+      size="md"
       radius="xl"
       {...form.getInputProps("searchValue")}
       maxDropdownHeight={300}
@@ -97,7 +98,7 @@ function PropertySearchBar() {
       clearable
       clearButtonProps={{ "aria-label": "Clear selection" }}
       maxSelectedValues={3}
-      limit={3}
+      limit={2}
       // creatable
       // getCreateLabel={(query) => `${query}`}
       // onCreate={(query) => {
@@ -129,35 +130,33 @@ function PropertySearchBar() {
     <Box px={20}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Group position="center" mb={5}>
-        <Select
+        <SegmentedControl
         radius="md"
-            size="lg"
-            w={218}
+            size="md"
+      
             {...form.getInputProps("listingType")}
+         
             data={["Buy", "Rent"]}
-            display="inline-block"
+            
             placeholder="Pick listing Type"
             aria-label="pick search type"
-            sx={(theme) => ({
-              "& .mantine-Select-nothingFound":{
-                color: theme.white,
-              },
-              "& .mantine-Select-input": {
-                paddingRight: 20,
-                textAlign: "center",
-                borderRadius:"8px",
-                // color: theme.white,
-                 border: `1px solid ${theme.colors.blue[4]}`,
-               
-                "&:hover": {
-                  // backgroundColor: theme.colors.blue[5],
-                },
-              },
-            })}
+            color="blue"
+            orientation="horizontal"
           />
+           <ActionIcon
+            type="submit"
+            w={196}
+            h={42}
+            variant="gradient"
+            color="blue.5"
+            title="Search"
+            aria-label="Search"
+          >
+            <IconSearch size="1rem" />
+          </ActionIcon>
           <Button
-          h={50}
-            size="lg"
+         
+            size="md"
             variant="filled"
             color="gradient"
             title=" Advanced Search"
@@ -170,17 +169,7 @@ function PropertySearchBar() {
 
          
 
-          <ActionIcon
-            type="submit"
-            w={{ base: 314, sm: 84 }}
-            h={50}
-            variant="gradient"
-            color="blue.5"
-            title="Search"
-            aria-label="Search"
-          >
-            <IconSearch size="1rem" />
-          </ActionIcon>
+         
         </Group>
       </form>
       <Collapse in={opened}>
