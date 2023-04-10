@@ -48,7 +48,7 @@ const Login = lazy(() => import("./features/Authentication/Login"));
 const Signup = lazy(() => import("./features/Authentication/Signup"));
 // import AddAgent from "./features/AdminPanel/AddAgent";
 // import AddAgency from "./features/AdminPanel/AddAgency";
-import AddProperty from "./features/AdminPanel/AddProperty";
+//import AddProperty from "./features/AdminPanel/AddProperty";
 
 const AddProperty = lazy(() => import("./features/AdminPanel/AddProperty"));
 
