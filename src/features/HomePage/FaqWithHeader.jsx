@@ -9,7 +9,9 @@ import {
   rem,
 } from '@mantine/core';
 import { ContactIconsList } from './ContactIcons';
-
+import faq1 from "../../assets/images/faq1.webp";
+import faq2 from "../../assets/images/faq2.webp";
+import faq3 from "../../assets/images/faq3.webp";
 const useStyles = createStyles((theme) => ({
   wrapper: {
     paddingTop: theme.spacing.md,
@@ -116,15 +118,15 @@ const useStyles = createStyles((theme) => ({
 const categories = [
     {
       "label": "Customer Support",
-      "image": "https://images.unsplash.com/photo-1508780709619-79562169bc64?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      "image": faq1
     },
     {
       "label": "User Guides",
-      "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80"
+      "image": faq2
     },
     {
       "label": "Sales Questions",
-      "image": "https://images.unsplash.com/photo-1543286386-713bdd548da4?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      "image": faq3
     }
   ]
 

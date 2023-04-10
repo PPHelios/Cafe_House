@@ -11,7 +11,7 @@ import {
 
 } from "@mantine/core";
 //import hero200 from "../../assets/images/hero,w_200.jpg";
-import hero1024 from "../../assets/images/hero,w_1024.jpg";
+import hero1024 from "../../assets/images/hero,w_1024.webp";
 //import hero1400 from "../../assets/images/hero,w_1400.jpg";
 
 
