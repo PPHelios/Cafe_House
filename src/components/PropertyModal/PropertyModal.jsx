@@ -178,7 +178,7 @@ const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber
                 )} */}
             
               </Carousel>
-              <Box w={600} h={400} mx="auto" sx={{border:"1px solid black"}}> 
+             {modalData?.get("video0")?._url && <Box w={600} h={400} mx="auto" sx={{border:"1px solid black"}}> 
                        <video
                       src={modalData.get("video0")._url}
                       alt="property video"
@@ -188,7 +188,7 @@ const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber
                      
                      
                     />
-                    </Box>
+                    </Box>}
               <Modal.Header>
             <Group position="center">
             <Avatar
