@@ -36,6 +36,12 @@ import SignupAgency from "./features/Authentication/SignupAgency";
 import SignupAgent from "./features/Authentication/SignupAgent";
 import NotFound404 from "./features/NotFound404/NotFound404";
 import ListWithUs from "./features/ListWithUs/ListWithUs";
+//import AdminPanelAnalytics from "./components/AdminPanelStats/AdminPanelAnalytics";
+//import ListedProperties from "./features/AdminPanel/ListedProperties";
+// import Account from "./features/AdminPanel/Account";
+// import Security from "./features/AdminPanel/Security";
+// import Settings from "./features/AdminPanel/Settings";
+// import Agents from "./features/AdminPanel/Agents";
 
 
 
@@ -67,3 +73,10 @@ const SignupAgent = lazy(() => import("./features/Authentication/SignupAgent"));
 const NotFound404 = lazy(() => import("./features/NotFound404/NotFound404"));
 
 const ListWithUs = lazy(() => import("./features/ListWithUs/ListWithUs"));
+//const AdminHome = lazy(() => import("./components/AdminPanel/Agents"));
+const AdminPanelAnalytics = lazy(() => import("./components/AdminPanelStats/AdminPanelAnalytics"));
+const ListedProperties = lazy(() => import("./features/AdminPanel/ListedProperties"));
+const Account = lazy(() => import("./features/AdminPanel/Account"));
+const Security = lazy(() => import("./features/AdminPanel/Security"));
+const Settings = lazy(() => import("./features/AdminPanel/Settings"));
+const Agents = lazy(() => import("./features/AdminPanel/Agents"));

@@ -60,6 +60,8 @@ import Account from "./features/AdminPanel/Account";
 import Security from "./features/AdminPanel/Security";
 import Settings from "./features/AdminPanel/Settings";
 import Agents from "./features/AdminPanel/Agents";
+import ResetPassword from "./features/Authentication/ResetPassword";
+import UserFavoritesPage from "./features/UserFavoritesPage/UserFavoritesPage";
 
 export function App() {
   const rtlCache = createEmotionCache({
@@ -109,7 +111,12 @@ export function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/Listwithus" element={<ListWithUs />} />
+          <Route path="/userfavorites" element={<UserFavoritesPage />}  loader={ async() => {
+             await getUserFavorites();
+             return true
+            }} />
           <Route path="/signupagency" element={<SignupAgency />} />
           <Route path="/signupagent" element={<SignupAgent />} />
           {/* <Route path="/adminpanel/addagent" element={<AddAgent />} />

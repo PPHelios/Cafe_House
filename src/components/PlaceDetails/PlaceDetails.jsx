@@ -8,17 +8,16 @@ import {
   Image,
   Card,
   Box,
+  Anchor
 } from "@mantine/core";
-import Parse from "parse/dist/parse.min.js";
-import { IconHeart, IconShare } from "@tabler/icons-preact";
+//import Parse from "parse/dist/parse.min.js";
+import { IconHeart, IconBrandWhatsapp } from "@tabler/icons-preact";
 import {
   addToFavorites,
-  userData,
   userFavorites,
   removeFromFavorites,
 } from "../../store/appState";
 import { useState } from "preact/hooks";
-import { effect, signal } from "@preact/signals";
 const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor:
@@ -57,13 +56,17 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function PlaceDetails({ item, setPopupInfo, modal }) {
+  
   const fav = userFavorites.value.some(
-    (favorite) => item.id === favorite.get("propertyPointer").id
+    (favorite) => {
+ 
+      return item.id === favorite.get("propertyPointer").id}
   );
 
   const [isFavorite, setIsFavorite] = useState(fav);
 
-  console.log(isFavorite);
+
+
 
   const { classes } = useStyles();
 

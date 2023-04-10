@@ -32,7 +32,8 @@ import {
   IconChevronDown,
   IconChevronLeft, IconChevronRight ,
   IconAirBalloon ,
-  IconHeartHandshake 
+  IconHeartHandshake ,
+  IconDashboard
 } from "@tabler/icons-preact";
 import { userData, logout } from "../../store/appState";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
@@ -278,9 +279,9 @@ export function Navbar() {
                       />
                     }
                   >
-                  <Text component={Link} to="/user/likedproperties"> Liked Properties</Text>
+                  <Text component={Link} to="/userfavorites"> Favorites</Text>
                   </Menu.Item>
-                  <Menu.Item
+                  {/* <Menu.Item
                     icon={
                       <IconStar
                         size="0.9rem"
@@ -291,8 +292,21 @@ export function Navbar() {
                   >
                      <Text component={Link} to="/user/savedsearches"> Saved Searches</Text>
                    
-                  </Menu.Item>
+                  </Menu.Item> */} 
                   {role !== "viewer" && (
+                    <>
+                       <Menu.Item
+                      icon={
+                        <IconDashboard
+                          size="0.9rem"
+                          color={theme.colors.blue[6]}
+                          stroke={1.5}
+                        />
+                      }
+                    >
+                     <Text component={Link} to="adminpanel/agentanalytics">Dashboard</Text>
+
+                    </Menu.Item>
                     <Menu.Item
                       icon={
                         <IconHomeEdit
@@ -305,6 +319,7 @@ export function Navbar() {
                      <Text component={Link} to="/adminpanel/addproperty"> Manage Ads.</Text>
 
                     </Menu.Item>
+                    </>
                   )}
 
                   <Menu.Label>Settings</Menu.Label>
@@ -393,7 +408,7 @@ export function Navbar() {
           />
         }
       >
-        <Text component={Link} to="\user/likedproperties"> Liked Properties</Text>
+        <Text component={Link} to="/userfavorites">Favorites</Text>
        
       </List.Item>
       <List.Item

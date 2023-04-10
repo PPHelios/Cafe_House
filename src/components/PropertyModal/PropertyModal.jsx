@@ -1,11 +1,12 @@
-import { Modal, Title, Flex, Box, Image, ScrollArea } from "@mantine/core";
+import { Modal, Title, Flex, Box, Image,   ActionIcon, Group,Anchor,Text ,Avatar} from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
+import { IconPhoneCall,IconBrandWhatsapp  } from "@tabler/icons-preact";
 
 import PlaceDetails from "../PlaceDetails/PlaceDetails";
 import AgentCard from "../AgentCard/AgentCard";
 function PropertyModal({ modalData, opened, close }) {
 
-  const agency = modalData?.get("agencyPointer")?.get("agencyName")
+ // const agency = modalData?.get("agencyPointer")?.get("agencyName")
 
   // let slides = null;
   // const imgUrls = () => {};
@@ -21,7 +22,7 @@ function PropertyModal({ modalData, opened, close }) {
   //     </Carousel.Slide>
   //   ));
   // }
-
+const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber
   return (
     <>
       {modalData && (
@@ -29,12 +30,13 @@ function PropertyModal({ modalData, opened, close }) {
           size="xl"
           opened={opened}
           onClose={close}
-          scrollAreaComponent={ScrollArea.Autosize}
+         
         
         >
+           
           <Box>
-            <Title order={3}> {modalData?.get("adName")}</Title>
-            <Box>
+            <Title order={3} ta="center">  {modalData?.get("adName")}</Title>
+            <Box h={3000}>
               <Carousel
                 maw={600}
                 mx="auto"
@@ -164,9 +166,37 @@ function PropertyModal({ modalData, opened, close }) {
                   </Carousel.Slide>
                 )}
               </Carousel>
+              <Modal.Header>
+            <Group position="center">
+            <Avatar
+              size={90}
+              radius="xl"
+              src={modalData?.get("agentPointer")?.get("profilePic")?._url}
+              alt="agent profile picture"
+            />
+          </Group>
+            <Group mt={10}>
+            <ActionIcon variant="default" radius="md" size={36}>
+              <IconPhoneCall size="1.1rem" stroke={1.5} color="blue"/>
+            </ActionIcon>
+            <Text fz="md" fw={500}>{phoneNumber}</Text>
+          </Group>
+          <Anchor td="none" target="_blank" href={`https://wa.me/+2${phoneNumber}?text=I'm%20inquiring%20about%20the%20apartment%20listing%${modalData.get("adName")}`}>  
+           <Group mt={10}>
+           
+            <ActionIcon variant="default" radius="md" size={36} >
+              <IconBrandWhatsapp  size="1.1rem" stroke={1.5} color="blue"/>
+            </ActionIcon>
+            <Text fz="md" fw={500}>{phoneNumber}</Text>
+          </Group>
+          </Anchor>
+          </Modal.Header>
               <Flex py={30} direction={{base:"column",xs:"row"}} justify={"center"} gap={10}>
                  <PlaceDetails item={modalData} modal={true} />
-                 <AgentCard item={modalData}/>
+
+                   <AgentCard item={modalData}/>
+              
+                
               </Flex>
             </Box>
           </Box>

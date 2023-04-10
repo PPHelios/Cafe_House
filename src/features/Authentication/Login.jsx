@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+
 import Parse from "parse/dist/parse.min.js";
 
 import { useForm } from "@mantine/form";
@@ -129,10 +129,20 @@ export default function Login() {
               >
                 Don't have an account? Register
               </Anchor>
-              <Button type="submit" radius="xl">
+              <Anchor
+                component={Link}
+                to="/resetpassword"
+                type="button"
+                color="dimmed"
+                size="xs"
+              >
+               Forgot Your Password?
+              </Anchor>
+            
+            </Group>
+            <Button mt={20} type="submit" radius="xl">
                 Login
               </Button>
-            </Group>
           </form>
         </Paper>
       ) : (
