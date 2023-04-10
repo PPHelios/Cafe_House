@@ -67,7 +67,7 @@ const ListWithUs = lazy(() => import("./features/ListWithUs/ListWithUs"));
 // import Security from "./features/AdminPanel/Security";
 // import Settings from "./features/AdminPanel/Settings";
 // import Agents from "./features/AdminPanel/Agents";
-const AdminHome = lazy(() => import("./components/AdminPanel/Agents"));
+//const AdminHome = lazy(() => import("./components/AdminPanel/Agents"));
 const AdminPanelAnalytics = lazy(() => import("./components/AdminPanelStats/AdminPanelAnalytics"));
 const ListedProperties = lazy(() => import("./components/AdminPanel/ListedProperties"));
 const Account = lazy(() => import("./components/AdminPanel/Account"));
