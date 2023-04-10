@@ -1,5 +1,5 @@
 import { useEffect } from "preact/hooks";
-//import { lazy } from "preact/compat";
+import { lazy } from "preact/compat";
 import { MantineProvider, createEmotionCache } from "@mantine/core";
 import rtlPlugin from "stylis-plugin-rtl";
 import {
