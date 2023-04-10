@@ -1,4 +1,4 @@
-import { Modal, Title, Flex, Box, Image,   ActionIcon, Group,Anchor,Text ,Avatar} from "@mantine/core";
+import { Modal, Title, Flex, Box, Image,   ActionIcon, Group,Anchor,Text ,Avatar,ScrollArea } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 import { IconPhoneCall,IconBrandWhatsapp  } from "@tabler/icons-preact";
 
@@ -30,7 +30,7 @@ const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber
           size="xl"
           opened={opened}
           onClose={close}
-         
+          scrollAreaComponent={ScrollArea.Autosize}
         
         >
            
@@ -192,7 +192,7 @@ const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber
               <Modal.Header>
             <Group position="center">
             <Avatar
-              size={90}
+              size={40}
               radius="xl"
               src={modalData?.get("agentPointer")?.get("profilePic")?._url}
               alt="agent profile picture"
