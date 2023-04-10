@@ -309,7 +309,7 @@ export const queryAgentsInAgency = async () => {
   try {
     let agencyQuery = new Parse.Query("Agent");
     agencyQuery.equalTo("agencyPointer", userData.value.get("agencyPointer"));
- await agencyQuery.find();
+  let  agencyQueryResult= await agencyQuery.find();
     
     //console.log(agencyQueryResult);
     return agencyQueryResult;

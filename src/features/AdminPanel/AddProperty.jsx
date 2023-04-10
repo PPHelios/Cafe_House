@@ -40,6 +40,7 @@ export default function AddProperty() {
   adminSideBarState.value=1
 
   const maxNumberOfPics = 15;
+  const maxNumberOfVideos = 2;
   const form = useForm({
     initialValues: {
       adName: "",
@@ -53,6 +54,7 @@ export default function AddProperty() {
       room: "",
       bath: "",
       pics: [],
+      videos:[],
       isFeatured: false,
       adStatus: "",
       locationTags: [],
@@ -77,6 +79,7 @@ export default function AddProperty() {
       room: Number(values.room) || 1,
       bath: Number(values.bath) || 1,
       pics: values.pics,
+      videos: values.videos,
       isFeatured: values.isFeatured || false,
       adStatus: values.adStatus || "pending",
       locationTags: values.locationTags,
@@ -105,7 +108,8 @@ export default function AddProperty() {
   }
   async function addnewProperty(values) {
     // const parseQuery = new Parse.Query("Person");
-    let files = [];
+    let picFiles = [];
+    let videoFiles = [];
     if (!propertLocation?.onDrag) {
       alert("Please Select A Location");
     }
@@ -122,10 +126,24 @@ export default function AddProperty() {
           console.log(fileSize);
 
           const parseFile = new Parse.File("img.jpeg", values.pics[i]);
-          files.push(parseFile);
+          picFiles.push(parseFile);
         }
       }
+      let numberOfVideos =
+      values.videos.length < maxNumberOfVideos
+        ? values.videos.length
+        : maxNumberOfVideos;
+    if (values.videos.length > 0) {
+      for (let i = 0; i < numberOfVideos; i++) {
+        const typeIsValid = validFileType(values.videos[i]);
+        const fileSize = returnFileSize(values.videos[i].size);
+        console.log(typeIsValid);
+        console.log(fileSize);
 
+        const parseFile = new Parse.File("img.mp4", values.videos[i]);
+        videoFiles.push(parseFile);
+      }
+    }
       let property = new Parse.Object("Property");
       property.set("adName", values.adName);
       property.set("adNameAr", values.adNameAr);
@@ -151,7 +169,12 @@ export default function AddProperty() {
       property.set("agencyPointer", Parse.User.current().get("agencyPointer"));
       if (values.pics.length > 0) {
         for (let i = 0; i < numberOfPics; i++) {
-          property.set(`pic${i}`, files[i]);
+          property.set(`pic${i}`, picFiles[i]);
+        }
+      }
+      if (values.videos.length > 0) {
+        for (let i = 0; i < numberOfVideos; i++) {
+          property.set(`video${i}`,videoFiles[i]);
         }
       }
       const saveproperty = await property.save();
@@ -300,7 +323,17 @@ export default function AddProperty() {
               }}
               icon={<IconUpload size="1rem" />}
             />
-
+<FileInput
+              multiple
+              label="Upload Property Videos"
+              placeholder="Upload Property Videos"
+              value={form.values.videos}
+              accept="video/*"
+              onChange={(event) => {
+                form.setFieldValue("videos", event);
+              }}
+              icon={<IconUpload size="1rem" />}
+            />
             <MultiSelect
               {...form.getInputProps("locationTags")}
               maxDropdownHeight={300}
