@@ -92,13 +92,15 @@ function AgentCard({ item }) {
             </ActionIcon>
             <Text fz="md" fw={500}>{email}</Text>
           </Group>
-           <Anchor td="none" target="_blank" href={`https://wa.me/+2${phoneNumber}?text=I'm%20inquiring%20about%20the%20apartment%20listing%${item.get("adName")}`}>  <Group mt={10}>
+           <Anchor td="none" target="_blank" href={`https://wa.me/+2${phoneNumber}?text=I'm%20inquiring%20about%20the%20apartment%20listing%${item.get("adName")}`}>  
+           <Group mt={10}>
            
             <ActionIcon variant="default" radius="md" size={36} >
               <IconBrandWhatsapp  size="1.1rem" stroke={1.5} color="blue"/>
             </ActionIcon>
             <Text fz="md" fw={500}>{phoneNumber}</Text>
-          </Group></Anchor>
+          </Group>
+          </Anchor>
         
         </Card.Section>
       </Card>

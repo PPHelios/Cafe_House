@@ -1,5 +1,5 @@
 import { useEffect } from "preact/hooks";
-import { lazy } from "preact/compat";
+//import { lazy } from "preact/compat";
 import { MantineProvider, createEmotionCache } from "@mantine/core";
 import rtlPlugin from "stylis-plugin-rtl";
 import {
@@ -36,45 +36,30 @@ const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
 import MainLayout from "./layouts/MainLayout";
-const AdminPanel = lazy(() => import("./layouts/AdminPanel"));
-//import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
-//import Menu from "./features/Menu/Menu";
+import AdminPanel from "./layouts/AdminPanel";
+import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
+import Menu from "./features/Menu/Menu";
 import HomePage from "./features/HomePage/HomePage";
-const MapSearch = lazy(() => import("./features/MapSearch/MapSearch"));
-
+import MapSearch from "./features/MapSearch/MapSearch";
 // import AddProperty from "./features/AddProperty/AddProperty";
-const Login = lazy(() => import("./features/Authentication/Login"));
-
-const Signup = lazy(() => import("./features/Authentication/Signup"));
+import Login from "./features/Authentication/Login";
+import Signup from "./features/Authentication/Signup";
 // import AddAgent from "./features/AdminPanel/AddAgent";
 // import AddAgency from "./features/AdminPanel/AddAgency";
-//import AddProperty from "./features/AdminPanel/AddProperty";
+import AddProperty from "./features/AdminPanel/AddProperty";
 
-const AddProperty = lazy(() => import("./features/AdminPanel/AddProperty"));
-
-
-const SignupAgency = lazy(() => import("./features/Authentication/SignupAgency"));
-
-const SignupAgent = lazy(() => import("./features/Authentication/SignupAgent"));
-
-const NotFound404 = lazy(() => import("./features/NotFound404/NotFound404"));
-
-const ListWithUs = lazy(() => import("./features/ListWithUs/ListWithUs"));
+import SignupAgency from "./features/Authentication/SignupAgency";
+import SignupAgent from "./features/Authentication/SignupAgent";
+import NotFound404 from "./features/NotFound404/NotFound404";
+import ListWithUs from "./features/ListWithUs/ListWithUs";
 //import AdminHome from "./features/AdminPanel/Agents";
-//import AdminPanelAnalytics from "./components/AdminPanelStats/AdminPanelAnalytics";
-//import ListedProperties from "./features/AdminPanel/ListedProperties";
-// import Account from "./features/AdminPanel/Account";
-// import Security from "./features/AdminPanel/Security";
-// import Settings from "./features/AdminPanel/Settings";
-// import Agents from "./features/AdminPanel/Agents";
-//const AdminHome = lazy(() => import("./components/AdminPanel/Agents"));
-const AdminPanelAnalytics = lazy(() => import("./components/AdminPanelStats/AdminPanelAnalytics"));
-const ListedProperties = lazy(() => import("./features/AdminPanel/ListedProperties"));
-const Account = lazy(() => import("./features/AdminPanel/Account"));
-const Security = lazy(() => import("./features/AdminPanel/Security"));
-const Settings = lazy(() => import("./features/AdminPanel/Settings"));
-const Agents = lazy(() => import("./features/AdminPanel/Agents"));
 
+import AdminPanelAnalytics from "./components/AdminPanelStats/AdminPanelAnalytics";
+import ListedProperties from "./features/AdminPanel/ListedProperties";
+import Account from "./features/AdminPanel/Account";
+import Security from "./features/AdminPanel/Security";
+import Settings from "./features/AdminPanel/Settings";
+import Agents from "./features/AdminPanel/Agents";
 
 export function App() {
   const rtlCache = createEmotionCache({
@@ -118,7 +103,7 @@ export function App() {
             path="/search"
             element={<MapSearch />}
             loader={ async() => {
-             const favorites= await getUserFavorites();
+             await getUserFavorites();
              return true
             }}
           />

@@ -182,9 +182,17 @@ function PlaceDetails({ item, setPopupInfo, modal }) {
               fill={isFavorite ? "red" : "white"}
             />
           </ActionIcon>
-          <ActionIcon variant="default" radius="md" size={36} >
+          {/* <ActionIcon variant="default" radius="md" size={36} >
             <IconShare size="1.1rem" className={classes.like} stroke={1.5} />
-          </ActionIcon>
+          </ActionIcon> */}
+           <Anchor td="none" target="_blank" href={`https://wa.me/+2${item?.get("agentPointer").get("phoneNumber")}?text=I'm%20inquiring%20about%20the%20apartment%20listing%${item.get("adName")}`}>  
+           
+           
+            <ActionIcon variant="default" radius="md" size={36} >
+              <IconBrandWhatsapp  size="1.1rem" stroke={1.5} color="blue"/>
+            </ActionIcon>
+          
+          </Anchor>
         </Group>
       </Card>
     </>
