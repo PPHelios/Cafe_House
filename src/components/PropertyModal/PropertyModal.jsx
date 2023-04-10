@@ -27,7 +27,7 @@ const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber
     <>
       {modalData && (
         <Modal
-          size="xl"
+          size={{base:"md",sm:"xl"}}
           opened={opened}
           onClose={close}
           scrollAreaComponent={ScrollArea.Autosize}
@@ -36,7 +36,7 @@ const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber
            
           <Box>
             <Title order={3} ta="center">  {modalData?.get("adName")}</Title>
-            <Box h={3000}>
+            <Box h={2000}>
               <Carousel
                 maw={600}
                 mx="auto"
@@ -202,7 +202,7 @@ const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber
             <ActionIcon variant="default" radius="md" size={36}>
               <IconPhoneCall size="1.1rem" stroke={1.5} color="blue"/>
             </ActionIcon>
-            <Text fz="md" fw={500}>{phoneNumber}</Text>
+            {/* <Text fz="md" fw={500}>{phoneNumber}</Text> */}
           </Group>
           <Anchor td="none" target="_blank" href={`https://wa.me/+2${phoneNumber}?text=I'm%20inquiring%20about%20the%20apartment%20listing%${modalData.get("adName")}`}>  
            <Group mt={10}>
@@ -210,7 +210,7 @@ const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber
             <ActionIcon variant="default" radius="md" size={36} >
               <IconBrandWhatsapp  size="1.1rem" stroke={1.5} color="blue"/>
             </ActionIcon>
-            <Text fz="md" fw={500}>{phoneNumber}</Text>
+            {/* <Text fz="md" fw={500}>{phoneNumber}</Text> */}
           </Group>
           </Anchor>
           </Modal.Header>
