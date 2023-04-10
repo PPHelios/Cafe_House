@@ -143,7 +143,7 @@ export function App() {
               return true;
             }}
           >
-            <Route path="/adminpanel" element={<AdminHome />} />
+            {/* <Route path="/adminpanel" element={<AdminHome />} /> */}
             <Route path="/adminpanel/addproperty" element={<AddProperty />} />
             <Route
               path="/adminpanel/listedproperties"
