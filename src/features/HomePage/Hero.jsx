@@ -10,7 +10,9 @@ import {
 
 
 } from "@mantine/core";
-import hero from "../../assets/images/hero.webp";
+//import hero200 from "../../assets/images/hero,w_200.jpg";
+import hero1024 from "../../assets/images/hero,w_1024.jpg";
+//import hero1400 from "../../assets/images/hero,w_1400.jpg";
 
 
 import PropertySearchBar from "../../components/PropertySearchBar/PropertySearchBar";
@@ -21,7 +23,7 @@ const useStyles = createStyles((theme) => ({
     position: "relative",
     paddingTop: rem(120),
     paddingBottom: rem(130),
-    backgroundImage: `url(${hero})`,
+    backgroundImage: `url(${hero1024})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     [theme.fn.smallerThan("sm")]:{
