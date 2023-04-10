@@ -69,11 +69,11 @@ const ListWithUs = lazy(() => import("./features/ListWithUs/ListWithUs"));
 // import Agents from "./features/AdminPanel/Agents";
 //const AdminHome = lazy(() => import("./components/AdminPanel/Agents"));
 const AdminPanelAnalytics = lazy(() => import("./components/AdminPanelStats/AdminPanelAnalytics"));
-const ListedProperties = lazy(() => import("./components/AdminPanel/ListedProperties"));
-const Account = lazy(() => import("./components/AdminPanel/Account"));
-const Security = lazy(() => import("./components/AdminPanel/Security"));
-const Settings = lazy(() => import("./components/AdminPanel/Settings"));
-const Agents = lazy(() => import("./components/AdminPanel/Agents"));
+const ListedProperties = lazy(() => import("./features/AdminPanel/ListedProperties"));
+const Account = lazy(() => import("./features/AdminPanel/Account"));
+const Security = lazy(() => import("./features/AdminPanel/Security"));
+const Settings = lazy(() => import("./features/AdminPanel/Settings"));
+const Agents = lazy(() => import("./features/AdminPanel/Agents"));
 
 
 export function App() {
