@@ -1,5 +1,4 @@
 import { useState } from "preact/hooks";
-import { useToggle, upperFirst } from "@mantine/hooks";
 
 import Parse from "parse/dist/parse.min.js";
 import { useForm } from "@mantine/form";
@@ -17,6 +16,7 @@ import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-preact";
 import { queryAgency, userData } from "../../store/appState";
 export default function SignupAgent() {
+  const [loading, setLoading] = useState(false)
   const form = useForm({
     initialValues: {
       agencyName: "",
@@ -27,7 +27,6 @@ export default function SignupAgent() {
       phoneNumber: "4535345",
       bio: "dfgdfg",
       bioAr: "fgdfg",
-      role: "agent",
       profilePic: null,
     },
 
@@ -40,12 +39,19 @@ export default function SignupAgent() {
     },
   });
   async function addAgent(values) {
+    setLoading(true)
+//     var sessionToken = Parse.User.current().getSessionToken();
+
+// Parse.User.signUp(username, password).then(function(newUser) {
+//     Parse.User.become(sessionToken);
+// });
     let parseFile = null;
     if (values.profilePic) {
       parseFile = new Parse.File("img.jpeg", values.profilePic);
     }
     try {
       const agency = await queryAgency(values.agencyName);
+      console.log(agency);
       if (agency === undefined) {
         throw new Error("no such Agency");
       }
@@ -63,9 +69,17 @@ export default function SignupAgent() {
       agentProfile.set("bio", values.bio);
       agentProfile.set("bioAr", values.bioAr);
       agentProfile.set("phoneNumber", values.phoneNumber);
+      agentProfile.set("userRole", "Agent");
       if (values.profilePic) agentProfile.set("profilePic", parseFile);
       agentProfile.set("userPointer", createdUser.toPointer());
       agentProfile.set("agencyPointer", agency.toPointer());
+      let agentProfileACL= new Parse.ACL()
+      agentProfileACL.setPublicReadAccess(true)
+      agentProfileACL.setWriteAccess(Parse.User.current(), true)
+      agentProfileACL.setRoleWriteAccess("SuperAdmin", true)
+      agentProfileACL.setRoleWriteAccess("SubAdmin", true)
+      agentProfileACL.setWriteAccess(agency.get("userPointer").id, true)
+      agentProfile.setACL(agentProfileACL);
       const addAgent = await agentProfile.save();
 
       console.log(addAgent);
@@ -73,20 +87,27 @@ export default function SignupAgent() {
       createdUser.set("firstName", values.firstName);
       createdUser.set("lastName", values.lastName);
       createdUser.set("email", values.email);
-      agentProfile.set("bio", values.bio);
-      agentProfile.set("bioAr", values.bioAr);
-      agentProfile.set("phoneNumber", values.phoneNumber);
-      createdUser.set("role", values.role);
+      createdUser.set("userRole", "Agent");
       createdUser.set("profilePicUrl", addAgent?.attributes?.profilePic?._url);
       createdUser.set("agencyPointer", agency.toPointer());
       createdUser.set("agentPointer", addAgent.toPointer());
+      
+      let userACL= new Parse.ACL()
+      userACL.setPublicReadAccess(true)
+      userACL.setWriteAccess(Parse.User.current(), true)
+      userACL.setRoleWriteAccess("SuperAdmin", true)
+      userACL.setRoleWriteAccess("SubAdmin", true)
+    //  agentProfileACL.setWriteAccess(agency.get("userPointer").id, true)
+      createdUser.setACL(userACL);
       const updateAgent = await createdUser.save();
+      setLoading(false)
       userData.value = updateAgent;
       notifications.show({
         title: "Signed Up Successfully",
       });
       return true;
     } catch (error) {
+      setLoading(false)
       // Error can be caused by lack of Internet connection
       notifications.show({
         title: "Error",
@@ -192,7 +213,7 @@ export default function SignupAgent() {
           </Stack>
 
           <Group position="apart" mt="xl">
-            <Button type="submit" radius="xl">
+            <Button type="submit" radius="xl" loading={loading}>
               Add
             </Button>
           </Group>

@@ -18,7 +18,12 @@ import { GoogleButton, FacebookButton } from "./SocialButtons";
 //import Backendless from "backendless";
 import { userData } from "../../store/appState";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "preact/hooks";
+
 export default function Login() {
+const [loading, setLoading] = useState(false)
+
+
   const navigate = useNavigate();
 
   const form = useForm({
@@ -40,6 +45,7 @@ export default function Login() {
   });
 
   const handleSubmit = async (values) => {
+    setLoading(true)
     try {
       const loggedInUser = await Parse.User.logIn(
         values.email,
@@ -54,13 +60,21 @@ export default function Login() {
       // Clear input fields
 
       // Update state variable holding current user
-      userData.value = loggedInUser;
+      if(loggedInUser){
+        userData.value = loggedInUser;
+      setLoading(false)
       notifications.show({
         title: "Logged In Successfully",
       });
       navigate("/");
       return true;
+      } else{
+       
+        throw new Error("Something Went Wrong, Couldn't Sign In")
+      }
+      
     } catch (error) {
+      setLoading(false)
       // Error can be caused by wrong parameters or lack of Internet connection
       notifications.show({
         title: "Error",
@@ -140,7 +154,7 @@ export default function Login() {
               </Anchor>
             
             </Group>
-            <Button mt={20} type="submit" radius="xl">
+            <Button mt={20} type="submit" radius="xl" loading={loading}>
                 Login
               </Button>
           </form>
@@ -149,8 +163,21 @@ export default function Login() {
         <>
           <p>You Are Logged In {userData.value.get("firstName")}</p>
           {/* <button
-            onClick={() =>
-              console.log(Parse.User.current().get("agencyPointer"))
+            onClick={async () =>{
+let roleACL= new Parse.ACL()
+roleACL.setPublicReadAccess(true)
+roleACL.setRoleWriteAccess("SuperAdmin", true)
+roleACL.setRoleWriteAccess("SubAdmin", true)
+let role = new Parse.Role("AgencyModerators", roleACL)
+const savedRole = await role.save()
+// savedRole.getUsers().add(Parse.User.current())
+// const updateRoll = await savedRole.save()
+// console.log(updateRoll)
+// const x =await Parse.Cloud.run("hello" ,{y:"hellowsssssuuu"})
+// console.log(x)
+
+            }
+             
             }
           >
             pic

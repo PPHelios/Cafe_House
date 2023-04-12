@@ -224,7 +224,7 @@ export function Navbar() {
               ome
             </Text>
           </Group>
-
+{/***************** dropdown List *************************/}
           <Group
             spacing={10}
             className={classes.actions}
@@ -324,7 +324,7 @@ export function Navbar() {
 
                   <Menu.Label>Settings</Menu.Label>
                   <Menu.Item icon={<IconSettings size="0.9rem" stroke={1.5} />}>
-                  <Text component={Link} to="/user/accountsettings">Account settings</Text>
+                  <Text component={Link} to="/user/edituserdata">Account settings</Text>
 
                   </Menu.Item>
 
@@ -352,6 +352,10 @@ export function Navbar() {
           </Group>
         </Container>
       </Header>
+
+
+{/***************** Burger Menu *************************/}
+
       <Drawer
         opened={opened2}
         size={300}
@@ -411,7 +415,7 @@ export function Navbar() {
         <Text component={Link} to="/userfavorites">Favorites</Text>
        
       </List.Item>
-      <List.Item
+      {/* <List.Item
        className={classes.burgerProfileLinks}
         icon={
           <IconStar
@@ -423,7 +427,7 @@ export function Navbar() {
       >
         <Text component={Link} to="\user/savedsearches"> Saved Searches</Text>
        
-      </List.Item>
+      </List.Item> */}
       {role !== "viewer" &&
  <List.Item
  className={classes.burgerProfileLinks}
@@ -449,7 +453,7 @@ export function Navbar() {
   />
   }
 >
-  <Text component={Link} to="\user/accountsettings">Account settings</Text>
+  <Text component={Link} to="/user/edituserdata">Account settings</Text>
  
 </List.Item>
 <List.Item

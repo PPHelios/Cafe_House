@@ -1,3 +1,5 @@
+import { useState } from "preact/hooks";
+
 import Parse from "parse/dist/parse.min.js";
 import { useForm } from "@mantine/form";
 import { userData, queryAgency } from "../../store/appState";
@@ -15,6 +17,7 @@ import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-preact";
 
 export default function SignupAgency() {
+  const [loading, setLoading] = useState(false)
   const form = useForm({
     initialValues: {
       agencyName: "",
@@ -38,21 +41,44 @@ export default function SignupAgency() {
     },
   });
   async function addAgency(values) {
+    setLoading(true)
     let parseFile = null;
+  
     if (values.profilePic) {
       parseFile = new Parse.File("img.jpeg", values.profilePic);
     }
     try {
       const agency = await queryAgency(values.agencyName);
       if (agency !== undefined) {
+        console.log({agency})
         throw new Error("Agency Name Already Exists");
       }
-      const createdUser = await Parse.User.signUp(
+      let createdUser = await Parse.User.signUp(
         values.email,
         values.password
       );
 
-      console.log(createdUser);
+      if(createdUser){
+       // const x =await Parse.Cloud.run("addAgency" ,values)
+       let roleACL= new Parse.ACL()
+       roleACL.setPublicReadAccess(true)
+       roleACL.setRoleWriteAccess("SuperAdmin", true)
+       roleACL.setRoleWriteAccess("SubAdmin", true)
+       roleACL.setWriteAccess(Parse.User.current(), true)
+      //  const agencyRoleName = `${values.agencyName.replace(/\s/g, '')}Agency`
+       const agencyModeratorName = `${values.agencyName.replace(/\s/g, '')}Moderator`
+      //  let role = new Parse.Role(agencyRoleName, roleACL)
+      //  const savedRole = await role.save()
+      //  console.log({savedRole})
+      //  savedRole.getUsers().add(Parse.User.current())
+      //  const updateRoll = await savedRole.save()
+      //  console.log({updateRoll})
+       //roleACL.setRoleWriteAccess(agencyRoleName, true)
+       let moderatorRole = new Parse.Role(agencyModeratorName, roleACL)
+       const addModeratorRole = await moderatorRole.save()
+       addModeratorRole.getUsers().add(Parse.User.current())
+       const updateModeratorRoll = await addModeratorRole.save()
+       console.log({updateModeratorRoll})
       let agencyProfile = new Parse.Object("Agency");
       agencyProfile.set("agencyName", values.agencyName);
       agencyProfile.set("firstName", values.firstName);
@@ -61,27 +87,48 @@ export default function SignupAgency() {
       agencyProfile.set("bio", values.bio);
       agencyProfile.set("bioAr", values.bioAr);
       agencyProfile.set("phoneNumber", values.phoneNumber);
+      agencyProfile.set("userRole", "Agency");
+    //  agencyProfile.set("agencyRoleName", role);
+      agencyProfile.set("moderatorRoleName", agencyModeratorName);
       if (values.profilePic) agencyProfile.set("profilePic", parseFile);
       agencyProfile.set("userPointer", createdUser.toPointer());
-      const addAgency = await agencyProfile.save();
+      let agencyACL= new Parse.ACL()
+      agencyACL.setPublicReadAccess(true)
+      agencyACL.setWriteAccess(Parse.User.current(), true)
+      agencyACL.setRoleWriteAccess("SuperAdmin", true)
+      agencyACL.setRoleWriteAccess("SubAdmin", true)
+      agencyProfile.setACL(agencyACL);
+    let  saveAgency=  await agencyProfile.save();
+       console.log({saveAgency})
 
-      console.log(addAgency);
+    
       createdUser.set("firstName", values.firstName);
       createdUser.set("lastName", values.lastName);
       createdUser.set("email", values.email);
-      agencyProfile.set("bio", values.bio);
-      agencyProfile.set("bioAr", values.bioAr);
-      agencyProfile.set("phoneNumber", values.phoneNumber);
-      createdUser.set("role", values.role);
-      createdUser.set("profilePicUrl", addAgency?.attributes?.profilePic?._url);
-      createdUser.set("agencyPointer", addAgency.toPointer());
+       createdUser.set("userRole", "Agency");
+      createdUser.set("profilePicUrl", saveAgency?.attributes?.profilePic?._url);
+      createdUser.set("agencyPointer", saveAgency.toPointer());
+      let userACL= new Parse.ACL()
+      userACL.setPublicReadAccess(true)
+      userACL.setWriteAccess(Parse.User.current(), true)
+      userACL.setRoleWriteAccess("SuperAdmin", true)
+      userACL.setRoleWriteAccess("SubAdmin", true)
+      createdUser.setACL(userACL);
       const updateAgency = await createdUser.save();
+      console.log({updateAgency})
+
+
+      setLoading(false)
       userData.value = updateAgency;
       notifications.show({
         title: "Signed Up Successfully",
       });
-      return true;
+      return true
+    } else{
+      throw new Error("Something Went Wrong, Couldn't Sign In")
+    }
     } catch (error) {
+      setLoading(false)
       // Error can be caused by lack of Internet connection
       notifications.show({
         title: "Error",
@@ -169,7 +216,7 @@ export default function SignupAgency() {
           </Stack>
 
           <Group position="apart" mt="xl">
-            <Button type="submit" radius="xl">
+            <Button type="submit" radius="xl" loading={loading}>
               Add
             </Button>
           </Group>

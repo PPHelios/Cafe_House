@@ -1,3 +1,4 @@
+import { useState } from "preact/hooks";
 
 import Parse from "parse/dist/parse.min.js";
 
@@ -17,6 +18,7 @@ import { notifications } from "@mantine/notifications";
 
 export default function ResetPassword() {
 
+  const [loading, setLoading] = useState(false)
 
   const form = useForm({
     initialValues: {
@@ -35,23 +37,27 @@ export default function ResetPassword() {
   });
 
   const handleSubmit = async (values) => {
+    setLoading(true)
     try {
 
       const emailQuery = new Parse.Query("User")
       emailQuery.equalTo("email",values.email)
       const searchForUser = await emailQuery.first()
-      console.log(searchForUser)
+      //console.log(searchForUser)
+      setLoading(false)
       if(searchForUser){
         await Parse.User.requestPasswordReset(values.email);
          notifications.show({
        title: `Success! Please check ${values.email} to proceed with password reset.`,
      });
       } else {
+        setLoading(false)
         throw new Error("This Email Doesn't Exist")
       }
 
      return true;
    } catch (error) {
+    setLoading(false)
      // Error can be caused by wrong parameters or lack of Internet connection
      notifications.show({
        title: "Error",
@@ -89,7 +95,7 @@ export default function ResetPassword() {
             </Stack>
 
            
-            <Button mt={20} type="submit" radius="xl">
+            <Button mt={20} type="submit" radius="xl" loading={loading}>
                 Reset Password
               </Button>
           </form>

@@ -1,4 +1,4 @@
-import { computed, effect, signal} from "@preact/signals";
+import { computed, effect, signal } from "@preact/signals";
 // import { create } from "zustand";
 // import produce from "immer";
 
@@ -152,7 +152,7 @@ export const userFavorites = signal([]);
 
 export const agents = signal([]);
 export const properties = signal([]);
-export const adminSideBarState = signal(0); 
+export const adminSideBarState = signal(0);
 export const searchOptions = signal([
   "New Cairo",
   "Mivida",
@@ -203,7 +203,6 @@ export const search = async (values) => {
   //console.log(values);
   if (values.searchValue.length > 0) {
     try {
-
       let parseQuery = new Parse.Query("Property");
       parseQuery.containedIn("locationTags", values.searchValue);
       parseQuery.contains("listingType", values.listingType);
@@ -220,12 +219,12 @@ export const search = async (values) => {
         return Math.random() - 0.5;
       });
       filteredData.value = shuffledResults;
-     // console.log(shuffledResults);
+      // console.log(shuffledResults);
     } catch (err) {
       notifications.show({
         title: "Error",
         message: `Error! ${err.message} 🤥`,
-        color: 'red',
+        color: "red",
       });
     }
   }
@@ -271,7 +270,7 @@ export const logout = async () => {
   try {
     await Parse.User.logOut();
     userData.value = {};
-   // console.log("loggedout");
+    // console.log("loggedout");
     notifications.show({
       title: "Logged Out Successfully",
     });
@@ -279,145 +278,178 @@ export const logout = async () => {
     notifications.show({
       title: "Error",
       message: `Error! ${err.message} 🤥`,
-      color: 'red',
+      color: "red",
     });
-    return false
+    return false;
   }
 };
 
 export const queryAgency = async (agencyName) => {
   //used
- // console.log(agencyName);
+  // console.log(agencyName);
   try {
     let agencyQuery = new Parse.Query("Agency");
     agencyQuery.equalTo("agencyName", agencyName);
     let agencyQueryResult = await agencyQuery.first();
 
-   // console.log(agencyQueryResult);
+    // console.log(agencyQueryResult);
     return agencyQueryResult;
   } catch (err) {
     notifications.show({
       title: "Error",
       message: `Error! ${err.message} 🤥`,
-      color: 'red',
+      color: "red",
     });
-    return false
+    return false;
   }
 };
 export const queryAgentsInAgency = async () => {
-    //used
-  try {
-    let agencyQuery = new Parse.Query("Agent");
-    agencyQuery.equalTo("agencyPointer", userData.value.get("agencyPointer"));
-  let  agencyQueryResult= await agencyQuery.find();
-    
-    //console.log(agencyQueryResult);
-    return agencyQueryResult;
-  } catch (err) {
+  //used
+ // console.log(userData.value);
+  if (userData.value?.get("agencyPointer")) {
+    try {
+      let agencyQuery = new Parse.Query("Agent");
+      agencyQuery.equalTo(
+        "agencyPointer",
+        userData.value?.get("agencyPointer")
+      );
+      let agencyQueryResult = await agencyQuery.find();
+
+      console.log(agencyQueryResult);
+      return agencyQueryResult;
+    } catch (err) {
+      notifications.show({
+        title: "Error",
+        message: `Error! ${err.message} 🤥`,
+        color: "red",
+      });
+      return false;
+    }
+  } else {
     notifications.show({
-      title: "Error",
-      message: `Error! ${err.message} 🤥`,
-      color: 'red',
+      title: "No Logged In User",
     });
-    return false
+    return false;
   }
 };
 
 export const queryAllProperties = async () => {
- const role = userData.value.get("role")
- const pointer = role==="agent"?userData.value?.get("agentPointer"):role==="agency" ?userData.value.get("agencyPointer"):null
+  if (userData.value?.get("agencyPointer")) {
+  const role = userData.value.get("role");
+  const pointer =
+    role === "agent"
+      ? userData.value?.get("agentPointer")
+      : role === "agency"
+      ? userData.value.get("agencyPointer")
+      : null;
   //used
-  try {
-    let propertyQuery = new Parse.Query("Property");
-    propertyQuery.equalTo("agentPointer", pointer);
-    let propertyQueryResult = await propertyQuery.find();
-   // console.log(propertyQueryResult);
-    properties.value=propertyQueryResult
-    return propertyQueryResult;
-  } catch (err) {
-   // console.log(err.message);
-   notifications.show({
-    title: "Error",
-    message: `Error! ${err.message} 🤥`,
-    color: 'red',
-  });
-    throw new Error("Couldn't Fetch Properties")
+ 
+    try {
+      let propertyQuery = new Parse.Query("Property");
+      propertyQuery.equalTo("agentPointer", pointer);
+      let propertyQueryResult = await propertyQuery.find();
+      // console.log(propertyQueryResult);
+      properties.value = propertyQueryResult;
+      return propertyQueryResult;
+    } catch (err) {
+      // console.log(err.message);
+      notifications.show({
+        title: "Error",
+        message: `Error! ${err.message} 🤥`,
+        color: "red",
+      });
+      throw new Error("Couldn't Fetch Properties");
+    }
+  } else {
+    notifications.show({
+      title: "No Logged In User",
+    });
+    return false;
   }
 };
 
-
-
-export const getUserFavorites = async()=>{
+export const getUserFavorites = async () => {
   try {
     // Since the signUp method returns a Promise, we need to call it using await
     let newFavoriteQuery = new Parse.Query("Favorite");
-   
-    newFavoriteQuery.equalTo("userPointer",Parse.User.current() );
+
+    newFavoriteQuery.equalTo("userPointer", Parse.User.current());
     newFavoriteQuery.include("propertyPointer");
 
     const favorites = await newFavoriteQuery.find();
     //console.log(favorites);
-    userFavorites.value = favorites
+    userFavorites.value = favorites;
     return true;
   } catch (error) {
     // signUp can fail if any parameter is blank or failed an uniqueness check on the server
     notifications.show({
       title: "Error",
       message: `Error! ${error.message} 🤥`,
-      color: 'red',
+      color: "red",
     });
     return false;
-  } 
-}
+  }
+};
 
-export const addToFavorites = async(property)=>{
+export const addToFavorites = async (property) => {
+  const favoritesBeforeFilter = userFavorites.value;
   try {
     // Since the signUp method returns a Promise, we need to call it using await
     let newFavorite = new Parse.Object("Favorite");
-    newFavorite.set("propertyPointer",property.toPointer() );
-    newFavorite.set("userPointer",userData.value );
-    
-    await newFavorite.save();
-    //console.log(addFavorite);
+    newFavorite.set("propertyPointer", property.toPointer());
+    newFavorite.set("userPointer", userData.value);
+
+    const addFavorite = await newFavorite.save();
+    // console.log({addFavorite});
+    // console.log(userFavorites.value);
+    userFavorites.value.push(addFavorite);
     notifications.show({
       title: "Added To Favorites Successfully",
     });
     return true;
   } catch (error) {
     // signUp can fail if any parameter is blank or failed an uniqueness check on the server
+    userFavorites.value = favoritesBeforeFilter;
     notifications.show({
       title: "Error",
       message: `Error! ${error.message} 🤥`,
-      color: 'red',
+      color: "red",
     });
-    throw new Error(error.message)
-  } 
-}
-export const removeFromFavorites = async(property)=>{
+    return false;
+  }
+};
+export const removeFromFavorites = async (property) => {
+  const favoritesBeforeFilter = userFavorites.value;
   try {
     // Since the signUp method returns a Promise, we need to call it using await
     let favoriteQuery = new Parse.Query("Favorite");
-    favoriteQuery.equalTo("propertyPointer",property.toPointer() );
-    favoriteQuery.equalTo("userPointer",userData.value );
-    
-   const findFavorite =  await favoriteQuery.first();
-  //  console.log({findFavorite});
-await findFavorite.destroy()
-   // console.log({deleteFavorite});
+    favoriteQuery.equalTo("propertyPointer", property.toPointer());
+    favoriteQuery.equalTo("userPointer", userData.value);
+
+    const findFavorite = await favoriteQuery.first();
+    // console.log({findFavorite});
+    const deleteFavorite = await findFavorite.destroy();
+    // console.log({deleteFavorite});
+    const filteredFavorites = userFavorites.value.filter(
+      (fav) => fav.id !== deleteFavorite.id
+    );
+    userFavorites.value = filteredFavorites;
+    console.log(userFavorites.value);
     notifications.show({
       title: "Removed From Favorites Successfully",
     });
     return true;
   } catch (error) {
+    userFavorites.value = favoritesBeforeFilter;
     // signUp can fail if any parameter is blank or failed an uniqueness check on the server
     notifications.show({
       title: "Error",
       message: `Error! ${error.message} 🤥`,
-      color: 'red',
+      color: "red",
     });
-    throw new Error(error.message)
-  } 
-}
+    return false;
+  }
+};
 // import { deepSignal } from "@deepsignal/preact";
 // export const appState = {
 //   themeColor: deepSignal({ color: "light" }),

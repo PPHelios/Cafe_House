@@ -1,4 +1,5 @@
 import { useState} from "preact/hooks";
+import { Link } from "react-router-dom";
 import { createStyles, Table, ScrollArea, rem ,Avatar, Text,Group,} from '@mantine/core';
 import {  adminSideBarState, agents } from "../../store/appState";
 const useStyles = createStyles((theme) => ({
@@ -44,7 +45,7 @@ const rows = agents.value.map((row) => {
     <tr key={row.name}>
        <td>
           <Group spacing="sm">
-            <Avatar size={26} src={profilePic._url} radius={26} />
+            <Avatar size={26} src={profilePic?._url} radius={26} />
             <Text size="sm" weight={500}>
               {firstName} {lastName}
             </Text>
@@ -52,7 +53,7 @@ const rows = agents.value.map((row) => {
         </td>
         <td>{email}</td>
         <td>{phoneNumber}</td>
-        
+        <td><Link to="/adminpanel/editagent">edit</Link></td>
     </tr>
   )})
 

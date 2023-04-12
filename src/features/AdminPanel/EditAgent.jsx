@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 import { Link, useNavigate } from "react-router-dom";
 import Parse from "parse/dist/parse.min.js";
@@ -16,21 +16,35 @@ import {
   Stack,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { GoogleButton, FacebookButton } from "./SocialButtons";
+
 //import Backendless from "backendless";
 import { userData } from "../../store/appState";
-export default function Login() {
+export default function EditAgent() {
   const [loading, setLoading] = useState(false)
+  const [user, setUser] = useState(false)
   const navigate = useNavigate();
-  const signup = true;
-  const header = "Signup";
+  
+useEffect(()=>{
+  const getAgentData=async()=>{
+    let agentQuery= new Parse.Query("Agent")
+    agentQuery.equalTo("objectId","Nn2qfpaxme")
+    const searchResults = await agentQuery.first()
+    console.log({searchResults})
+    setUser(searchResults)
+    form.setValues({
+      firstName: searchResults.attributes.firstName,
+      lastName: searchResults.attributes.lastName,
+      email: searchResults.attributes.email,
+    })
+  }
+  getAgentData()
+},[])
+
   const form = useForm({
     initialValues: {
       firstName: "",
       lastName: "",
       email: "",
-      password: "",
-      user: "viewer",
     },
 
     validate: {
@@ -46,36 +60,35 @@ export default function Login() {
     setLoading(true)
     try {
       // Since the signUp method returns a Promise, we need to call it using await
-      const createdUser = await Parse.User.signUp(
-        values.email,
-        values.password
-      );
-      if(createdUser){
-         createdUser.set("firstName", values.firstName);
-      createdUser.set("lastName", values.lastName);
-      createdUser.set("email", values.email);
-      createdUser.set("userRole", values.role);
-      let userACL= new Parse.ACL()
-      userACL.setPublicReadAccess(true)
-      userACL.setWriteAccess(Parse.User.current(), true)
-      userACL.setRoleWriteAccess("SuperAdmin", true)
-      userACL.setRoleWriteAccess("SubAdmin", true)
-      createdUser.setACL(userACL);
-      const saveUser = await createdUser.save();
+    
+      if(user){
+
+// let agentQuery= new Parse.Query("Agent")
+// agentQuery.equalTo("email","adamsag1@gmail.com")
+// let editableUser = await agentQuery.first()
+// console.log({editableUser})
+let editableUser = user
+         editableUser.set("firstName", values.firstName);
+      editableUser.set("lastName", values.lastName);
+    //  editableUser.set("email", values.email);
+     // editableUser.set("password", values.password);
+      const saveUser = await editableUser.save();
       if(saveUser){
-         userData.value = saveUser;
+        console.log({saveUser})
+      
       setLoading(false)
       notifications.show({
-        title: "Signed Up Successfully",
+        title: "User Data Updated Successfully",
       });
-      navigate("/");
+     // navigate("/");
       return true;
       }else{
-        
+        console.log("bbbbbbbbb")
         throw new Error("Something Went Wrong, Couldn't Sign Up")
       }
      
       }  else{
+        console.log("yyyyyyyy")
         throw new Error("Something Went Wrong, Couldn't Sign Up")
       }
      
@@ -94,26 +107,13 @@ export default function Login() {
   return (
     <>
       <Title my={30} order={1} weight={700} ta="center" c="blue.4">
-        Welcome to My Home, Signup with
+      
       </Title>
-      {!userData?.value?.id ? (
-        <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
-          <Group grow mb="md" mt="md">
-            <GoogleButton radius="xl">Google</GoogleButton>
-
-            <FacebookButton radius="xl">Facebook</FacebookButton>
-          </Group>
-
-          <Divider
-            label="Or continue with email"
-            labelPosition="center"
-            my="lg"
-          />
-
+     
+      <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
           <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Stack>
-              {signup && (
-                <>
+          
                   <TextInput
                     required
                     label="First Name"
@@ -134,8 +134,7 @@ export default function Login() {
                     }
                     radius="md"
                   />
-                </>
-              )}
+             
 
               <TextInput
                 required
@@ -149,53 +148,17 @@ export default function Login() {
                 radius="md"
               />
 
-              <PasswordInput
-                required
-                label="Password"
-                placeholder="Your password"
-                value={form.values.password}
-                onChange={(event) =>
-                  form.setFieldValue("password", event.currentTarget.value)
-                }
-                error={
-                  form.errors.password &&
-                  "Password should include at least 6 characters"
-                }
-                radius="md"
-              />
+             
             </Stack>
 
             <Group position="apart" mt="xl">
-              <Anchor
-                component={Link}
-                to="/login"
-                type="button"
-                color="dimmed"
-                onClick={() => toggle()}
-                size="xs"
-              >
-                {signup
-                  ? "Already have an account? Login"
-                  : "Don't have an account? Register"}
-              </Anchor>
+              
               <Button type="submit" radius="xl" loading={loading}>
-                {header}
+              Update User Data
               </Button>
             </Group>
           </form>
         </Paper>
-      ) : (
-        <>
-          <p>You Are Logged In {userData.value.get("firstName")}</p>
-          {/* <button
-            onClick={() =>
-              console.log(Parse.User.current().get("agencyPointer"))
-            }
-          >
-            pic
-          </button> */}
-        </>
-      )}
-    </>
+     </>
   );
 }

@@ -11,26 +11,22 @@ import {
   Paper,
   Group,
   Button,
-  Divider,
-  Anchor,
   Stack,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { GoogleButton, FacebookButton } from "./SocialButtons";
+
 //import Backendless from "backendless";
 import { userData } from "../../store/appState";
-export default function Login() {
+export default function EditUserData() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
-  const signup = true;
-  const header = "Signup";
+
+
   const form = useForm({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      user: "viewer",
+      firstName: Parse.User.current().get("firstName"),
+      lastName: Parse.User.current().get("lastName"),
+      email: Parse.User.current().get("email"),
     },
 
     validate: {
@@ -46,27 +42,22 @@ export default function Login() {
     setLoading(true)
     try {
       // Since the signUp method returns a Promise, we need to call it using await
-      const createdUser = await Parse.User.signUp(
-        values.email,
-        values.password
-      );
-      if(createdUser){
-         createdUser.set("firstName", values.firstName);
-      createdUser.set("lastName", values.lastName);
-      createdUser.set("email", values.email);
-      createdUser.set("userRole", values.role);
-      let userACL= new Parse.ACL()
-      userACL.setPublicReadAccess(true)
-      userACL.setWriteAccess(Parse.User.current(), true)
-      userACL.setRoleWriteAccess("SuperAdmin", true)
-      userACL.setRoleWriteAccess("SubAdmin", true)
-      createdUser.setACL(userACL);
-      const saveUser = await createdUser.save();
+      const userQuery = new Parse.Query("User")
+      userQuery.equalTo("objectId",Parse.User.current().id)
+      const foundUser = await userQuery.first()
+      if(foundUser){
+console.log({foundUser})
+         foundUser.set("firstName", values.firstName);
+      foundUser.set("lastName", values.lastName);
+      foundUser.set("email", values.email);
+     // foundUser.set("password", values.password);
+      const saveUser = await foundUser.save();
       if(saveUser){
+        console.log({saveUser})
          userData.value = saveUser;
       setLoading(false)
       notifications.show({
-        title: "Signed Up Successfully",
+        title: "User Data Updated Successfully",
       });
       navigate("/");
       return true;
@@ -94,26 +85,13 @@ export default function Login() {
   return (
     <>
       <Title my={30} order={1} weight={700} ta="center" c="blue.4">
-        Welcome to My Home, Signup with
+      
       </Title>
-      {!userData?.value?.id ? (
-        <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
-          <Group grow mb="md" mt="md">
-            <GoogleButton radius="xl">Google</GoogleButton>
-
-            <FacebookButton radius="xl">Facebook</FacebookButton>
-          </Group>
-
-          <Divider
-            label="Or continue with email"
-            labelPosition="center"
-            my="lg"
-          />
-
+     
+      <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
           <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Stack>
-              {signup && (
-                <>
+          
                   <TextInput
                     required
                     label="First Name"
@@ -134,8 +112,7 @@ export default function Login() {
                     }
                     radius="md"
                   />
-                </>
-              )}
+             
 
               <TextInput
                 required
@@ -149,7 +126,7 @@ export default function Login() {
                 radius="md"
               />
 
-              <PasswordInput
+              {/* <PasswordInput
                 required
                 label="Password"
                 placeholder="Your password"
@@ -162,40 +139,17 @@ export default function Login() {
                   "Password should include at least 6 characters"
                 }
                 radius="md"
-              />
+              /> */}
             </Stack>
 
             <Group position="apart" mt="xl">
-              <Anchor
-                component={Link}
-                to="/login"
-                type="button"
-                color="dimmed"
-                onClick={() => toggle()}
-                size="xs"
-              >
-                {signup
-                  ? "Already have an account? Login"
-                  : "Don't have an account? Register"}
-              </Anchor>
+              
               <Button type="submit" radius="xl" loading={loading}>
-                {header}
+              Update User Data
               </Button>
             </Group>
           </form>
         </Paper>
-      ) : (
-        <>
-          <p>You Are Logged In {userData.value.get("firstName")}</p>
-          {/* <button
-            onClick={() =>
-              console.log(Parse.User.current().get("agencyPointer"))
-            }
-          >
-            pic
-          </button> */}
-        </>
-      )}
-    </>
+     </>
   );
 }

@@ -37,6 +37,7 @@ const SelectItem = forwardRef(
 export default function AddProperty() {
 
   const [propertLocation, setPropertLocation] = useState({});
+  const [loading, setLoading] = useState(false)
   adminSideBarState.value=1
 
   const maxNumberOfPics = 15;
@@ -107,6 +108,7 @@ export default function AddProperty() {
     }
   }
   async function addnewProperty(values) {
+    setLoading(true)
     // const parseQuery = new Parse.Query("Person");
     let picFiles = [];
     let videoFiles = [];
@@ -177,7 +179,20 @@ export default function AddProperty() {
           property.set(`video${i}`,videoFiles[i]);
         }
       }
+
+//ACL
+// only current user has read/write access
+// property.setACL(new Parce.ACL(Parse.User.current()))
+// let propertyACL = new Parse.ACL()
+// propertyACL.setWriteAccess(Parse.User.current(), true)
+// //propertyACL.setWriteAccess(admin, true)
+// propertyACL.setPublicWriteAccess(false)
+// property.setACL(propertyACL)
+
+
       const saveproperty = await property.save();
+      setLoading(false)
+      form.reset()
       notifications.show({
         title: "Property Added Successfully",
       });
@@ -192,6 +207,7 @@ export default function AddProperty() {
 
       return true;
     } catch (error) {
+      setLoading(false)
       // Error can be caused by lack of Internet connection
       notifications.show({
         title: "Error",
@@ -369,8 +385,8 @@ export default function AddProperty() {
             <AppMap add={false} setPropertLocation={setPropertLocation} />
           </Box>
           <Group position="center" mt="xl">
-            <Button type="submit" radius="xl">
-              Add
+            <Button type="submit" radius="xl" loading={loading}>
+              Add Property
             </Button>
           </Group>
         </form>

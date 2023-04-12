@@ -55,7 +55,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PlaceDetails({ item, setPopupInfo, modal }) {
+function PlaceDetails({ item, setPopupInfo, modal,favotitesPage }) {
   
   const fav = userFavorites.value.some(
     (favorite) => {
@@ -95,18 +95,21 @@ function PlaceDetails({ item, setPopupInfo, modal }) {
     </div>
   ));
 
-  const handleClick = async () => {
+  const handleClick = async (e) => {
+    e.stopPropagation()
     if (!isFavorite) {
       try {
-        await addToFavorites(item);
-        setIsFavorite(true);
+           setIsFavorite(true);
+      const saveFavorite =  await addToFavorites(item);
+     if(!saveFavorite)  setIsFavorite(false);
       } catch (err) {
         setIsFavorite(false);
       }
     } else {
       try {
-        await removeFromFavorites(item);
-        setIsFavorite(false);
+         setIsFavorite(false);
+        const removeFavorite =  await removeFromFavorites(item);
+        if(!removeFavorite)  setIsFavorite(true);
       } catch (err) {
         setIsFavorite(true);
       }
@@ -120,7 +123,7 @@ function PlaceDetails({ item, setPopupInfo, modal }) {
         radius="md"
         className={classes.card}
         onClick={() => {
-          setPopupInfo(item);
+        if(!favotitesPage)  setPopupInfo(item);
         }}
       >
         {!modal && (
@@ -176,7 +179,7 @@ function PlaceDetails({ item, setPopupInfo, modal }) {
             variant="default"
             radius="md"
             size={36}
-            onClick={() => handleClick()}
+            onClick={(e) => handleClick(e)}
           >
             <IconHeart
               size="1.1rem"

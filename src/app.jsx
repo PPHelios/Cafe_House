@@ -37,22 +37,21 @@ Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
 import MainLayout from "./layouts/MainLayout";
 import AdminPanel from "./layouts/AdminPanel";
-import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
-import Menu from "./features/Menu/Menu";
+//import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
+
 import HomePage from "./features/HomePage/HomePage";
 import MapSearch from "./features/MapSearch/MapSearch";
-// import AddProperty from "./features/AddProperty/AddProperty";
+
 import Login from "./features/Authentication/Login";
 import Signup from "./features/Authentication/Signup";
-// import AddAgent from "./features/AdminPanel/AddAgent";
-// import AddAgency from "./features/AdminPanel/AddAgency";
+
 import AddProperty from "./features/AdminPanel/AddProperty";
 
 import SignupAgency from "./features/Authentication/SignupAgency";
 import SignupAgent from "./features/Authentication/SignupAgent";
 import NotFound404 from "./features/NotFound404/NotFound404";
 import ListWithUs from "./features/ListWithUs/ListWithUs";
-//import AdminHome from "./features/AdminPanel/Agents";
+
 
 import AdminPanelAnalytics from "./components/AdminPanelStats/AdminPanelAnalytics";
 import ListedProperties from "./features/AdminPanel/ListedProperties";
@@ -62,6 +61,8 @@ import Settings from "./features/AdminPanel/Settings";
 import Agents from "./features/AdminPanel/Agents";
 import ResetPassword from "./features/Authentication/ResetPassword";
 import UserFavoritesPage from "./features/UserFavoritesPage/UserFavoritesPage";
+import EditUserData from "./features/EditUserData/EditUserData";
+import EditAgent from "./features/AdminPanel/EditAgent";
 
 export function App() {
   const rtlCache = createEmotionCache({
@@ -119,14 +120,14 @@ export function App() {
             }} />
           <Route path="/signupagency" element={<SignupAgency />} />
           <Route path="/signupagent" element={<SignupAgent />} />
-          {/* <Route path="/adminpanel/addagent" element={<AddAgent />} />
-          <Route path="/adminpanel/addagency" element={<AddAgency />} /> */}
+          <Route path="/user/edituserdata" element={<EditUserData />} />
+         
 
           <Route
             element={<AdminPanel />}
             loader={async () => {
               const agentsQuery = await queryAgentsInAgency();
-              console.log(agentsQuery);
+             
               agents.value = agentsQuery;
               const propertiesQuery = await queryAllProperties();
               console.log(propertiesQuery);
@@ -145,10 +146,11 @@ export function App() {
               path="/adminpanel/agentanalytics"
               element={<AdminPanelAnalytics />}
             />
-            <Route path="/adminpanel/agents" element={<Agents />} />
+            <Route path="/adminpanel/agents" element={<Agents />}/>
             <Route path="/adminpanel/account" element={<Account />} />
             <Route path="/adminpanel/security" element={<Security />} />
             <Route path="/adminpanel/settings" element={<Settings />} />
+            <Route path="/adminpanel/editagent" element={<EditAgent />} />
           </Route>
           <Route path="*" element={<NotFound404 />} />
         </Route>
