@@ -11,11 +11,15 @@ import {
   Button,
   FileInput,
   Stack,
+  Textarea
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-preact";
 import { queryAgency, userData } from "../../store/appState";
+import { useNavigate } from "react-router";
+
 export default function SignupAgent() {
+  const navigate=useNavigate()
   const [loading, setLoading] = useState(false)
   const form = useForm({
     initialValues: {
@@ -31,20 +35,25 @@ export default function SignupAgent() {
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
-      // password: (val) =>
-      //   val.length <= 6
-      //     ? "Password should include at least 6 characters"
-      //     : null,
+      firstName: (value) => (value.length < 2 ? 'Name must have at least 2 letters' : null),
+      lastName: (value) => (value.length < 2 ? 'Name must have at least 2 letters' : null),
+      email: (val) => (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val) ? null : "Invalid email"),
+      password: (val) =>
+        val.length <= 6
+          ? "Password should include at least 6 characters"
+          : null,
+          phoneNumber:(val) => (/ ^[0-9]*$/.test(val) ? null : "Invalid Phone Number"),
+          bio: (value) => (value.length < 700 ? 'Name must have at least 700 letters' : value.length>2000?'Name must have Maxmimum 2000 letters': null),
+          bioAr: (value) => (value.length < 700 ? 'Name must have at least 700 letters' : value.length>2000?'Name must have Maxmimum 2000 letters': null),
+
     },
   });
   async function addAgent(values) {
     setLoading(true)
-//     var sessionToken = Parse.User.current().getSessionToken();
+     const sessionToken = Parse.User.current().getSessionToken();
 
-// Parse.User.signUp(username, password).then(function(newUser) {
-//     Parse.User.become(sessionToken);
-// });
+
+
     let parseFile = null;
     if (values.profilePic) {
       parseFile = new Parse.File("img.jpeg", values.profilePic);
@@ -100,6 +109,11 @@ export default function SignupAgent() {
     //  agentProfileACL.setWriteAccess(agency.get("userPointer").id, true)
       createdUser.setACL(userACL);
       const updateAgent = await createdUser.save();
+      // revert to agency profile
+     await Parse.User.become(sessionToken);
+      navigate(0)
+    
+
       setLoading(false)
       userData.value = updateAgent;
       notifications.show({
@@ -144,6 +158,8 @@ export default function SignupAgent() {
                 form.setFieldValue("firstName", event.currentTarget.value)
               }
               radius="md"
+                            {...form.getInputProps('firstName')}
+
             />
             <TextInput
               required
@@ -154,26 +170,32 @@ export default function SignupAgent() {
                 form.setFieldValue("lastName", event.currentTarget.value)
               }
               radius="md"
+                            {...form.getInputProps('lastName')}
+
             />
             <TextInput
               required
-              label="First NameAr"
-              placeholder="Your First Name"
+              label="First Name Arabic"
+              placeholder="Your First Name in Arabic"
               value={form.values.firstNameAr}
               onChange={(event) =>
                 form.setFieldValue("firstNameAr", event.currentTarget.value)
               }
               radius="md"
+                            {...form.getInputProps('firstNameAr')}
+
             />
             <TextInput
               required
-              label="Last NameAr"
-              placeholder="Your Last Name"
+              label="Last Name Arabic"
+              placeholder="Your Last Name in Arabic"
               value={form.values.lastNameAr}
               onChange={(event) =>
                 form.setFieldValue("lastNameAr", event.currentTarget.value)
               }
               radius="md"
+                            {...form.getInputProps('lastNameAr')}
+
             />
             <TextInput
               required
@@ -183,8 +205,8 @@ export default function SignupAgent() {
               onChange={(event) =>
                 form.setFieldValue("email", event.currentTarget.value)
               }
-              error={form.errors.email && "Invalid email"}
               radius="md"
+               {...form.getInputProps('email')}
             />
             <PasswordInput
               required
@@ -194,11 +216,53 @@ export default function SignupAgent() {
               onChange={(event) =>
                 form.setFieldValue("password", event.currentTarget.value)
               }
-              error={
-                form.errors.password &&
-                "Password should include at least 6 characters"
+                       {...form.getInputProps('password')}
+
+              radius="md"
+            />
+             <TextInput
+              required
+              label="Phone Number"
+              placeholder="Your Phone Number"
+              value={form.values.phoneNumber}
+              onChange={(event) =>
+                form.setFieldValue("phoneNumber", event.currentTarget.value)
               }
               radius="md"
+                            {...form.getInputProps('phoneNumber')}
+
+            />
+            <Textarea
+              required
+              autosize
+        minRows={2}
+        maxRows={4}
+              label="About Agent"
+              placeholder="About Agent"
+              description="From 400 to 2000 characters"
+              value={form.values.bio}
+              onChange={(event) =>
+                form.setFieldValue("bio", event.currentTarget.value)
+              }
+              radius="md"
+                            {...form.getInputProps('bio')}
+
+            />
+            <Textarea
+              required
+              autosize
+        minRows={2}
+        maxRows={4}
+              label="Arabic About Agent"
+              placeholder="Arabic About Agent"
+              description="From 400 to 2000 characters"
+              value={form.values.bioAr}
+              onChange={(event) =>
+                form.setFieldValue("bioAr", event.currentTarget.value)
+              }
+              radius="md"
+                            {...form.getInputProps('bioAr')}
+
             />
             <FileInput
               label="Profile Picture"

@@ -2,21 +2,14 @@ import { Link } from "react-router-dom";
 import {
   Title,
   Text,
-  Paper,
   Box,
   Stack,
-  Flex,
-  createStyles,
-  Container,
+createStyles,
   UnstyledButton,
   Overlay,
   SimpleGrid,
   rem,
-  Select,
-  Collapse,
-  ActionIcon,
-  Button,
-  TextInput,
+
 } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
@@ -67,17 +60,18 @@ function ListWithUs() {
       className={classes.categoryCard}
       key={category.label}
     >
-      <Link to={category.link}>
+      <Box component={Link} to={category.link}>
         <Overlay color="#000" opacity={0.6} zIndex={1} />
         <Text
           size="xl"
           align="center"
           weight={700}
           className={classes.categoryLabel}
+         sx={{textDecoration:"none"}}
         >
           {category.label}
         </Text>
-      </Link>
+      </Box>
     </UnstyledButton>
   ));
   return (

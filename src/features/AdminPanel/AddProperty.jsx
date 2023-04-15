@@ -17,6 +17,7 @@ import {
   Select,
   Stack,
   Title,
+  Textarea
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-preact";
@@ -48,6 +49,7 @@ export default function AddProperty() {
       adNameAr: "",
       description: "",
       descriptionAr: "",
+      propertyCode:"",
       propertyType: "",
       listingType: "",
       price: "",
@@ -62,17 +64,20 @@ export default function AddProperty() {
     },
 
     validate: {
-      // email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
-      // password: (val) =>
-      //   val.length <= 6
-      //     ? "Password should include at least 6 characters"
-      //     : null,
+      adName: (value) => (value.length < 10 ? 'Name must have at least 10 letters' : value.length>200?'Name must have Maxmimum 200 letters': null),
+      lastName: (value) => (value.length < 10 ? 'Name must have at least 10 letters' : value.length>200?'Name must have Maxmimum 200 letters': null),
+      description: (value) => (value.length < 700 ? 'Description must have at least 700 letters' : value.length>2000?'Description must have Maxmimum 2000 letters': null),
+      descriptionAr: (value) => (value.length < 700 ? 'Description must have at least 700 letters' : value.length>2000?'Description must have Maxmimum 2000 letters': null),
+      price: (value) => (value < 1 ? 'Room Must Be 1 At Least' : value>1000000?'Room Must Be 1000000000 Maximum': null),
+      area: (value) => (value < 1 ? 'Area Must Be 1 At Least' : value>1000000?'Area Must Be 1000000000 Maximum': null),
+
     },
     transformValues: (values) => ({
       adName: values.adName,
       adNameAr: values.adNameAr,
       description: values.description,
       descriptionAr: values.descriptionAr,
+      propertyCode: values.propertyCode,
       propertyType: values.propertyType || "Apartment",
       listingType: values.listingType || "Buy",
       price: Number(values.price) || 1,
@@ -151,6 +156,7 @@ export default function AddProperty() {
       property.set("adNameAr", values.adNameAr);
       property.set("description", values.description);
       property.set("descriptionAr", values.descriptionAr);
+      property.set("propertyCode", values.propertyCode);
       property.set("listingType", values.listingType);
       property.set("propertyType", values.propertyType);
       property.set("price", values.price);
@@ -220,11 +226,11 @@ export default function AddProperty() {
   }
 
   return (
-    <>
+    <Box h="calc(100vh - 90px)" sx={{overflowY:"auto"}}>
       <Title my={30} order={1} weight={700} ta="center" c="blue.4">
         Add New Property
       </Title>
-      <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
+      <Paper w="90%"  maw={700} mx="auto" radius="md" p="xl" withBorder>
         <form onSubmit={form.onSubmit((values) => addnewProperty(values))}>
           <Stack>
             <TextInput
@@ -236,6 +242,7 @@ export default function AddProperty() {
                 form.setFieldValue("adName", event.currentTarget.value)
               }
               radius="md"
+              {...form.getInputProps('adName')}
             />
             <TextInput
               label="Ad. Arabic Name"
@@ -245,26 +252,48 @@ export default function AddProperty() {
                 form.setFieldValue("adNameAr", event.currentTarget.value)
               }
               radius="md"
+              {...form.getInputProps('adNameAr')}
             />
-            <TextInput
+            <Textarea
               required
+              autosize
+        minRows={2}
+        maxRows={4}
               label="Property Description"
               placeholder="Enter Property Description"
+              description="From 700 to 2000 characters"
               value={form.values.description}
               onChange={(event) =>
                 form.setFieldValue("description", event.currentTarget.value)
               }
               radius="md"
+              {...form.getInputProps('description')}
             />
-            <TextInput
+            <Textarea
               required
+              autosize
+        minRows={2}
+        maxRows={4}
               label="Property Arabic Description"
               placeholder="Enter Property Arabic Description"
+              description="From 700 to 2000 characters"
               value={form.values.descriptionAr}
               onChange={(event) =>
                 form.setFieldValue("descriptionAr", event.currentTarget.value)
               }
               radius="md"
+              {...form.getInputProps('descriptionAr')}
+            />
+              <TextInput
+              required
+              label="Property Code"
+              placeholder="Enter Property Code"
+              value={form.values.adName}
+              onChange={(event) =>
+                form.setFieldValue("propertyCode", event.currentTarget.value)
+              }
+              radius="md"
+              {...form.getInputProps('propertyCode')}
             />
             <Select
               required
@@ -276,6 +305,7 @@ export default function AddProperty() {
               placeholder="Property Type"
               aria-label="pick property type "
               radius="md"
+              {...form.getInputProps('propertyType')}
             />
             <Select
               required
@@ -286,6 +316,8 @@ export default function AddProperty() {
               placeholder="pick Listing Type"
               aria-label="pick Listing Type"
               radius="md"
+              {...form.getInputProps('listingType')}
+
             />
 
             <TextInput
@@ -297,6 +329,7 @@ export default function AddProperty() {
                 form.setFieldValue("price", event.currentTarget.value)
               }
               radius="md"
+              {...form.getInputProps('price')}
             />
             <TextInput
               required
@@ -307,6 +340,7 @@ export default function AddProperty() {
                 form.setFieldValue("area", event.currentTarget.value)
               }
               radius="md"
+              {...form.getInputProps('area')}
             />
             <TextInput
               required
@@ -317,6 +351,7 @@ export default function AddProperty() {
                 form.setFieldValue("room", event.currentTarget.value)
               }
               radius="md"
+              {...form.getInputProps('room')}
             />
             <TextInput
               required
@@ -327,6 +362,7 @@ export default function AddProperty() {
                 form.setFieldValue("bath", event.currentTarget.value)
               }
               radius="md"
+              {...form.getInputProps('bath')}
             />
             <FileInput
               multiple
@@ -379,9 +415,10 @@ export default function AddProperty() {
                   paddingRight: 40,
                 },
               }}
+              {...form.getInputProps('locationTags')}
             />
           </Stack>
-          <Box w="100%" mt={50} h={400} mx="auto">
+          <Box w="100%" mt={50} h={{base:250,sm:400}} mx="auto">
             <AppMap add={false} setPropertLocation={setPropertLocation} />
           </Box>
           <Group position="center" mt="xl">
@@ -391,6 +428,6 @@ export default function AddProperty() {
           </Group>
         </form>
       </Paper>
-    </>
+    </Box>
   );
 }

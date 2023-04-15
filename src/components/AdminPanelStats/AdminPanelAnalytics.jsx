@@ -88,7 +88,7 @@ const useStyles = createStyles((theme) => ({
       
       return (
       
-        <Paper withBorder p="md" radius="md" key={stat.title}>
+        <Paper withBorder p="md" radius="md" key={stat.title} >
           <Group position="apart">
             <div>
               <Text c="dimmed" tt="uppercase" fw={700} fz="xs" className={classes.label}>
@@ -148,7 +148,9 @@ const useStyles = createStyles((theme) => ({
     });
     return (
       <>
-      {agents.value.length && properties.value.length && <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
+      {agents.value.length 
+      && 
+      <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
       {stats2}
     </SimpleGrid>}
       <div className={classes.root}>

@@ -8,16 +8,20 @@ import {
   Image,
   Card,
   Box,
-  Anchor
 } from "@mantine/core";
+import { Carousel } from "@mantine/carousel";
+import Autoplay from 'embla-carousel-autoplay';
+
 //import Parse from "parse/dist/parse.min.js";
-import { IconHeart, IconBrandWhatsapp } from "@tabler/icons-preact";
+import { IconHeart} from "@tabler/icons-preact";
 import {
   addToFavorites,
   userFavorites,
   removeFromFavorites,
 } from "../../store/appState";
-import { useState } from "preact/hooks";
+import { useRef, useState } from "preact/hooks";
+import WhatsappButton from "../Buttons/WhatsappButton";
+import PhoneNumberButton from "../Buttons/phoneNumberButton";
 const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor:
@@ -47,7 +51,8 @@ const useStyles = createStyles((theme) => ({
   },
   actionButtons: {
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
     padding: `${theme.spacing.sm} ${theme.spacing.sm}`,
     borderTop: `${rem(1)} solid ${
       theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]
@@ -55,18 +60,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PlaceDetails({ item, setPopupInfo, modal,favotitesPage }) {
-  
-  const fav = userFavorites.value.some(
-    (favorite) => {
- 
-      return item.id === favorite.get("propertyPointer").id}
-  );
+function PlaceDetails({ item, setPopupInfo, modal, favotitesPage }) {
+  const autoplay = useRef(Autoplay({ delay: 4000 }));
+  const fav = userFavorites.value.some((favorite) => {
+    return item.id === favorite.get("propertyPointer").id;
+  });
 
   const [isFavorite, setIsFavorite] = useState(fav);
-
-
-
 
   const { classes } = useStyles();
 
@@ -96,45 +96,183 @@ function PlaceDetails({ item, setPopupInfo, modal,favotitesPage }) {
   ));
 
   const handleClick = async (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
     if (!isFavorite) {
       try {
-           setIsFavorite(true);
-      const saveFavorite =  await addToFavorites(item);
-     if(!saveFavorite)  setIsFavorite(false);
+        setIsFavorite(true);
+        const saveFavorite = await addToFavorites(item);
+        if (!saveFavorite) setIsFavorite(false);
       } catch (err) {
         setIsFavorite(false);
       }
     } else {
       try {
-         setIsFavorite(false);
-        const removeFavorite =  await removeFromFavorites(item);
-        if(!removeFavorite)  setIsFavorite(true);
+        setIsFavorite(false);
+        const removeFavorite = await removeFromFavorites(item);
+        if (!removeFavorite) setIsFavorite(true);
       } catch (err) {
         setIsFavorite(true);
       }
     }
   };
-
+  const phoneNumber = item?.get("agentPointer").attributes.phoneNumber;
+  const propertyCode = item?.get("agentPointer").attributes.propertyCode;
   return (
     <>
       <Card
         withBorder
         radius="md"
         className={classes.card}
-        onClick={() => {
-        if(!favotitesPage)  setPopupInfo(item);
-        }}
+       
       >
         {!modal && (
-          <Card.Section sx={{ position: "relative" }}>
-            <Box>
-              <Image
-                src={item?.get("pic0")?._url}
-                alt="property picture"
-                height={180}
-              />
-            </Box>
+          <Card.Section sx={{ position: "relative" }}  onClick={() => {
+            if (!favotitesPage) setPopupInfo(item);
+          }}>
+             <Carousel
+                maw={600}
+                mx="auto"
+                slideSize="100%"
+                slideGap="xs"
+                controlsOffset="xs"
+                withIndicators
+                loop
+                plugins={[autoplay.current]}
+                onMouseEnter={autoplay.current.stop}
+                onMouseLeave={autoplay.current.reset}
+              >
+                {item && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item?.get("pic0")?._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic1")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic1")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic2")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic2")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic3")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic3")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic4")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic4")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic5")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic5")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic6")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic6")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic7")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic7")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic8")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic8")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic9")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic9")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic10")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic10")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic11")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic11")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic12")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic12")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic13")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic13")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {item?.get("pic14")?._url && (
+                  <Carousel.Slide>
+                    <Image
+                      src={item.get("pic14")._url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+                )}
+                {/*          
+                {item?.get("video1")?._url && (
+                  <Carousel.Slide>
+                    <video
+                      src={item.get("video1")._url}
+                      alt="property video"
+                      video controls="controls"
+                      type="video/mp4"
+                    />
+                  </Carousel.Slide>
+                )} */}
+              </Carousel>
 
             <Box w={50} sx={{ position: "absolute", bottom: 0, right: 0 }}>
               <Image
@@ -146,7 +284,9 @@ function PlaceDetails({ item, setPopupInfo, modal,favotitesPage }) {
           </Card.Section>
         )}
 
-        <Card.Section className={classes.section} mt="md">
+        <Card.Section className={classes.section} mt="md"  onClick={() => {
+          if (!favotitesPage) setPopupInfo(item);
+        }}>
           <Group position="apart">
             <Text fz="lg" fw={500}>
               {item?.get("adName")}
@@ -172,7 +312,9 @@ function PlaceDetails({ item, setPopupInfo, modal,favotitesPage }) {
           </Text>
         </Card.Section>
 
-        <Card.Section className={classes.footer}>{items}</Card.Section>
+        <Card.Section className={classes.footer}  onClick={() => {
+          if (!favotitesPage) setPopupInfo(item);
+        }}>{items}</Card.Section>
 
         <Group mt="xs" className={classes.actionButtons}>
           <ActionIcon
@@ -191,14 +333,16 @@ function PlaceDetails({ item, setPopupInfo, modal,favotitesPage }) {
           {/* <ActionIcon variant="default" radius="md" size={36} >
             <IconShare size="1.1rem" className={classes.like} stroke={1.5} />
           </ActionIcon> */}
-           <Anchor td="none" target="_blank" href={`https://wa.me/+2${item?.get("agentPointer").get("phoneNumber")}?text=I'm%20inquiring%20about%20the%20apartment%20listing%${item.get("adName")}`}>  
+         {!modal && <> 
+         <PhoneNumberButton phoneNumber={phoneNumber} />
+
+          <WhatsappButton
+            phoneNumber={phoneNumber}
+            propertyCode={propertyCode}
            
-           
-            <ActionIcon variant="default" radius="md" size={36} >
-              <IconBrandWhatsapp  size="1.1rem" stroke={1.5} color="blue"/>
-            </ActionIcon>
-          
-          </Anchor>
+          /> 
+          </>
+          }
         </Group>
       </Card>
     </>

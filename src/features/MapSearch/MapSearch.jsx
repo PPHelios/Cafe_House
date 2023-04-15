@@ -1,9 +1,6 @@
 import { useState, useRef } from "preact/hooks";
 
-import {
-  Box,
-  Flex,
-} from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import PlaceDetails from "../../components/PlaceDetails/PlaceDetails";
 import AppMap from "../Map/AppMap";
 import { filteredData } from "../../store/appState";
@@ -34,49 +31,63 @@ function MapSearch() {
   // }
 
   return (
-   <Box>
-    <PropertySearchBar/>
-    <Flex mt={20} py={10}   h={{base:700,xs:600}} direction={{base:"column",xs:"row"}} gap={{base:30,sm:0}} bg="gray.2">
-      <Box  w={{base:"94vw",xs:"68vw"}}  h={{base:500,xs:600}} mx="auto">
-        <AppMap
-          popupInfo={popupInfo}
-          setPopupInfo={(item) => setPopupInfo(item)}
-          scrollToId={(i) => scrollToId(i)}
-          add={true}
-        />
-      </Box>
-      <Box
-        w={{base:"94vw",xs:"30vw"}}
-        h={{base:700,xs:600}}
-        mx="auto"
-        px={9}
-        bg="gray.3"
-        // ref={containerRef}
-        sx={{ overflowY: "auto", overflowX: "hidden" }}
+    <>
+      <PropertySearchBar />
+      <Flex
+        mt={20}
+        py={10}
+        h={{ base: 700, xs: 600 }}
+        direction={{ base: "column", xs: "row" }}
+        gap={{ base: 60, sm: 0 }}
+       
       >
-        <PropertiesFilterMenu/>
-        {filteredData.value && filteredData.value.map((item, i) => (
-          <Box
-            mt={10}
-            // ref={(node) => {
-            //   const map = getMap();
-            //   if (node) {
-            //     map.set(i, node);
-            //   } else {
-            //     map.delete(i);
-            //   }
-            // }}
-            key={i}
-          >
-            <PlaceDetails
-              item={item}
-              setPopupInfo={(item) => setPopupInfo(item)}
-            />
-          </Box>
-        ))}
-      </Box>
-    </Flex>
-    </Box>
+        <Box
+          w={{ base: "94vw", xs: "48vw" }}
+          h={{ base: 500, xs: 600 }}
+          mx="auto"
+        >
+          <AppMap
+            popupInfo={popupInfo}
+            setPopupInfo={(item) => setPopupInfo(item)}
+            scrollToId={(i) => scrollToId(i)}
+            add={true}
+          />
+        </Box>
+        <Box
+          w={{ base: "94vw", xs: "40vw" }}
+          h={{ base: 700, xs: 600 }}
+          mx="auto"
+          pt={5}
+          px={9}
+          bg="gray.3"
+          // ref={containerRef}
+          sx={{ overflowY: "auto", overflowX: "hidden" }}
+        >
+          <PropertiesFilterMenu />
+          {filteredData.value &&
+            filteredData.value.map((item, i) => (
+              <Box
+                mt={10}
+              
+                // ref={(node) => {
+                //   const map = getMap();
+                //   if (node) {
+                //     map.set(i, node);
+                //   } else {
+                //     map.delete(i);
+                //   }
+                // }}
+                key={i}
+              >
+                <PlaceDetails
+                  item={item}
+                  setPopupInfo={(item) => setPopupInfo(item)}
+                />
+              </Box>
+            ))}
+        </Box>
+      </Flex>
+    </>
   );
 }
 

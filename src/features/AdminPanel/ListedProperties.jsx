@@ -64,8 +64,8 @@ const rows = properties.value.map((row) => {
   )})
 
   return (
-    <ScrollArea w="calc(100vw - 80px)" h={300} type="auto" offsetScrollbars onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-      <Table miw={700}>
+    <ScrollArea w="calc(100vw - 100px)"  maw={1000} h="calc(100vh - 80px)" scroll onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+      <Table w="max-content" >
         <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <tr>
             <th>Ad. Name</th>

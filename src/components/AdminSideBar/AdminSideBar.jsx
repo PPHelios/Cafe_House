@@ -1,14 +1,13 @@
 import { adminSideBarState } from '../../store/appState';
 import { Navbar, Box, Tooltip, UnstyledButton, createStyles, Stack, rem } from '@mantine/core';
 import {
-  IconHome2,
+
   IconDeviceDesktopAnalytics,
   IconFingerprint,
   IconHomeEdit,
   IconUser,
   IconSettings,
   IconLogout,
-  IconSwitchHorizontal,
    IconSubtask,
    IconUsers 
 } from '@tabler/icons-preact';
@@ -17,8 +16,7 @@ import { Link } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
   link: {
-    width: rem(50),
-    height: rem(50),
+   
     borderRadius: theme.radius.md,
     display: 'flex',
     alignItems: 'center',
@@ -47,8 +45,8 @@ function NavbarLink({ icon: Icon, label, active, onClick, to }) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       
-      <UnstyledButton component={Link} to={to} onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
-        <Icon size="1.2rem" stroke={1.5} />
+      <UnstyledButton component={Link} to={to} w={{base:25, xs:50}} h={{base:25, xs:50}} onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
+        <Icon  stroke={1.5} />
       </UnstyledButton>
      
     </Tooltip>
@@ -57,33 +55,35 @@ function NavbarLink({ icon: Icon, label, active, onClick, to }) {
 
 const mockdata = [
   
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' , target:"adminpanel/agentanalytics"},
-  { icon: IconHomeEdit, label: 'Add Property', target:"adminpanel/addproperty" },
+  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' , target:"adminpanel/agentanalytics", role:"Moderator"},
+  { icon: IconHomeEdit, label: 'Add Property', target:"adminpanel/addproperty" ,role:"Moderator"},
   { icon: IconSubtask, label: 'Listed Properties', target:"adminpanel/listedproperties" },
-  { icon: IconUsers, label: 'Agents', target:"adminpanel/agents" },
+  { icon: IconUsers, label: 'Agents', target:"adminpanel/agents" , role:"Moderator"},
   { icon: IconUser, label: 'Account', target:"adminpanel/account" },
-  { icon: IconFingerprint, label: 'Security', target:"adminpanel/security" },
-  { icon: IconSettings, label: 'Settings', target:"adminpanel/settings" },
+  // { icon: IconFingerprint, label: 'Security', target:"adminpanel/security" , role:"Moderator"},
+  // { icon: IconSettings, label: 'Settings', target:"adminpanel/settings" },
 ];
 
 export default function AdminSideBar() {
   
-
-  const links = mockdata.map((link, index) => (
-    <NavbarLink
+// link?.role !== "Moderator" && 
+  const links =  mockdata.map((link, index) => {
+   return( <NavbarLink
       {...link}
       key={link.label}
       to={`/${link?.target}`}
       active={index === adminSideBarState.value}
       onClick={() => adminSideBarState.value=index}
-    />
-  ));
+    />)
+  });
 
   return (
     <Navbar
-      height={750}
-      width={{ base: 80 }}
-      p="md"
+      height="calc(100vh - 80px)"
+      width={{ base: 40,xs:80 }}
+      p={{base:"xs",sm:"md"}}
+      pos="sticky"
+      top={0}
       sx={(theme) => ({
         backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
           .background,
@@ -93,13 +93,12 @@ export default function AdminSideBar() {
         <MantineLogo type="mark" inverted size={30} />
       </Center> */}
       <Navbar.Section grow mt={50}>
-        <Stack justify="center" spacing={0}>
+        <Stack justify="center" align='center' >
           {links}
         </Stack>
       </Navbar.Section>
       <Navbar.Section>
-        <Stack justify="center" spacing={0}>
-          <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
+        <Stack justify="center" align='center' >
           <NavbarLink icon={IconLogout} label="Logout" />
         </Stack>
       </Navbar.Section>

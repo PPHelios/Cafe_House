@@ -6,7 +6,7 @@ import ControlPanel from "./control-panel";
 import { useState, useMemo, useRef, useCallback } from "preact/hooks";
 import { filteredData } from "../../store/appState";
 import { Box, Image, Text, Group, Paper } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useWindowScroll } from '@mantine/hooks';
 import Pin from "./pin";
 import PropertyModal from "../../components/PropertyModal/PropertyModal";
 import {
@@ -28,19 +28,26 @@ const AppMap = ({
   add,
   setPropertLocation,
 }) => {
+  const [scroll, scrollTo] = useWindowScroll();
   const [viewState, setViewState] = useState({
     longitude: 31.53824,
     latitude: 30.00624,
     zoom: 12,
   });
   const modalData = useSignal(null);
+  const modalOpen = useSignal(false)
+  const closeModal=()=>{
+    console.log("closeModal")
+    document.body.style.height = 'fit-content';
+    document.body.style.overflow = 'visible';
+    modalOpen.value=false
+  }
   const [marker, setMarker] = useState({
     latitude: 30.00629,
     longitude: 31.5385,
   });
   //const [events, logEvents] = useState({});
-
-  const [opened, { open, close }] = useDisclosure(false);
+  // const [opened, { open, close }] = useDisclosure(false);
   const mapRef = useRef(null);
   // function onMapLoad() {
   //   mapRef.current.setLanguage("ar");
@@ -62,7 +69,7 @@ const AppMap = ({
           longitude={item.get("location")._longitude}
           latitude={item.get("location")._latitude}
           anchor="bottom"
-          onClick={(e) => {
+          onClick={() => {
             // If we let the click event propagates to the map, it will immediately close the popup
             // with `closeOnClick: true`
             // elRefs[i]?.current?.scrollIntoView({
@@ -70,11 +77,19 @@ const AppMap = ({
             //   block: "start",
             // });
             //   scrollToId(i);
-
-            open();
+           
+           
           }}
         >
           <Box
+          onClick={() =>{
+            console.log("openModal")
+            const body = document.body;
+            body.style.height = '100vh';
+            body.style.overflowY = 'hidden';
+            modalOpen.value=true
+            scrollTo({ y: 0 })
+          }}
             onMouseOver={() => {
               modalData.value = item;
               setPopupInfo(item);
@@ -82,6 +97,7 @@ const AppMap = ({
             onMouseLeave={() => {
               setPopupInfo(null);
             }}
+            
           >
             {<Pin />}
           </Box>
@@ -166,8 +182,10 @@ const AppMap = ({
       {add && (
         <PropertyModal
           modalData={modalData.value}
-          opened={opened}
-          close={close}
+          modalOpen={modalOpen}
+          closeModal={closeModal}
+          // opened={opened}
+          // close={close}
         />
       )}
       {/* <button

@@ -34,11 +34,13 @@ export default function Login() {
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
-      // password: (val) =>
-      //   val.length <= 6
-      //     ? "Password should include at least 6 characters"
-      //     : null,
+      firstName: (value) => (value.length < 2 ? 'Name must have at least 2 letters' : null),
+      lastName: (value) => (value.length < 2 ? 'Name must have at least 2 letters' : null),
+      email: (val) => (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val) ? null : "Invalid email"),
+      password: (val) =>
+        val.length <= 6
+          ? "Password should include at least 6 characters"
+          : null,
     },
   });
 
@@ -123,6 +125,7 @@ export default function Login() {
                       form.setFieldValue("firstName", event.currentTarget.value)
                     }
                     radius="md"
+                    {...form.getInputProps('firstName')}
                   />
                   <TextInput
                     required
@@ -133,6 +136,7 @@ export default function Login() {
                       form.setFieldValue("lastName", event.currentTarget.value)
                     }
                     radius="md"
+                    {...form.getInputProps('lastName')}
                   />
                 </>
               )}
@@ -145,23 +149,22 @@ export default function Login() {
                 onChange={(event) =>
                   form.setFieldValue("email", event.currentTarget.value)
                 }
-                error={form.errors.email && "Invalid email"}
+              
                 radius="md"
+                {...form.getInputProps('email')}
               />
 
               <PasswordInput
                 required
                 label="Password"
                 placeholder="Your password"
+                description="Password Must Be 6 Characters At Least"
                 value={form.values.password}
                 onChange={(event) =>
                   form.setFieldValue("password", event.currentTarget.value)
                 }
-                error={
-                  form.errors.password &&
-                  "Password should include at least 6 characters"
-                }
                 radius="md"
+                {...form.getInputProps('password')}
               />
             </Stack>
 
