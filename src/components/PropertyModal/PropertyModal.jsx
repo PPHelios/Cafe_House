@@ -12,7 +12,7 @@ import Autoplay from 'embla-carousel-autoplay';
 import PlaceDetails from "../PlaceDetails/PlaceDetails";
 import AgentCard from "../AgentCard/AgentCard";
 import WhatsappButton from "../Buttons/WhatsappButton";
-import PhoneNumberButton from "../Buttons/phoneNumberButton";
+import PhoneNumberButton from "../Buttons/PhoneNumberButton";
 import { useRef } from "preact/hooks";
 function PropertyModal({ modalData, closeModal, modalOpen }) {
   // const agency = modalData?.get("agencyPointer")?.get("agencyName")
