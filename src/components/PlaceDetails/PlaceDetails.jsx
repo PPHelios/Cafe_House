@@ -21,7 +21,7 @@ import {
 } from "../../store/appState";
 import { useRef, useState } from "preact/hooks";
 import WhatsappButton from "../Buttons/WhatsappButton";
-import PhoneNumberButton from "../Buttons/phoneNumberButton";
+import PhoneNumberButton from "../Buttons/PhoneNumberButton";
 const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor:
