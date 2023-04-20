@@ -36,9 +36,9 @@ function ListedProperties() {
   adminSideBarState.value=2
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
-
- 
-const rows = properties.value.map((row) => {
+let propertiesData = null
+ if(properties?.value){
+   rows = propertiesData.map((row) => {
     const {adName, price, area, room, bath,pic0, propertyType,listingType, adStatus, isFeatured} = row?.attributes
     return(
     
@@ -62,6 +62,8 @@ const rows = properties.value.map((row) => {
         
     </tr>
   )})
+ }
+
 
   return (
     <ScrollArea w="calc(100vw - 100px)"  maw={1000} h="calc(100vh - 80px)" scroll onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
@@ -79,7 +81,7 @@ const rows = properties.value.map((row) => {
         <th>Is Featured</th>
           </tr>
         </thead>
-        <tbody>{properties.value && rows}</tbody>
+        <tbody>{propertiesData && rows}</tbody>
       </Table>
     </ScrollArea>
   );

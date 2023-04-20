@@ -22,14 +22,14 @@ export default function SignupAgency() {
   const form = useForm({
     initialValues: {
       agencyName: "",
-      firstName: "",
+      firstName: "ag",
       lastName: "bb",
-      email: "bb",
-      password: "",
+      email: "ag@gmail.com",
+      password: "hzompieh",
       phoneNumber: "1234",
-      bio: "dfgdfg",
-      bioAr: "fgdfg",
-      role: "agency",
+      bio: "dfgdfgffffffff",
+      bioAr: "fgdfgfffffffffff",
+      role: "Agency",
       profilePic: null,
     },
 
@@ -64,22 +64,34 @@ export default function SignupAgency() {
           : null,
     },
   });
+ 
   async function addAgency(values) {
     setLoading(true);
     let parseFile = null;
 
     if (values.profilePic) {
+    //  console.log(values.profilePic)
       parseFile = new Parse.File("img.jpeg", values.profilePic);
+     await parseFile.save()
+     values.profilePic = parseFile
     }
     try {
-      const agency = await queryAgency(values.agencyName);
-      if (agency !== undefined) {
-        console.log({ agency });
-        throw new Error("Agency Name Already Exists");
-      }
+      // const agency = await queryAgency(values.agencyName);
+      // if (agency !== undefined) {
+      //  // console.log({ agency });
+      //   throw new Error("Agency Name Already Exists");
+      // }
     //  let createdUser = await Parse.User.signUp(values.email, values.password);
- const x =await Parse.Cloud.run("addAgency" ,values)
- console.log({x})
+    
+  //  console.log(values.profilePic)
+   //console.log(parseFile)
+ const addAgency =await Parse.Cloud.run("addAgency" ,values)
+ console.log({addAgency})
+ notifications.show({
+  title: "Agency Added Successfully",
+});
+ setLoading(false);
+ return true
       // if (createdUser) {
        
       //   let roleACL = new Parse.ACL();
@@ -156,6 +168,7 @@ export default function SignupAgency() {
     } catch (error) {
       setLoading(false);
       // Error can be caused by lack of Internet connection
+      console.log(error)
       notifications.show({
         title: "Error",
         message: `Error! ${error.message} 🤥`,

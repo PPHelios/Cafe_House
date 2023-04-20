@@ -1,0 +1,1 @@
+const currentUser = await Parse.User.current().fetchWithInclude(["agencyPointer"]);

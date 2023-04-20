@@ -1,4 +1,5 @@
 import { adminSideBarState } from '../../store/appState';
+import Parse from "parse/dist/parse.min.js";
 import { Navbar, Box, Tooltip, UnstyledButton, createStyles, Stack, rem } from '@mantine/core';
 import {
 
@@ -53,7 +54,8 @@ function NavbarLink({ icon: Icon, label, active, onClick, to }) {
   );
 }
 
-const mockdata = [
+
+const adminMockdata = [
   
   { icon: IconDeviceDesktopAnalytics, label: 'Analytics' , target:"adminpanel/agentanalytics", role:"Moderator"},
   { icon: IconHomeEdit, label: 'Add Property', target:"adminpanel/addproperty" ,role:"Moderator"},
@@ -63,11 +65,21 @@ const mockdata = [
   // { icon: IconFingerprint, label: 'Security', target:"adminpanel/security" , role:"Moderator"},
   // { icon: IconSettings, label: 'Settings', target:"adminpanel/settings" },
 ];
-
-export default function AdminSideBar() {
+const mockdata = [
   
-// link?.role !== "Moderator" && 
-  const links =  mockdata.map((link, index) => {
+  { icon: IconSubtask, label: 'Listed Properties', target:"adminpanel/listedproperties" },
+  { icon: IconUser, label: 'Account', target:"adminpanel/account" },
+  // { icon: IconFingerprint, label: 'Security', target:"adminpanel/security" , role:"Moderator"},
+  // { icon: IconSettings, label: 'Settings', target:"adminpanel/settings" },
+];
+export default function AdminSideBar() {
+  const role = Parse.User.current()?.get("userRole")
+  const admin = role === "SuperAdmin" ||
+  role === "SubAdmin" ||
+  role === "Agency" ||
+  role === "AgencyModerator" 
+const sidebarItems = admin?adminMockdata:mockdata
+  const links =  sidebarItems.map((link, index) => {
    return( <NavbarLink
       {...link}
       key={link.label}
@@ -76,7 +88,7 @@ export default function AdminSideBar() {
       onClick={() => adminSideBarState.value=index}
     />)
   });
-
+  
   return (
     <Navbar
       height="calc(100vh - 80px)"

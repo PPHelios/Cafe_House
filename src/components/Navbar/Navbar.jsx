@@ -364,8 +364,10 @@ export function Navbar() {
           toggle();
         }}
         title="My Home"
+        styles={() => ({inner:{zIndex:1000}})}
+        
       >
-        {!userData.value?.id ? <Group position="center" my="0.4rem" spacing={42}>{items}</Group>:
+        {!userData.value?.id ? <Group position="center" my="0.4rem" spacing={42} >{items}</Group>:
                 <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control}>
                     <Group position="apart" spacing={0} pl={10}>
                       <Group>

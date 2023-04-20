@@ -27,8 +27,10 @@ const AppMap = ({
   scrollToId,
   add,
   setPropertLocation,
+  handlePropertyView,
+  handlePropertyAction
 }) => {
-  const [scroll, scrollTo] = useWindowScroll();
+  //const [scroll, scrollTo] = useWindowScroll();
   const [viewState, setViewState] = useState({
     longitude: 31.53824,
     latitude: 30.00624,
@@ -87,6 +89,7 @@ const AppMap = ({
             const body = document.body;
             body.style.height = '100vh';
             body.style.overflowY = 'hidden';
+            handlePropertyView(item)
             modalOpen.value=true
             scrollTo({ y: 0 })
           }}
@@ -184,6 +187,7 @@ const AppMap = ({
           modalData={modalData.value}
           modalOpen={modalOpen}
           closeModal={closeModal}
+          handlePropertyAction={handlePropertyAction}
           // opened={opened}
           // close={close}
         />

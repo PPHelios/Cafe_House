@@ -47,23 +47,27 @@ export default function Login() {
   const handleSubmit = async (values) => {
     setLoading(true)
     try {
+      const saveUser =await Parse.Cloud.run("userSignup" ,values)
+ console.log({saveUser})
+ setLoading(false);
       // Since the signUp method returns a Promise, we need to call it using await
-      const createdUser = await Parse.User.signUp(
-        values.email,
-        values.password
-      );
-      if(createdUser){
-         createdUser.set("firstName", values.firstName);
-      createdUser.set("lastName", values.lastName);
-      createdUser.set("email", values.email);
-      createdUser.set("userRole", values.role);
-      let userACL= new Parse.ACL()
-      userACL.setPublicReadAccess(true)
-      userACL.setWriteAccess(Parse.User.current(), true)
-      userACL.setRoleWriteAccess("SuperAdmin", true)
-      userACL.setRoleWriteAccess("SubAdmin", true)
-      createdUser.setACL(userACL);
-      const saveUser = await createdUser.save();
+      // const createdUser = await Parse.User.signUp(
+      //   values.email,
+      //   values.password
+      // );
+      // if(createdUser){
+      //    createdUser.set("firstName", values.firstName);
+      // createdUser.set("lastName", values.lastName);
+      // createdUser.set("email", values.email);
+      // createdUser.set("userRole", values.role);
+      // let userACL= new Parse.ACL()
+      // userACL.setPublicReadAccess(true)
+      // userACL.setWriteAccess(Parse.User.current(), true)
+      // userACL.setRoleWriteAccess("SuperAdmin", true)
+      // userACL.setRoleWriteAccess("SubAdmin", true)
+      // createdUser.setACL(userACL);
+      // const saveUser = await createdUser.save();
+      Parse.User.become(saveUser.get("sessionToken"))
       if(saveUser){
          userData.value = saveUser;
       setLoading(false)
@@ -77,9 +81,9 @@ export default function Login() {
         throw new Error("Something Went Wrong, Couldn't Sign Up")
       }
      
-      }  else{
-        throw new Error("Something Went Wrong, Couldn't Sign Up")
-      }
+      // }  else{
+      //   throw new Error("Something Went Wrong, Couldn't Sign Up")
+      // }
      
     } catch (error) {
       setLoading(false)

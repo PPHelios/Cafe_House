@@ -11,26 +11,27 @@ import {
   Button,
   FileInput,
   Stack,
-  Textarea
+  Textarea,
+  Select
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-preact";
 import { queryAgency, userData } from "../../store/appState";
-import { useNavigate } from "react-router";
-
 export default function SignupAgent() {
-  const navigate=useNavigate()
+
   const [loading, setLoading] = useState(false)
   const form = useForm({
     initialValues: {
-      agencyName: "",
-      firstName: "",
-      lastName: "",
-      firstNameAr: "",
-      lastNameAr: "",
+      firstName: "iiiiii",
+      lastName: "yyyyyyyyy",
+      firstNameAr: "qqqqqqqq",
+      lastNameAr: "aaaaaaaa",
+      email: "ag1@gmail.com",
+      password: "hzompieh",
       phoneNumber: "4535345",
-      bio: "dfgdfg",
-      bioAr: "fgdfg",
+      bio: "dfgdfgddddddddddd",
+      bioAr: "fgdfgggggggggggggg",
+      role:"",
       profilePic: null,
     },
 
@@ -42,84 +43,96 @@ export default function SignupAgent() {
         val.length <= 6
           ? "Password should include at least 6 characters"
           : null,
-          phoneNumber:(val) => (/ ^[0-9]*$/.test(val) ? null : "Invalid Phone Number"),
-          bio: (value) => (value.length < 700 ? 'Name must have at least 700 letters' : value.length>2000?'Name must have Maxmimum 2000 letters': null),
-          bioAr: (value) => (value.length < 700 ? 'Name must have at least 700 letters' : value.length>2000?'Name must have Maxmimum 2000 letters': null),
+          // phoneNumber:(val) => (/ ^[0-9]*$/.test(val) ? null : "Invalid Phone Number"),
+          bio: (value) => (value.length < 10 ? 'Name must have at least 700 letters' : value.length>2000?'Name must have Maxmimum 2000 letters': null),
+          bioAr: (value) => (value.length < 10 ? 'Name must have at least 700 letters' : value.length>2000?'Name must have Maxmimum 2000 letters': null),
 
     },
   });
+
+  const userRole = userData.value?.attributes?.userRole
+  console.log(userRole);
+  let options =[]
+  if(userRole==="Agency"){
+     options=["Moderator","AdCreator","SeniorAgent" ,"Agent",]
+  } else if(userRole==="Moderator"){
+    options=["AdCreator","SeniorAgent" ,"Agent",]
+  }
+  
   async function addAgent(values) {
     setLoading(true)
-     const sessionToken = Parse.User.current().getSessionToken();
-
-
 
     let parseFile = null;
     if (values.profilePic) {
       parseFile = new Parse.File("img.jpeg", values.profilePic);
+      await parseFile.save()
+      values.profilePic = parseFile
     }
     try {
-      const agency = await queryAgency(values.agencyName);
-      console.log(agency);
-      if (agency === undefined) {
-        throw new Error("no such Agency");
-      }
-
-      const createdUser = await Parse.User.signUp(
-        values.email,
-        values.password
-      );
-
-      let agentProfile = new Parse.Object("Agent");
-      agentProfile.set("agencyName", values.agencyName);
-      agentProfile.set("firstName", values.firstName);
-      agentProfile.set("lastName", values.lastName);
-      agentProfile.set("email", values.email);
-      agentProfile.set("bio", values.bio);
-      agentProfile.set("bioAr", values.bioAr);
-      agentProfile.set("phoneNumber", values.phoneNumber);
-      agentProfile.set("userRole", "Agent");
-      if (values.profilePic) agentProfile.set("profilePic", parseFile);
-      agentProfile.set("userPointer", createdUser.toPointer());
-      agentProfile.set("agencyPointer", agency.toPointer());
-      let agentProfileACL= new Parse.ACL()
-      agentProfileACL.setPublicReadAccess(true)
-      agentProfileACL.setWriteAccess(Parse.User.current(), true)
-      agentProfileACL.setRoleWriteAccess("SuperAdmin", true)
-      agentProfileACL.setRoleWriteAccess("SubAdmin", true)
-      agentProfileACL.setWriteAccess(agency.get("userPointer").id, true)
-      agentProfile.setACL(agentProfileACL);
-      const addAgent = await agentProfile.save();
-
-      console.log(addAgent);
-
-      createdUser.set("firstName", values.firstName);
-      createdUser.set("lastName", values.lastName);
-      createdUser.set("email", values.email);
-      createdUser.set("userRole", "Agent");
-      createdUser.set("profilePicUrl", addAgent?.attributes?.profilePic?._url);
-      createdUser.set("agencyPointer", agency.toPointer());
-      createdUser.set("agentPointer", addAgent.toPointer());
-      
-      let userACL= new Parse.ACL()
-      userACL.setPublicReadAccess(true)
-      userACL.setWriteAccess(Parse.User.current(), true)
-      userACL.setRoleWriteAccess("SuperAdmin", true)
-      userACL.setRoleWriteAccess("SubAdmin", true)
-    //  agentProfileACL.setWriteAccess(agency.get("userPointer").id, true)
-      createdUser.setACL(userACL);
-      const updateAgent = await createdUser.save();
-      // revert to agency profile
-     await Parse.User.become(sessionToken);
-      navigate(0)
-    
-
+     const addAgent =await Parse.Cloud.run("addAgent" ,values)
+    console.log(addAgent);
       setLoading(false)
-      userData.value = updateAgent;
       notifications.show({
-        title: "Signed Up Successfully",
+        title: "Agent Added Successfully",
       });
       return true;
+
+
+    //   const agency = await queryAgency(values.agencyName);
+    //   console.log(agency);
+    //   if (agency === undefined) {
+    //     throw new Error("no such Agency");
+    //   }
+
+    //   const createdUser = await Parse.User.signUp(
+    //     values.email,
+    //     values.password
+    //   );
+
+    //   let agentProfile = new Parse.Object("Agent");
+    //   agentProfile.set("agencyName", values.agencyName);
+    //   agentProfile.set("firstName", values.firstName);
+    //   agentProfile.set("lastName", values.lastName);
+    //   agentProfile.set("email", values.email);
+    //   agentProfile.set("bio", values.bio);
+    //   agentProfile.set("bioAr", values.bioAr);
+    //   agentProfile.set("phoneNumber", values.phoneNumber);
+    //   agentProfile.set("userRole", "Agent");
+    //   if (values.profilePic) agentProfile.set("profilePic", parseFile);
+    //   agentProfile.set("userPointer", createdUser.toPointer());
+    //   agentProfile.set("agencyPointer", agency.toPointer());
+    //   let agentProfileACL= new Parse.ACL()
+    //   agentProfileACL.setPublicReadAccess(true)
+    //   agentProfileACL.setWriteAccess(Parse.User.current(), true)
+    //   agentProfileACL.setRoleWriteAccess("SuperAdmin", true)
+    //   agentProfileACL.setRoleWriteAccess("SubAdmin", true)
+    //   agentProfileACL.setWriteAccess(agency.get("userPointer").id, true)
+    //   agentProfile.setACL(agentProfileACL);
+    //   const addAgent = await agentProfile.save();
+
+    //   console.log(addAgent);
+
+    //   createdUser.set("firstName", values.firstName);
+    //   createdUser.set("lastName", values.lastName);
+    //   createdUser.set("email", values.email);
+    //   createdUser.set("userRole", "Agent");
+    //   createdUser.set("profilePicUrl", addAgent?.attributes?.profilePic?._url);
+    //   createdUser.set("agencyPointer", agency.toPointer());
+    //   createdUser.set("agentPointer", addAgent.toPointer());
+      
+    //   let userACL= new Parse.ACL()
+    //   userACL.setPublicReadAccess(true)
+    //   userACL.setWriteAccess(Parse.User.current(), true)
+    //   userACL.setRoleWriteAccess("SuperAdmin", true)
+    //   userACL.setRoleWriteAccess("SubAdmin", true)
+    // //  agentProfileACL.setWriteAccess(agency.get("userPointer").id, true)
+    //   createdUser.setACL(userACL);
+    //   const updateAgent = await createdUser.save();
+    //   // revert to agency profile
+    //  await Parse.User.become(sessionToken);
+    //   navigate(0)
+    
+   
     } catch (error) {
       setLoading(false)
       // Error can be caused by lack of Internet connection
@@ -139,16 +152,7 @@ export default function SignupAgent() {
 
         <form onSubmit={form.onSubmit((values) => addAgent(values))}>
           <Stack>
-            <TextInput
-              required
-              label="Agency Name"
-              placeholder="Your Agency Name"
-              value={form.values.agencyName}
-              onChange={(event) =>
-                form.setFieldValue("agencyName", event.currentTarget.value)
-              }
-              radius="md"
-            />
+          
             <TextInput
               required
               label="First Name"
@@ -263,6 +267,23 @@ export default function SignupAgent() {
               radius="md"
                             {...form.getInputProps('bioAr')}
 
+            />
+              <Select
+              required
+              w={200}
+           
+              data={options}
+              display="inline-block"
+              {...form.getInputProps("role")}
+              label="Agent Role"
+              placeholder="Pick Agent Role"
+              aria-label="Pick Agent Role"
+              // sx={(theme) => ({
+              //   "& .mantine-Select-input": {
+              //     paddingRight: 20,
+              //     textAlign: "center",
+              //   },
+              // })}
             />
             <FileInput
               label="Profile Picture"

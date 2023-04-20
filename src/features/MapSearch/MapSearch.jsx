@@ -1,4 +1,5 @@
 import { useState, useRef } from "preact/hooks";
+import Parse from "parse/dist/parse.min.js";
 
 import { Box, Flex } from "@mantine/core";
 import PlaceDetails from "../../components/PlaceDetails/PlaceDetails";
@@ -29,7 +30,28 @@ function MapSearch() {
   //   }
   //   return itemsRef.current;
   // }
-
+  const handlePropertyView = async (item) => {
+    console.log(item);
+    try {
+      const addPropertyView = await Parse.Cloud.run("addPropertyView", {
+        id: item.id,
+      });
+      console.log({ addPropertyView });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handlePropertyAction = async (item) => {
+    console.log(item);
+    try {
+      const addPropertyAction = await Parse.Cloud.run("addPropertyAction", {
+        id: item,
+      });
+      console.log({ addPropertyAction });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <PropertySearchBar />
@@ -39,7 +61,6 @@ function MapSearch() {
         h={{ base: 700, xs: 600 }}
         direction={{ base: "column", xs: "row" }}
         gap={{ base: 60, sm: 0 }}
-       
       >
         <Box
           w={{ base: "94vw", xs: "48vw" }}
@@ -50,6 +71,8 @@ function MapSearch() {
             popupInfo={popupInfo}
             setPopupInfo={(item) => setPopupInfo(item)}
             scrollToId={(i) => scrollToId(i)}
+            handlePropertyView={handlePropertyView}
+            handlePropertyAction={handlePropertyAction}
             add={true}
           />
         </Box>
@@ -68,7 +91,6 @@ function MapSearch() {
             filteredData.value.map((item, i) => (
               <Box
                 mt={10}
-              
                 // ref={(node) => {
                 //   const map = getMap();
                 //   if (node) {
@@ -79,10 +101,13 @@ function MapSearch() {
                 // }}
                 key={i}
               >
-                <PlaceDetails
-                  item={item}
-                  setPopupInfo={(item) => setPopupInfo(item)}
-                />
+                <div onClick={() => handlePropertyView(item)}>
+                  <PlaceDetails
+                    item={item}
+                    setPopupInfo={(item) => setPopupInfo(item)}
+                    handlePropertyAction={handlePropertyAction}
+                  />
+                </div>
               </Box>
             ))}
         </Box>

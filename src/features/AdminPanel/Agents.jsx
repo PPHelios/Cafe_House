@@ -41,8 +41,9 @@ function Agents() {
   adminSideBarState.value = 3;
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
-
-  const rows = agents.value.map((row) => {
+let agentsData = null
+if(agents.value){
+   agentsData = agents.value.map((row) => {
     const { firstName, lastName, email, phoneNumber, profilePic } =
       row?.attributes;
     return (
@@ -64,6 +65,8 @@ function Agents() {
     );
   });
 
+}
+  
   return (
     <ScrollArea
       w="calc(100vw - 100px)"
@@ -81,7 +84,7 @@ function Agents() {
             <th>Ads.</th>
           </tr>
         </thead>
-        <tbody>{agents.value && rows}</tbody>
+        <tbody>{agentsData && rows}</tbody>
       </Table>
     </ScrollArea>
   );

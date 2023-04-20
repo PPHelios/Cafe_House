@@ -60,7 +60,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PlaceDetails({ item, setPopupInfo, modal, favotitesPage }) {
+function PlaceDetails({ item, setPopupInfo, modal, favotitesPage,handlePropertyAction }) {
   const autoplay = useRef(Autoplay({ delay: 4000 }));
   const fav = userFavorites.value.some((favorite) => {
     return item.id === favorite.get("propertyPointer").id;
@@ -117,6 +117,7 @@ function PlaceDetails({ item, setPopupInfo, modal, favotitesPage }) {
   };
   const phoneNumber = item?.get("agentPointer").attributes.phoneNumber;
   const propertyCode = item?.get("agentPointer").attributes.propertyCode;
+  const propertyId = item?.id;
   return (
     <>
       <Card
@@ -334,13 +335,18 @@ function PlaceDetails({ item, setPopupInfo, modal, favotitesPage }) {
             <IconShare size="1.1rem" className={classes.like} stroke={1.5} />
           </ActionIcon> */}
          {!modal && <> 
-         <PhoneNumberButton phoneNumber={phoneNumber} />
+         <div onClick={()=>handlePropertyAction(propertyId)}>
+                   <PhoneNumberButton phoneNumber={phoneNumber} />
 
-          <WhatsappButton
+         </div>
+<div onClick={()=>handlePropertyAction(propertyId)}>
+  <WhatsappButton
             phoneNumber={phoneNumber}
             propertyCode={propertyCode}
            
           /> 
+</div>
+          
           </>
           }
         </Group>

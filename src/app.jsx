@@ -28,7 +28,8 @@ import { Notifications } from "@mantine/notifications";
 // );
 //Import Parse minified version
 import Parse from "parse/dist/parse.min.js";
-
+Parse.enableEncryptedUser();
+Parse.secret = import.meta.env.VITE_PARSE_SECRET;
 //Your Parse initialization configuration goes here
 const PARSE_APPLICATION_ID = import.meta.env.VITE_PARSE_APPLICATION_ID;
 const PARSE_HOST_URL = import.meta.env.VITE_PARSE_HOST_URL;
@@ -136,7 +137,7 @@ export function App() {
               return true;
             }}
           >
-            {/* <Route path="/adminpanel" element={<AdminHome />} /> */}
+           
             <Route path="/adminpanel/addproperty" element={<AddProperty />} />
             <Route
               path="/adminpanel/listedproperties"
