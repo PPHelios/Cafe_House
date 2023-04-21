@@ -1,10 +1,23 @@
 Parse.Cloud.define("addAgent", async (req, res) => {
-  const user = await req.user.fetchWithInclude(["agencyPointer"], {
-    useMasterKey: true,
-  });
-  const userRole = user.get("agencyPointer").get("userRole");
-  const agency = req.user.get("agencyPointer");
-  const agencyName = req.user.get("agencyPointer").get("agencyName");
+  let user,userRole,agency,agencyName = null
+if (req.user.get("userRole") === "Agency"){
+     user = await req.user.fetchWithInclude(["agencyPointer"], { 
+     useMasterKey: true, 
+   }); 
+    userRole = user.get("agencyPointer").get("userRole"); 
+    agency = user.get("agencyPointer"); 
+    agencyName = user.get("agentPointer").get("agencyName"); 
+} else if {
+    (["Moderator", "AdCreator"].include(req.user.get("userRole") ){
+     user = await req.user.fetchWithInclude(["agentPointer"], { 
+     useMasterKey: true, 
+   }); 
+    userRole = user.get("agentPointer").get("userRole"); 
+    agency = user.get("agencyPointer"); 
+    agencyName = user.get("agentPointer").get("agencyName");
+} else {
+    throw new Error("Unauthorized"); 
+}
   //  if(userRole !== "Agency" || userRole !== "Moderator" || userRole !== "AdCreator"){
   //    throw new Error("Unauthorized");
   //  }
