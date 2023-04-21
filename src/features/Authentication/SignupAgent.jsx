@@ -22,7 +22,7 @@ export default function SignupAgent() {
   const [loading, setLoading] = useState(false)
   const form = useForm({
     initialValues: {
-      firstName: "iiiiii",
+      firstName: "ag1",
       lastName: "yyyyyyyyy",
       firstNameAr: "qqqqqqqq",
       lastNameAr: "aaaaaaaa",
@@ -64,10 +64,11 @@ export default function SignupAgent() {
 
     let parseFile = null;
     if (values.profilePic) {
-      parseFile = new Parse.File("img.jpeg", values.profilePic);
+      parseFile = new Parse.File(values.profilePic.name.slice(-5), values.profilePic);
       await parseFile.save()
       values.profilePic = parseFile
     }
+    // console.log(values.profilePic.name)
     try {
      const addAgent =await Parse.Cloud.run("addAgent" ,values)
     console.log(addAgent);

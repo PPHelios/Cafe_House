@@ -108,6 +108,8 @@ Parse.Cloud.define(
       // agencyProfile.set("moderatorRoleName", agencyModeratorName);
       //  if (values.profilePic) agencyProfile.set("profilePicObj", values.profilePic);
         agencyProfile.set("userPointer", createdUser.toPointer());
+        agencyProfile.set("creator", req.user);
+        agencyProfile.set("creatorEmail", req.user.get("email"));
       let agencyACL = new Parse.ACL();
     //  agencyACL.setPublicReadAccess(true);
       agencyACL.setRoleReadAccess("SuperAdmin", true);
@@ -133,7 +135,7 @@ Parse.Cloud.define(
         createdUser.set("profilePicUrl", values.profilePic._url);
       }
       //  agencyProfile.set("profilePic", parseFile);
-
+      createdUser.set("agencyName", values.agencyName);
       createdUser.set("agencyPointer", saveAgency.toPointer());
       let userACL = new Parse.ACL();
       userACL.setPublicReadAccess(true);

@@ -54,7 +54,7 @@ import NotFound404 from "./features/NotFound404/NotFound404";
 import ListWithUs from "./features/ListWithUs/ListWithUs";
 
 
-import AdminPanelAnalytics from "./components/AdminPanelStats/AdminPanelAnalytics";
+import AdminPanelAnalytics from "./features/AdminPanel/AdminPanelAnalytics";
 import ListedProperties from "./features/AdminPanel/ListedProperties";
 import Account from "./features/AdminPanel/Account";
 import Security from "./features/AdminPanel/Security";

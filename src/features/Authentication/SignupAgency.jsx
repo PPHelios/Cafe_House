@@ -71,7 +71,7 @@ export default function SignupAgency() {
 
     if (values.profilePic) {
     //  console.log(values.profilePic)
-      parseFile = new Parse.File("img.jpeg", values.profilePic);
+      parseFile = new Parse.File(values.profilePic.name.slice(-5), values.profilePic);
      await parseFile.save()
      values.profilePic = parseFile
     }

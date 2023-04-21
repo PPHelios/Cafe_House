@@ -116,7 +116,9 @@ export default function AddProperty() {
     setLoading(true)
     // const parseQuery = new Parse.Query("Person");
     let picFiles = [];
+    let picUrls = [];
     let videoFiles = [];
+    let videoUrls = [];
     if (!propertLocation?.onDrag) {
       alert("Please Select A Location");
     }
@@ -131,9 +133,11 @@ export default function AddProperty() {
           const fileSize = returnFileSize(values.pics[i].size);
           console.log(typeIsValid);
           console.log(fileSize);
-
+console.log(pics[i].name)
+          await parseFile.save()
           const parseFile = new Parse.File("img.jpeg", values.pics[i]);
           picFiles.push(parseFile);
+          picUrls.push(parseFile.url);
         }
       }
       let numberOfVideos =
@@ -148,9 +152,12 @@ export default function AddProperty() {
         console.log(fileSize);
 
         const parseFile = new Parse.File("img.mp4", values.videos[i]);
+        await parseFile.save()
         videoFiles.push(parseFile);
+        videoUrls.push(parseFile.url);
       }
     }
+ 
       let property = new Parse.Object("Property");
       property.set("adName", values.adName);
       property.set("adNameAr", values.adNameAr);

@@ -1,4 +1,4 @@
-parse.Cloud.define("createProperty", async(req, res)=>{
+Parse.Cloud.define("createProperty", async(req, res)=>{
     const {adName,adNameAr,description} = req.params;
     const agency = req.user.get("profile").agency
     const internalRole = req.user.get("profile").internalRole

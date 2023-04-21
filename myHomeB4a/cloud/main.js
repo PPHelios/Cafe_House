@@ -26,8 +26,8 @@ require("./functions/filesBeforeSave.js")
 // Here is how you have to call it via REST API:
 
 /** curl -X POST \
-* -H "X-Parse-Application-Id: 26Ig38pD21TbvcMR2JqdgqjZGEofXCtKOiiBcWLI" \
-* -H "X-Parse-REST-API-Key: X2Hqk4N4QbM8pQEoc7UNPb8UOaSDwCqVteMJphMA" \
+* -H "X-Parse-Application-Id: e" \
+* -H "X-Parse-REST-API-Key: e" \
 * -H "Content-Type: application/json" \
 * -d "{}" \
 * https://parseapi.back4app.com/functions/hello
