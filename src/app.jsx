@@ -82,10 +82,13 @@ export function App() {
     const initialData = async () => {
       try {
         const currentUser = await Parse.User.current();
-        userData.value = currentUser;
+        if(currentUser){
+           userData.value = currentUser;
         console.log(currentUser);
         userData.value.userRole = currentUser.attributes.userRole;
         console.log(userData.value);
+        }
+       
         // const searchOptionsQuery = new Parse.Query("searchOptions");
         // searchOptionsQuery.contains("name", "englishOptions");
         // let queryResult = await searchOptionsQuery.first();

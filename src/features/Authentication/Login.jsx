@@ -75,6 +75,7 @@ const [loading, setLoading] = useState(false)
       
     } catch (error) {
       setLoading(false)
+      console.log(error)
       // Error can be caused by wrong parameters or lack of Internet connection
       notifications.show({
         title: "Error",
