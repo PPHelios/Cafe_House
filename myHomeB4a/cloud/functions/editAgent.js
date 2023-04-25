@@ -10,7 +10,7 @@ Parse.Cloud.define("editAgent", async (req, res) => {
     agentToEdit.set("userRole", userRole);
     agentToEdit.set("agentStatus", agentStatus);
     const updateAgent = await agentToEdit.save(null, { useMasterKey: true });
-    console.log({updateAgent});
+  //  console.log({updateAgent});
     return updateAgent
   } catch (err) {
     throw new Error(err.message);

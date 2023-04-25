@@ -1,3 +1,18 @@
+Parse.Cloud.beforeFind('Property', async (request) => {
+  console.log("propbeforefind")
+   const beforeFindUser =request?.params?.user
+   console.log(beforeFindUser)
+   console.log(request)
+ })
+
+ Parse.Cloud.afterFind('Property', async (request) => {
+  console.log("propafterfind")
+  const afterFindUser =request?.params?.user
+  console.log(afterFindUser)
+  console.log({request})
+  });
+
+
 Parse.Cloud.define("mainSearch", async (req, res) => {
   const values = req.params;
   console.log({req})

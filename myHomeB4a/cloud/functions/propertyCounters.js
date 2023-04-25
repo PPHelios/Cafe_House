@@ -3,14 +3,14 @@ Parse.Cloud.define("addPropertyView", async (req, res) => {
   const propertyId = req.params.id;
   const agency =req.params.agency
   const creatorEmail =req.params.creator
-   console.log(req.params)
+ //  console.log(req.params)
   try {
 
     let agencyQuery = new Parse.Query("Property");
     let agencyQueryResult = await agencyQuery.get(propertyId, {
       useMasterKey: true,
     });
-    console.log(agencyQueryResult);
+    //console.log(agencyQueryResult);
     //  await agencyQuery.first({
     //    useMasterKey: true,
     //  });
@@ -33,11 +33,11 @@ Parse.Cloud.define("addPropertyView", async (req, res) => {
 });
 
 Parse.Cloud.define("addPropertyAction", async (req, res) => {
-  console.log(req.params);
+ // console.log(req.params);
   const propertyId = req.params.id;
   const agency =req.params.agency
   const creatorEmail =req.params.creator
-   console.log(req.params)
+  // console.log(req.params)
   try {
     let agencyQuery = new Parse.Query("Property");
 
