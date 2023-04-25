@@ -30,6 +30,7 @@ export default function SignupAgency() {
       bio: "dfgdfgffffffff",
       bioAr: "fgdfgfffffffffff",
       role: "Agency",
+      agencyStatus:"active",
       profilePic: null,
     },
 
@@ -62,18 +63,23 @@ export default function SignupAgency() {
           : value.length > 20
           ? "Name must have Maxmimum 2000 letters"
           : null,
+      profilePic: (value) =>
+        value === null ? "Profile Picture Is Required" : null,
     },
   });
- 
+
   async function addAgency(values) {
     setLoading(true);
     let parseFile = null;
 
     if (values.profilePic) {
-    //  console.log(values.profilePic)
-      parseFile = new Parse.File(values.profilePic.name.slice(-5), values.profilePic);
-     await parseFile.save()
-     values.profilePic = parseFile
+      //  console.log(values.profilePic)
+      parseFile = new Parse.File(
+        `profilePic${values.profilePic.name.slice(-5)}`,
+        values.profilePic
+      );
+      await parseFile.save();
+      values.profilePic = parseFile;
     }
     try {
       // const agency = await queryAgency(values.agencyName);
@@ -81,19 +87,20 @@ export default function SignupAgency() {
       //  // console.log({ agency });
       //   throw new Error("Agency Name Already Exists");
       // }
-    //  let createdUser = await Parse.User.signUp(values.email, values.password);
-    
-  //  console.log(values.profilePic)
-   //console.log(parseFile)
- const addAgency =await Parse.Cloud.run("addAgency" ,values)
- console.log({addAgency})
- notifications.show({
-  title: "Agency Added Successfully",
-});
- setLoading(false);
- return true
+      //  let createdUser = await Parse.User.signUp(values.email, values.password);
+
+      //  console.log(values.profilePic)
+      //console.log(parseFile)
+      const addAgency = await Parse.Cloud.run("addAgency", values);
+      console.log({ addAgency });
+      form.reset();
+      notifications.show({
+        title: "Agency Added Successfully",
+      });
+      setLoading(false);
+      return true;
       // if (createdUser) {
-       
+
       //   let roleACL = new Parse.ACL();
       //   roleACL.setPublicReadAccess(true);
       //   roleACL.setRoleWriteAccess("SuperAdmin", true);
@@ -167,8 +174,8 @@ export default function SignupAgency() {
       // }
     } catch (error) {
       setLoading(false);
+      values.profilePic = null;
       // Error can be caused by lack of Internet connection
-      console.log(error)
       notifications.show({
         title: "Error",
         message: `Error! ${error.message} 🤥`,
@@ -299,6 +306,7 @@ export default function SignupAgency() {
                 form.setFieldValue("profilePic", event);
               }}
               icon={<IconUpload size="1rem" />}
+              {...form.getInputProps("profilePic")}
             />
           </Stack>
 

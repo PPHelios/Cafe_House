@@ -13,7 +13,7 @@ import { Carousel } from "@mantine/carousel";
 import Autoplay from 'embla-carousel-autoplay';
 
 //import Parse from "parse/dist/parse.min.js";
-import { IconHeart} from "@tabler/icons-preact";
+import { IconHeart, IconWashTemperature1} from "@tabler/icons-preact";
 import {
   addToFavorites,
   userFavorites,
@@ -60,7 +60,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PlaceDetails({ item, setPopupInfo, modal, favotitesPage,handlePropertyAction }) {
+function PlaceDetails({ item, setPopupInfo, modal, favoritesPage,handlePropertyAction,handlePropertyView }) {
   const autoplay = useRef(Autoplay({ delay: 4000 }));
   const fav = userFavorites.value.some((favorite) => {
     return item.id === favorite.get("propertyPointer").id;
@@ -82,7 +82,12 @@ function PlaceDetails({ item, setPopupInfo, modal, favotitesPage,handlePropertyA
     {
       title: "Area",
       value: `${item?.get("area")} m`,
+      
     },
+    {
+      title: "Views",
+      value: `${item?.get("userViews")}`,
+    }
   ];
   const items = data.map((stat) => (
     <div key={stat.title}>
@@ -115,9 +120,26 @@ function PlaceDetails({ item, setPopupInfo, modal, favotitesPage,handlePropertyA
       }
     }
   };
-  const phoneNumber = item?.get("agentPointer").attributes.phoneNumber;
-  const propertyCode = item?.get("agentPointer").attributes.propertyCode;
-  const propertyId = item?.id;
+const handleView = ()=>{
+  if (!favoritesPage){
+    setPopupInfo(item);
+    handlePropertyView(item)
+  }  
+}
+
+let carouselSlides =[]
+if(item){
+   carouselSlides = item?.get("picUrls").map(url=>(
+<Carousel.Slide>
+                    <Image
+                      src={url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+))
+}
+  const phoneNumber = item?.get("agentPointer")?.attributes?.phoneNumber;
+  const propertyCode = item?.get("agentPointer")?.attributes?.propertyCode;
   return (
     <>
       <Card
@@ -127,9 +149,7 @@ function PlaceDetails({ item, setPopupInfo, modal, favotitesPage,handlePropertyA
        
       >
         {!modal && (
-          <Card.Section sx={{ position: "relative" }}  onClick={() => {
-            if (!favotitesPage) setPopupInfo(item);
-          }}>
+          <Card.Section sx={{ position: "relative" }}  onClick={handleView}>
              <Carousel
                 maw={600}
                 mx="auto"
@@ -142,126 +162,8 @@ function PlaceDetails({ item, setPopupInfo, modal, favotitesPage,handlePropertyA
                 onMouseEnter={autoplay.current.stop}
                 onMouseLeave={autoplay.current.reset}
               >
-                {item && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item?.get("pic0")?._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic1")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic1")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic2")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic2")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic3")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic3")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic4")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic4")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic5")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic5")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic6")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic6")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic7")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic7")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic8")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic8")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic9")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic9")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic10")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic10")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic11")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic11")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic12")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic12")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic13")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic13")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {item?.get("pic14")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={item.get("pic14")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
+                {carouselSlides}
+               
                 {/*          
                 {item?.get("video1")?._url && (
                   <Carousel.Slide>
@@ -278,16 +180,14 @@ function PlaceDetails({ item, setPopupInfo, modal, favotitesPage,handlePropertyA
             <Box w={50} sx={{ position: "absolute", bottom: 0, right: 0 }}>
               <Image
                 w="100%"
-                src={item?.get("agencyPointer").get("profilePic")?._url}
+                src={item?.get("agencyPointer")?.get("userPointer")?.get("profilePic")?._url}
                 alt="agency logo"
               />
             </Box>
           </Card.Section>
         )}
 
-        <Card.Section className={classes.section} mt="md"  onClick={() => {
-          if (!favotitesPage) setPopupInfo(item);
-        }}>
+        <Card.Section className={classes.section} mt="md"  onClick={handleView}>
           <Group position="apart">
             <Text fz="lg" fw={500}>
               {item?.get("adName")}
@@ -296,7 +196,7 @@ function PlaceDetails({ item, setPopupInfo, modal, favotitesPage,handlePropertyA
               Price: {item?.get("price")} LE
             </Text>
             <Text fz="md" fw={500} c="blue.4">
-              Agency: {item?.get("agencyPointer").get("agencyName")}
+              Agency: {item?.get("agencyPointer")?.get("agencyName")}
             </Text>
           </Group>
 
@@ -313,33 +213,35 @@ function PlaceDetails({ item, setPopupInfo, modal, favotitesPage,handlePropertyA
           </Text>
         </Card.Section>
 
-        <Card.Section className={classes.footer}  onClick={() => {
-          if (!favotitesPage) setPopupInfo(item);
-        }}>{items}</Card.Section>
+        <Card.Section className={classes.footer}  onClick={handleView}>{items}</Card.Section>
 
         <Group mt="xs" className={classes.actionButtons}>
+       
           <ActionIcon
             variant="default"
             radius="md"
             size={36}
             onClick={(e) => handleClick(e)}
           >
+             <div onClick={()=>handlePropertyAction(item)}>
             <IconHeart
               size="1.1rem"
               className={classes.like}
               stroke={1.5}
               fill={isFavorite ? "red" : "white"}
             />
+             </div>
           </ActionIcon>
+         
           {/* <ActionIcon variant="default" radius="md" size={36} >
             <IconShare size="1.1rem" className={classes.like} stroke={1.5} />
           </ActionIcon> */}
          {!modal && <> 
-         <div onClick={()=>handlePropertyAction(propertyId)}>
+         <div onClick={()=>handlePropertyAction(item)}>
                    <PhoneNumberButton phoneNumber={phoneNumber} />
 
          </div>
-<div onClick={()=>handlePropertyAction(propertyId)}>
+<div onClick={()=>handlePropertyAction(item)}>
   <WhatsappButton
             phoneNumber={phoneNumber}
             propertyCode={propertyCode}

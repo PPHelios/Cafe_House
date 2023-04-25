@@ -103,6 +103,7 @@ Parse.Cloud.define(
       // agencyProfile.set("bioAr", values.bioAr);
       // agencyProfile.set("phoneNumber", values.phoneNumber);
       agencyProfile.set("userRole", "Agency");
+    //  agencyProfile.set("agentStatus", values.agencyStatus);
       agencyProfile.set("credits", 0);
       // agencyProfile.set("agencyRoleName", role);
       // agencyProfile.set("moderatorRoleName", agencyModeratorName);
@@ -126,6 +127,7 @@ Parse.Cloud.define(
       createdUser.set("bio", values.bio);
       createdUser.set("bioAr", values.bioAr);
       createdUser.set("userRole", "Agency");
+      createdUser.set("agentStatus", agentStatus);
       createdUser.set("phoneNumber", values.phoneNumber);
     //  createdUser.set("moderatorRoleName", agencyModeratorName);
 
@@ -136,10 +138,11 @@ Parse.Cloud.define(
       }
       //  agencyProfile.set("profilePic", parseFile);
       createdUser.set("agencyName", values.agencyName);
+      
       createdUser.set("agencyPointer", saveAgency.toPointer());
       let userACL = new Parse.ACL();
       userACL.setPublicReadAccess(true);
-      userACL.setWriteAccess(createdUser.id, true);
+    //  userACL.setWriteAccess(createdUser.id, true);
       userACL.setRoleWriteAccess("SuperAdmin", true);
       userACL.setRoleWriteAccess("SubAdmin", true);
       userACL.setReadAccess(createdUser.id, true);
@@ -151,7 +154,7 @@ Parse.Cloud.define(
       return updateAgency;
     } catch (error) {
       // Error can be caused by lack of Internet connection
-      return error.message;
+      throw new Error(err.message);
     }
   },
   { requireAnyUserRoles: ["SuperAdmin", "SubAdmin"] }

@@ -16,8 +16,10 @@ import {
   agents,
   userData,
   properties,
-  queryAllProperties,
+  queryPropertiesInAgency,
   getUserFavorites,
+  getUserData,
+  queryViewStats
 } from "./store/appState";
 import { Notifications } from "@mantine/notifications";
 // BACKENDLESS
@@ -53,7 +55,6 @@ import SignupAgent from "./features/Authentication/SignupAgent";
 import NotFound404 from "./features/NotFound404/NotFound404";
 import ListWithUs from "./features/ListWithUs/ListWithUs";
 
-
 import AdminPanelAnalytics from "./features/AdminPanel/AdminPanelAnalytics";
 import ListedProperties from "./features/AdminPanel/ListedProperties";
 import Account from "./features/AdminPanel/Account";
@@ -83,6 +84,8 @@ export function App() {
         const currentUser = await Parse.User.current();
         userData.value = currentUser;
         console.log(currentUser);
+        userData.value.userRole = currentUser.attributes.userRole;
+        console.log(userData.value);
         // const searchOptionsQuery = new Parse.Query("searchOptions");
         // searchOptionsQuery.contains("name", "englishOptions");
         // let queryResult = await searchOptionsQuery.first();
@@ -106,38 +109,38 @@ export function App() {
           <Route
             path="/search"
             element={<MapSearch />}
-            loader={ async() => {
-             await getUserFavorites();
-             return true
+            loader={async () => {
+              await getUserFavorites();
+              return true;
             }}
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/Listwithus" element={<ListWithUs />} />
-          <Route path="/userfavorites" element={<UserFavoritesPage />}  loader={ async() => {
-             await getUserFavorites();
-             return true
-            }} />
+          <Route
+            path="/userfavorites"
+            element={<UserFavoritesPage />}
+            loader={async () => {
+              await getUserFavorites();
+              return true;
+            }}
+          />
           <Route path="/signupagency" element={<SignupAgency />} />
           <Route path="/signupagent" element={<SignupAgent />} />
           <Route path="/user/edituserdata" element={<EditUserData />} />
-         
 
           <Route
             element={<AdminPanel />}
             loader={async () => {
-              const agentsQuery = await queryAgentsInAgency();
-             
-              agents.value = agentsQuery;
-              const propertiesQuery = await queryAllProperties();
-              console.log(propertiesQuery);
-              properties.value = propertiesQuery;
-
+              if (userData.value.userRole !== "Agent"){
+                 await queryAgentsInAgency();
+              }
+              await queryPropertiesInAgency();
+              await queryViewStats()
               return true;
             }}
           >
-           
             <Route path="/adminpanel/addproperty" element={<AddProperty />} />
             <Route
               path="/adminpanel/listedproperties"
@@ -147,11 +150,14 @@ export function App() {
               path="/adminpanel/agentanalytics"
               element={<AdminPanelAnalytics />}
             />
-            <Route path="/adminpanel/agents" element={<Agents />}/>
+            <Route path="/adminpanel/agents" element={<Agents />} />
             <Route path="/adminpanel/account" element={<Account />} />
             <Route path="/adminpanel/security" element={<Security />} />
             <Route path="/adminpanel/settings" element={<Settings />} />
-            <Route path="/adminpanel/editagent" element={<EditAgent />} />
+            <Route
+              path="/adminpanel/editagent/:agentId"
+              element={<EditAgent />}
+            />
           </Route>
           <Route path="*" element={<NotFound404 />} />
         </Route>

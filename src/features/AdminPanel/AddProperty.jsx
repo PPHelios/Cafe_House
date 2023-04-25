@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import { forwardRef } from "preact/compat";
-import { searchOptions, adminSideBarState } from "../../store/appState";
+import { searchOptions, adminSideBarState,filteredData } from "../../store/appState";
 import Parse from "parse/dist/parse.min.js";
 import { useForm } from "@mantine/form";
 import AppMap from "../Map/AppMap";
@@ -17,7 +17,7 @@ import {
   Select,
   Stack,
   Title,
-  Textarea
+  Textarea,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-preact";
@@ -36,11 +36,10 @@ const SelectItem = forwardRef(
 );
 
 export default function AddProperty() {
-
   const [propertLocation, setPropertLocation] = useState({});
-  const [loading, setLoading] = useState(false)
-  adminSideBarState.value=1
-
+  const [loading, setLoading] = useState(false);
+  adminSideBarState.value = 1;
+  filteredData.value=[]
   const maxNumberOfPics = 15;
   const maxNumberOfVideos = 2;
   const form = useForm({
@@ -49,7 +48,7 @@ export default function AddProperty() {
       adNameAr: "",
       description: "",
       descriptionAr: "",
-      propertyCode:"",
+      propertyCode: "",
       propertyType: "",
       listingType: "",
       price: "",
@@ -57,20 +56,50 @@ export default function AddProperty() {
       room: "",
       bath: "",
       pics: [],
-      videos:[],
-      isFeatured: false,
+      videos: [],
+      isFeatured: "",
       adStatus: "",
       locationTags: [],
+      location:[]
     },
 
     validate: {
-      adName: (value) => (value.length < 10 ? 'Name must have at least 10 letters' : value.length>200?'Name must have Maxmimum 200 letters': null),
-      lastName: (value) => (value.length < 10 ? 'Name must have at least 10 letters' : value.length>200?'Name must have Maxmimum 200 letters': null),
-      description: (value) => (value.length < 700 ? 'Description must have at least 700 letters' : value.length>2000?'Description must have Maxmimum 2000 letters': null),
-      descriptionAr: (value) => (value.length < 700 ? 'Description must have at least 700 letters' : value.length>2000?'Description must have Maxmimum 2000 letters': null),
-      price: (value) => (value < 1 ? 'Room Must Be 1 At Least' : value>1000000?'Room Must Be 1000000000 Maximum': null),
-      area: (value) => (value < 1 ? 'Area Must Be 1 At Least' : value>1000000?'Area Must Be 1000000000 Maximum': null),
-
+      adName: (value) =>
+        value.length < 10
+          ? "Name must have at least 10 letters"
+          : value.length > 200
+          ? "Name must have Maxmimum 200 letters"
+          : null,
+          adNameAr: (value) =>
+        value.length < 10
+          ? "Name must have at least 10 letters"
+          : value.length > 200
+          ? "Name must have Maxmimum 200 letters"
+          : null,
+      description: (value) =>
+        value.length < 7
+          ? "Description must have at least 700 letters"
+          : value.length > 2000
+          ? "Description must have Maxmimum 2000 letters"
+          : null,
+      descriptionAr: (value) =>
+        value.length < 7
+          ? "Description must have at least 700 letters"
+          : value.length > 2000
+          ? "Description must have Maxmimum 2000 letters"
+          : null,
+      price: (value) =>
+        value < 1
+          ? "Price Must Be 1 At Least"
+          : value > 1000000000
+          ? "Price Must Be 1000000000 Maximum"
+          : null,
+      area: (value) =>
+        value < 1
+          ? "Area Must Be 1 At Least"
+          : value > 1000000
+          ? "Area Must Be 1000000000 Maximum"
+          : null,
     },
     transformValues: (values) => ({
       adName: values.adName,
@@ -87,8 +116,9 @@ export default function AddProperty() {
       pics: values.pics,
       videos: values.videos,
       isFeatured: values.isFeatured || false,
-      adStatus: values.adStatus || "pending",
+      adStatus: values.adStatus || "active",
       locationTags: values.locationTags,
+      location:propertLocation
     }),
   });
   const fileTypes = [
@@ -113,12 +143,13 @@ export default function AddProperty() {
     }
   }
   async function addnewProperty(values) {
-    setLoading(true)
+    setLoading(true);
+    console.log(values);
     // const parseQuery = new Parse.Query("Person");
-    let picFiles = [];
-    let picUrls = [];
-    let videoFiles = [];
-    let videoUrls = [];
+    let picFiles= [];
+let picUrls = []
+let videoFiles = []
+let videoUrls = []
     if (!propertLocation?.onDrag) {
       alert("Please Select A Location");
     }
@@ -127,89 +158,100 @@ export default function AddProperty() {
         values.pics.length < maxNumberOfPics
           ? values.pics.length
           : maxNumberOfPics;
+
       if (values.pics.length > 0) {
         for (let i = 0; i < numberOfPics; i++) {
           const typeIsValid = validFileType(values.pics[i]);
           const fileSize = returnFileSize(values.pics[i].size);
           console.log(typeIsValid);
           console.log(fileSize);
-console.log(pics[i].name)
-          await parseFile.save()
-          const parseFile = new Parse.File("img.jpeg", values.pics[i]);
+          console.log(values.pics[i].name);
+          const parseFile = new Parse.File(`propertyPic${values.pics[i].name.slice(-5)}`, values.pics[i]);
+           await parseFile.save();
           picFiles.push(parseFile);
-          picUrls.push(parseFile.url);
+          picUrls.push(parseFile._url);
         }
+          delete values.pics
+      values.picFiles = picFiles
+      values.picUrls = picUrls
       }
+    
       let numberOfVideos =
-      values.videos.length < maxNumberOfVideos
-        ? values.videos.length
-        : maxNumberOfVideos;
-    if (values.videos.length > 0) {
-      for (let i = 0; i < numberOfVideos; i++) {
-        const typeIsValid = validFileType(values.videos[i]);
-        const fileSize = returnFileSize(values.videos[i].size);
-        console.log(typeIsValid);
-        console.log(fileSize);
-
-        const parseFile = new Parse.File("img.mp4", values.videos[i]);
-        await parseFile.save()
-        videoFiles.push(parseFile);
-        videoUrls.push(parseFile.url);
-      }
-    }
- 
-      let property = new Parse.Object("Property");
-      property.set("adName", values.adName);
-      property.set("adNameAr", values.adNameAr);
-      property.set("description", values.description);
-      property.set("descriptionAr", values.descriptionAr);
-      property.set("propertyCode", values.propertyCode);
-      property.set("listingType", values.listingType);
-      property.set("propertyType", values.propertyType);
-      property.set("price", values.price);
-      property.set("area", values.area);
-      property.set("room", values.room);
-      property.set("bath", values.bath);
-      property.set("isFeatured", values.isFeatured);
-      property.set("adStatus", values.adStatus);
-      property.set(
-        "location",
-        new Parse.GeoPoint(
-          propertLocation.onDrag.lat,
-          propertLocation.onDrag.lng
-        )
-      );
-      property.set("locationTags", values.locationTags);
-      property.set("agentPointer", Parse.User.current().get("agentPointer"));
-      property.set("agencyPointer", Parse.User.current().get("agencyPointer"));
-      if (values.pics.length > 0) {
-        for (let i = 0; i < numberOfPics; i++) {
-          property.set(`pic${i}`, picFiles[i]);
-        }
-      }
+        values.videos.length < maxNumberOfVideos
+          ? values.videos.length
+          : maxNumberOfVideos;
       if (values.videos.length > 0) {
         for (let i = 0; i < numberOfVideos; i++) {
-          property.set(`video${i}`,videoFiles[i]);
+          const typeIsValid = validFileType(values.videos[i]);
+          const fileSize = returnFileSize(values.videos[i].size);
+          console.log(typeIsValid);
+          console.log(fileSize);
+          const parseFile = new Parse.File(`propertyVideo${values.pics[i].name.slice(-5)}`, values.videos[i]);
+          await parseFile.save();
+          videoFiles.push(parseFile);
+          videoUrls.push(parseFile._url);
         }
+        delete values.videos
+        values.videoFiles = videoFiles
+        values.videoUrls = videoUrls
       }
-
-//ACL
-// only current user has read/write access
-// property.setACL(new Parce.ACL(Parse.User.current()))
-// let propertyACL = new Parse.ACL()
-// propertyACL.setWriteAccess(Parse.User.current(), true)
-// //propertyACL.setWriteAccess(admin, true)
-// propertyACL.setPublicWriteAccess(false)
-// property.setACL(propertyACL)
-
-
-      const saveproperty = await property.save();
-      setLoading(false)
-      form.reset()
+      const saveproperty =await Parse.Cloud.run("addProperty" ,values)
+      setLoading(false);
+     // form.reset();
       notifications.show({
         title: "Property Added Successfully",
       });
       console.log(saveproperty);
+      // let property = new Parse.Object("Property");
+      // property.set("adName", values.adName);
+      // property.set("adNameAr", values.adNameAr);
+      // property.set("description", values.description);
+      // property.set("descriptionAr", values.descriptionAr);
+      // property.set("propertyCode", values.propertyCode);
+      // property.set("listingType", values.listingType);
+      // property.set("propertyType", values.propertyType);
+      // property.set("price", values.price);
+      // property.set("area", values.area);
+      // property.set("room", values.room);
+      // property.set("bath", values.bath);
+      // property.set("isFeatured", values.isFeatured);
+      // property.set("adStatus", values.adStatus);
+      // property.set(
+      //   "location",
+        // new Parse.GeoPoint(
+        //   propertLocation.onDrag.lat,
+        //   propertLocation.onDrag.lng
+        // )
+      // );
+      // property.set("locationTags", values.locationTags);
+      // property.set("picUrls", picUrls);
+      // property.set("videoUrls", videoUrls);
+      // property.set("picFiles", picFiles);
+      // property.set("videoFiles", videoFiles);
+      // property.set("agentPointer", Parse.User.current().get("agentPointer"));
+      // property.set("agencyPointer", Parse.User.current().get("agencyPointer"));
+      // if (values.pics.length > 0) {
+      //   for (let i = 0; i < numberOfPics; i++) {
+      //     property.set(`pic${i}`, picFiles[i]);
+      //   }
+      // }
+      // if (values.videos.length > 0) {
+      //   for (let i = 0; i < numberOfVideos; i++) {
+      //     property.set(`video${i}`, videoFiles[i]);
+      //   }
+      // }
+
+      //ACL
+      // only current user has read/write access
+      // property.setACL(new Parce.ACL(Parse.User.current()))
+      // let propertyACL = new Parse.ACL()
+      // propertyACL.setWriteAccess(Parse.User.current(), true)
+      // //propertyACL.setWriteAccess(admin, true)
+      // propertyACL.setPublicWriteAccess(false)
+      // property.setACL(propertyACL)
+
+      // const saveproperty = await property.save();
+     
 
       //       let PicsUrls=[]
 
@@ -220,12 +262,17 @@ console.log(pics[i].name)
 
       return true;
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
+      values.picFiles = null
+      values.picUrls = null
+      values.videoFiles = null
+      values.videoUrls = null
       // Error can be caused by lack of Internet connection
+      console.log(error);
       notifications.show({
         title: "Error",
         message: `Error! ${error.message} 🤥`,
-        color: 'red',
+        color: "red",
       });
 
       return false;
@@ -233,11 +280,11 @@ console.log(pics[i].name)
   }
 
   return (
-    <Box h="calc(100vh - 90px)" sx={{overflowY:"auto"}}>
+    <Box h="calc(100vh - 90px)" sx={{ overflowY: "auto" }}>
       <Title my={30} order={1} weight={700} ta="center" c="blue.4">
         Add New Property
       </Title>
-      <Paper w="90%"  maw={700} mx="auto" radius="md" p="xl" withBorder>
+      <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
         <form onSubmit={form.onSubmit((values) => addnewProperty(values))}>
           <Stack>
             <TextInput
@@ -249,7 +296,7 @@ console.log(pics[i].name)
                 form.setFieldValue("adName", event.currentTarget.value)
               }
               radius="md"
-              {...form.getInputProps('adName')}
+              {...form.getInputProps("adName")}
             />
             <TextInput
               label="Ad. Arabic Name"
@@ -259,13 +306,13 @@ console.log(pics[i].name)
                 form.setFieldValue("adNameAr", event.currentTarget.value)
               }
               radius="md"
-              {...form.getInputProps('adNameAr')}
+              {...form.getInputProps("adNameAr")}
             />
             <Textarea
               required
               autosize
-        minRows={2}
-        maxRows={4}
+              minRows={2}
+              maxRows={4}
               label="Property Description"
               placeholder="Enter Property Description"
               description="From 700 to 2000 characters"
@@ -274,13 +321,13 @@ console.log(pics[i].name)
                 form.setFieldValue("description", event.currentTarget.value)
               }
               radius="md"
-              {...form.getInputProps('description')}
+              {...form.getInputProps("description")}
             />
             <Textarea
               required
               autosize
-        minRows={2}
-        maxRows={4}
+              minRows={2}
+              maxRows={4}
               label="Property Arabic Description"
               placeholder="Enter Property Arabic Description"
               description="From 700 to 2000 characters"
@@ -289,9 +336,9 @@ console.log(pics[i].name)
                 form.setFieldValue("descriptionAr", event.currentTarget.value)
               }
               radius="md"
-              {...form.getInputProps('descriptionAr')}
+              {...form.getInputProps("descriptionAr")}
             />
-              <TextInput
+            <TextInput
               required
               label="Property Code"
               placeholder="Enter Property Code"
@@ -300,7 +347,7 @@ console.log(pics[i].name)
                 form.setFieldValue("propertyCode", event.currentTarget.value)
               }
               radius="md"
-              {...form.getInputProps('propertyCode')}
+              {...form.getInputProps("propertyCode")}
             />
             <Select
               required
@@ -312,7 +359,7 @@ console.log(pics[i].name)
               placeholder="Property Type"
               aria-label="pick property type "
               radius="md"
-              {...form.getInputProps('propertyType')}
+              {...form.getInputProps("propertyType")}
             />
             <Select
               required
@@ -323,8 +370,7 @@ console.log(pics[i].name)
               placeholder="pick Listing Type"
               aria-label="pick Listing Type"
               radius="md"
-              {...form.getInputProps('listingType')}
-
+              {...form.getInputProps("listingType")}
             />
 
             <TextInput
@@ -336,7 +382,7 @@ console.log(pics[i].name)
                 form.setFieldValue("price", event.currentTarget.value)
               }
               radius="md"
-              {...form.getInputProps('price')}
+              {...form.getInputProps("price")}
             />
             <TextInput
               required
@@ -347,7 +393,7 @@ console.log(pics[i].name)
                 form.setFieldValue("area", event.currentTarget.value)
               }
               radius="md"
-              {...form.getInputProps('area')}
+              {...form.getInputProps("area")}
             />
             <TextInput
               required
@@ -358,7 +404,7 @@ console.log(pics[i].name)
                 form.setFieldValue("room", event.currentTarget.value)
               }
               radius="md"
-              {...form.getInputProps('room')}
+              {...form.getInputProps("room")}
             />
             <TextInput
               required
@@ -369,7 +415,7 @@ console.log(pics[i].name)
                 form.setFieldValue("bath", event.currentTarget.value)
               }
               radius="md"
-              {...form.getInputProps('bath')}
+              {...form.getInputProps("bath")}
             />
             <FileInput
               multiple
@@ -381,8 +427,9 @@ console.log(pics[i].name)
                 form.setFieldValue("pics", event);
               }}
               icon={<IconUpload size="1rem" />}
+              {...form.getInputProps("pics")}
             />
-<FileInput
+            <FileInput
               multiple
               label="Upload Property Videos"
               placeholder="Upload Property Videos"
@@ -392,6 +439,7 @@ console.log(pics[i].name)
                 form.setFieldValue("videos", event);
               }}
               icon={<IconUpload size="1rem" />}
+              {...form.getInputProps("videos")}
             />
             <MultiSelect
               {...form.getInputProps("locationTags")}
@@ -422,10 +470,22 @@ console.log(pics[i].name)
                   paddingRight: 40,
                 },
               }}
-              {...form.getInputProps('locationTags')}
+              {...form.getInputProps("locationTags")}
+            />
+             <Select
+              required
+              m={5}
+              data={["active", "inactive"]}
+              display="inline-block"
+              {...form.getInputProps("adStatus")}
+              label="Ad Status"
+              placeholder="Ad Status"
+              aria-label="pick Ad Status"
+              radius="md"
+              {...form.getInputProps("adStatus")}
             />
           </Stack>
-          <Box w="100%" mt={50} h={{base:250,sm:400}} mx="auto">
+          <Box w="100%" mt={50} h={{ base: 250, sm: 400 }} mx="auto">
             <AppMap add={false} setPropertLocation={setPropertLocation} />
           </Box>
           <Group position="center" mt="xl">

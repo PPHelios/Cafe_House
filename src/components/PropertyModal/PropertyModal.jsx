@@ -31,9 +31,20 @@ function PropertyModal({ modalData, closeModal, modalOpen }) {
   //     </Carousel.Slide>
   //   ));
   // }
-  const phoneNumber = modalData?.get("agentPointer").attributes.phoneNumber;
-  const propertyCode = modalData?.get("agentPointer").attributes.propertyCode;
+  const phoneNumber = modalData?.get("creator").attributes.phoneNumber;
+  const propertyCode = modalData?.get("creator").attributes.propertyCode;
   const autoplay = useRef(Autoplay({ delay: 4000 }));
+  let carouselSlides =[]
+if(modalData){
+   carouselSlides = modalData?.get("picUrls").map(url=>(
+<Carousel.Slide>
+                    <Image
+                      src={url}
+                      alt="property picture"
+                    />
+                  </Carousel.Slide>
+))
+}
   return (
     <>
       {modalOpen.value && (
@@ -62,126 +73,7 @@ function PropertyModal({ modalData, closeModal, modalOpen }) {
                 onMouseEnter={autoplay.current.stop}
                 onMouseLeave={autoplay.current.reset}
               >
-                {modalData && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData?.get("pic0")?._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic1")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic1")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic2")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic2")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic3")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic3")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic4")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic4")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic5")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic5")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic6")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic6")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic7")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic7")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic8")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic8")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic9")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic9")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic10")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic10")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic11")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic11")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic12")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic12")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic13")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic13")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
-                {modalData?.get("pic14")?._url && (
-                  <Carousel.Slide>
-                    <Image
-                      src={modalData.get("pic14")._url}
-                      alt="property picture"
-                    />
-                  </Carousel.Slide>
-                )}
+                {carouselSlides}
                 {/*          
                 {modalData?.get("video1")?._url && (
                   <Carousel.Slide>
@@ -232,7 +124,7 @@ function PropertyModal({ modalData, closeModal, modalOpen }) {
                     size={40}
                     radius="xl"
                     src={
-                      modalData?.get("agentPointer")?.get("profilePic")?._url
+                      modalData?.get("creator")?.get("profilePic")?._url
                     }
                     alt="agent profile picture"
                   />

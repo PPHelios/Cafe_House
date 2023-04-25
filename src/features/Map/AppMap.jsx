@@ -3,7 +3,7 @@ import maplibregl from "maplibre-gl";
 import { useSignal } from "@preact/signals";
 //import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import ControlPanel from "./control-panel";
-import { useState, useMemo, useRef, useCallback } from "preact/hooks";
+import { useState, useMemo, useRef, useCallback, useEffect } from "preact/hooks";
 import { filteredData } from "../../store/appState";
 import { Box, Image, Text, Group, Paper } from "@mantine/core";
 import { useWindowScroll } from '@mantine/hooks';
@@ -30,7 +30,13 @@ const AppMap = ({
   handlePropertyView,
   handlePropertyAction
 }) => {
-  //const [scroll, scrollTo] = useWindowScroll();
+  const [scroll, scrollTo] = useWindowScroll();
+  const scrollPosition = useSignal(1);
+  const yPosition = useSignal(1);
+  useEffect(()=>{
+    yPosition.value  = scroll.y
+   // console.log(yPosition.value)
+  },[scroll.y])
   const [viewState, setViewState] = useState({
     longitude: 31.53824,
     latitude: 30.00624,
@@ -38,8 +44,11 @@ const AppMap = ({
   });
   const modalData = useSignal(null);
   const modalOpen = useSignal(false)
+
   const closeModal=()=>{
-    console.log("closeModal")
+  //  console.log("closeModal")
+  //console.log(scrollPosition.value)
+  scrollTo({ y:scrollPosition.value })
     document.body.style.height = 'fit-content';
     document.body.style.overflow = 'visible';
     modalOpen.value=false
@@ -85,13 +94,16 @@ const AppMap = ({
         >
           <Box
           onClick={() =>{
-            console.log("openModal")
+            //console.log("openModal")
+             scrollPosition.value= yPosition.value
             const body = document.body;
+           // console.log(scrollPosition.value)
+            scrollTo({ y: 0 })
             body.style.height = '100vh';
             body.style.overflowY = 'hidden';
             handlePropertyView(item)
             modalOpen.value=true
-            scrollTo({ y: 0 })
+           
           }}
             onMouseOver={() => {
               modalData.value = item;
@@ -126,7 +138,7 @@ const AppMap = ({
         {...viewState}
         // onLoad={onMapLoad}
         ref={mapRef}
-        reuseMaps
+       // reuseMaps
         onMove={(evt) => setViewState(evt.viewState)}
         style={{ width: "100%", height: "100%" }}
         mapStyle={`https://api.maptiler.com/maps/0589890f-74b7-443f-acab-40553ad8f673/style.json?key=${
@@ -154,7 +166,7 @@ const AppMap = ({
               <Group>
                 <Box w={80}>
                   <Image
-                    src={popupInfo.get("pic0")._url}
+                    src={popupInfo.get("picUrls")[0]}
                     alt="property picture"
                   />
                 </Box>
@@ -187,7 +199,7 @@ const AppMap = ({
           modalData={modalData.value}
           modalOpen={modalOpen}
           closeModal={closeModal}
-          handlePropertyAction={handlePropertyAction}
+          // handlePropertyAction={handlePropertyAction}
           // opened={opened}
           // close={close}
         />

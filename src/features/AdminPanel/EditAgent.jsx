@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate ,useParams} from "react-router-dom";
 import Parse from "parse/dist/parse.min.js";
 
 import { useForm } from "@mantine/form";
@@ -14,41 +14,47 @@ import {
   Divider,
   Anchor,
   Stack,
+  Select
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
 //import Backendless from "backendless";
-import { userData } from "../../store/appState";
+import { userData, agents } from "../../store/appState";
 export default function EditAgent() {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-
+  let { agentId } = useParams();
+  
   useEffect(() => {
-    const getAgentData = async () => {
-      let agentQuery = new Parse.Query("Agent");
-      agentQuery.equalTo("objectId", "Nn2qfpaxme");
-      const searchResults = await agentQuery.first();
-      console.log({ searchResults });
-      setUser(searchResults);
-      form.setValues({
-        firstName: searchResults.attributes.firstName,
-        lastName: searchResults.attributes.lastName,
-        email: searchResults.attributes.email,
-      });
+let agentToEdit = []
+    const getAgentData = () => {
+    agentToEdit = agents.value.filter(agent => agent.attributes.userPointer.id === agentId)
+    console.log({agentToEdit})
+    setUser(agentToEdit[0])
     };
     getAgentData();
-  }, []);
+    const userRole = agentToEdit[0].get("userRole")
+    const agentStatus = agentToEdit[0].get("agentStatus")
+    console.log({userRole})
+    console.log({agentStatus})
+    form.setValues({
+      userRole:userRole,
+      agentStatus:agentStatus
+    })
+  }, [agents.value]);
 
+  //console.log({user})
+
+  
   const form = useForm({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      userRole:"",
+      agentStatus:""
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
+     // email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
       // password: (val) =>
       //   val.length <= 6
       //     ? "Password should include at least 6 characters"
@@ -57,88 +63,71 @@ export default function EditAgent() {
   });
 
   const handleSubmit = async (values) => {
-    setLoading(true);
-    try {
-      // Since the signUp method returns a Promise, we need to call it using await
-
-      if (user) {
-        // let agentQuery= new Parse.Query("Agent")
-        // agentQuery.equalTo("email","adamsag1@gmail.com")
-        // let editableUser = await agentQuery.first()
-        // console.log({editableUser})
-        let editableUser = user;
-        editableUser.set("firstName", values.firstName);
-        editableUser.set("lastName", values.lastName);
-        //  editableUser.set("email", values.email);
-        // editableUser.set("password", values.password);
-        const saveUser = await editableUser.save();
-        if (saveUser) {
-          console.log({ saveUser });
-
-          setLoading(false);
-          notifications.show({
-            title: "User Data Updated Successfully",
-          });
-          // navigate("/");
-          return true;
-        } else {
-          console.log("bbbbbbbbb");
-          throw new Error("Something Went Wrong, Couldn't Sign Up");
-        }
-      } else {
-        console.log("yyyyyyyy");
-        throw new Error("Something Went Wrong, Couldn't Sign Up");
-      }
+     setLoading(true);
+     try {
+values.agentId = agentId
+      const editAgent =await Parse.Cloud.run("editAgent" ,values)
+      setLoading(false);
+     // form.reset();
+      notifications.show({
+        title: "Agent Edited Successfully",
+      });
+      console.log({editAgent});
     } catch (error) {
       setLoading(false);
-      // signUp can fail if any parameter is blank or failed an uniqueness check on the server
-      if (error.code == 209) logout(await Parse.User.logOut());
       notifications.show({
         title: "Error",
         message: `Error! ${error.message} 🤥`,
         color: "red",
       });
       return false;
-    }
   };
+}
+  const editingAgentRole = userData.value?.userRole
+  let roleOptions =[]
+  if(editingAgentRole==="Agency"){
+     roleOptions=["Admin","Moderator","SeniorAgent" ,"Agent",]
+  }else if(editingAgentRole==="Admin"){
+    options=["Moderator","SeniorAgent" ,"Agent",]
+  } else if(editingAgentRole==="Moderator"){
+    roleOptions=["Agent",]
+  }else {
+    roleOptions=[]
+  }
+
+  const statusOptions = ["active", "inactive"]
   return (
     <>
-      <Title my={30} order={1} weight={700} ta="center" c="blue.4"></Title>
-
+      <Title my={30} order={1} weight={700} ta="center" c="blue.4">Edit Agent</Title>
+{user &&
+         <>
       <Paper w="90%" maw={700} mx="auto" radius="md" p="xl" withBorder>
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          <Stack>
-            <TextInput
+         
+         <Stack>
+         <Select
               required
-              label="First Name"
-              placeholder="Your First Name"
-              value={form.values.firstName}
-              onChange={(event) =>
-                form.setFieldValue("firstName", event.currentTarget.value)
-              }
+              m={5}
+              data={roleOptions}
+              display="inline-block"
+              {...form.getInputProps("userRole")}
+              label="Agent Role"
+              placeholder="Agent Role"
+              aria-label="pick Agent Role"
               radius="md"
+              {...form.getInputProps("userRole")}
             />
-            <TextInput
+              <Select
               required
-              label="Last Name"
-              placeholder="Your Last Name"
-              value={form.values.lastName}
-              onChange={(event) =>
-                form.setFieldValue("lastName", event.currentTarget.value)
-              }
+              m={5}
+              data={statusOptions}
+              display="inline-block"
+              {...form.getInputProps("agentStatus")}
+              label="Agent Status"
+              placeholder="Agent Status"
+              aria-label="pick Agent Status"
               radius="md"
-            />
-
-            <TextInput
-              required
-              label="Email"
-              placeholder="Enter Your Email"
-              value={form.values.email}
-              onChange={(event) =>
-                form.setFieldValue("email", event.currentTarget.value)
-              }
-              error={form.errors.email && "Invalid email"}
-              radius="md"
+              {...form.getInputProps("agentStatus")}
             />
           </Stack>
 
@@ -147,8 +136,12 @@ export default function EditAgent() {
               Update User Data
             </Button>
           </Group>
+        
+         
         </form>
       </Paper>
+
+    </> }
     </>
   );
 }

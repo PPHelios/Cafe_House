@@ -41,11 +41,12 @@ function Agents() {
   adminSideBarState.value = 3;
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
-let agentsData = null
-if(agents.value){
-   agentsData = agents.value.map((row) => {
-    const { firstName, lastName, email, phoneNumber, profilePic } =
-      row?.attributes;
+let rowsData = []
+if(agents.value.length>0){
+  rowsData = agents.value.map((row) => {
+    const { firstName, lastName, email, phoneNumber, profilePic, userRole } =
+      row?.get("userPointer").attributes;
+      const userId = row?.get("userPointer").id
     return (
       <tr key={row.name}>
         <td>
@@ -56,10 +57,11 @@ if(agents.value){
             </Text>
           </Group>
         </td>
+        <td>{userRole}</td>
         <td>{email}</td>
         <td>{phoneNumber}</td>
         <td>
-          <Link to="/adminpanel/editagent">edit</Link>
+          <Link to={`/adminpanel/editagent/${userId}`} >edit</Link>
         </td>
       </tr>
     );
@@ -79,12 +81,13 @@ if(agents.value){
         <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <tr>
             <th>Name</th>
+            <th>Role</th>
             <th>Email</th>
             <th>Phone Number</th>
             <th>Ads.</th>
           </tr>
         </thead>
-        <tbody>{agentsData && rows}</tbody>
+        <tbody>{rowsData.length>1 && rowsData}</tbody>
       </Table>
     </ScrollArea>
   );

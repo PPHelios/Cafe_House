@@ -11,8 +11,8 @@
       createdUser.set("lastName", values.lastName);
       createdUser.set("email", values.email);
       let userACL= new Parse.ACL()
-      userACL.setPublicReadAccess(true)
-      userACL.setWriteAccess(createdUser, true)
+    //  userACL.setPublicReadAccess(true)
+    //  userACL.setWriteAccess(createdUser, true)
       userACL.setRoleWriteAccess("SuperAdmin", true)
       userACL.setRoleWriteAccess("SubAdmin", true)
       createdUser.setACL(userACL);
@@ -22,7 +22,7 @@
         throw new Error("Something Went Wrong, Couldn't Sign Up")
       } 
       }catch(err){
-        return(err.message)
+        throw new Error(err.message);
       }
       }
   )

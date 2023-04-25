@@ -8,6 +8,7 @@ export const themeColor = signal("light");
 
 export const userData = signal({});
 export const userFavorites = signal([]);
+export const viewStats = signal([]);
 
 export const agents = signal([]);
 export const properties = signal([]);
@@ -59,26 +60,14 @@ export const sortByArea = () => {
 };
 
 export const search = async (values) => {
-  //console.log(values);
+ 
   if (values.searchValue.length > 0) {
     try {
-      let parseQuery = new Parse.Query("Property");
-      parseQuery.containedIn("locationTags", values.searchValue);
-      parseQuery.contains("listingType", values.listingType);
-      parseQuery.contains("propertyType", values.propertyType);
-      parseQuery.greaterThan("room", values.propertyRooms - 1);
-      parseQuery.greaterThan("bath", values.propertyBaths - 1);
-      parseQuery.greaterThan("area", values.propertyArea - 1);
-      parseQuery.greaterThan("price", +values.propertyminPrice - 1);
-      parseQuery.lessThan("price", +values.propertymaxPrice + 1);
-      parseQuery.include("agencyPointer");
-      parseQuery.include("agentPointer");
-      let queryResults = await parseQuery.find();
-      const shuffledResults = queryResults.sort(function () {
-        return Math.random() - 0.5;
-      });
-      filteredData.value = shuffledResults;
-      // console.log(shuffledResults);
+     
+      const mainSearch =await Parse.Cloud.run("mainSearch",values )
+      
+      filteredData.value = mainSearch.data;
+       console.log(mainSearch);
     } catch (err) {
       notifications.show({
         title: "Error",
@@ -89,33 +78,7 @@ export const search = async (values) => {
   }
 };
 
-// export const search = effect(() => {
-//   // console.log(stateSearchValues.value);
-//   const searchValues = stateSearchValues.value.searchValue.map((item) =>
-//     item.toLowerCase()
-//   );
-//   if (searchValues.length > 0) {
-//     const filtered = residentialSaleDb.value.map((item) => {
-//       const company = Object.keys(item);
-//       return item[company].filter((item) =>
-//         searchValues.some(
-//           (element) =>
-//             item.location.map((loc) => loc.toLowerCase()).includes(element) &&
-//             +item.rooms >= stateSearchValues.value.propertyRooms &&
-//             +item.price >= stateSearchValues.value.propertyminPrice &&
-//             +item.price <= stateSearchValues.value.propertymaxPrice &&
-//             +item.area >= stateSearchValues.value.propertyminArea &&
-//             +item.area <= stateSearchValues.value.propertymaxArea
-//         )
-//       );
-//     });
-//  && +stateSearchValues.propertyRooms > 2
 
-//     const data = filtered.flat();
-//     console.log(data);
-//     filteredData.value = data;
-//   }
-// });
 
 export const changethemeColor = () => {
   if (themeColor.value === "light") {
@@ -165,18 +128,14 @@ export const queryAgency = async (agencyName) => {
 export const queryAgentsInAgency = async () => {
   //used
  // console.log(userData.value);
-  if (userData.value?.get("agencyPointer")) {
+  if (userData.value?.id) {
     try {
-      let agencyQuery = new Parse.Query("Agent");
-      agencyQuery.equalTo(
-        "agencyPointer",
-        userData.value?.get("agencyPointer")
-      );
-      let agencyQueryResult = await agencyQuery.find();
-
-      console.log(agencyQueryResult);
-      return agencyQueryResult;
+      const agentsInAgency =await Parse.Cloud.run("queryAgentsInAgency")
+      agents.value = agentsInAgency;
+      console.log(agentsInAgency);
+      return agentsInAgency;
     } catch (err) {
+  
       notifications.show({
         title: "Error",
         message: `Error! ${err.message} 🤥`,
@@ -186,42 +145,66 @@ export const queryAgentsInAgency = async () => {
     }
   } else {
     notifications.show({
-      title: "No Logged In User",
+      title: "No Logged In User1",
     });
     return false;
   }
 };
 
-export const queryAllProperties = async () => {
-  if (userData.value?.get("agencyPointer")) {
-  const role = userData.value.get("role");
-  const pointer =
-    role === "agent"
-      ? userData.value?.get("agentPointer")
-      : role === "agency"
-      ? userData.value.get("agencyPointer")
-      : null;
-  //used
- 
+export const queryPropertiesInAgency = async () => {
+  if (userData.value?.id) {
     try {
-      let propertyQuery = new Parse.Query("Property");
-      propertyQuery.equalTo("agentPointer", pointer);
-      let propertyQueryResult = await propertyQuery.find();
-      // console.log(propertyQueryResult);
-      properties.value = propertyQueryResult;
-      return propertyQueryResult;
+      const propertiesInAgency =await Parse.Cloud.run("queryPropertiesInAgency" )
+      properties.value = propertiesInAgency;
+      console.log(propertiesInAgency);
+      return propertiesInAgency;
     } catch (err) {
-      // console.log(err.message);
       notifications.show({
         title: "Error",
         message: `Error! ${err.message} 🤥`,
         color: "red",
       });
-      throw new Error("Couldn't Fetch Properties");
+      return false;
     }
   } else {
+    // notifications.show({
+    //   title: "No Logged In User2",
+    // });
+    return false;
+  }
+};
+
+export const queryViewStats = async () => {
+  if (userData.value?.id) {
+    try {
+      const viewStatsResult =await Parse.Cloud.run("queryViewStats" )
+     viewStats.value = viewStatsResult;
+      console.log(viewStatsResult);
+      return viewStatsResult;
+    } catch (err) {
+      notifications.show({
+        title: "Error",
+        message: `Error! ${err.message} 🤥`,
+        color: "red",
+      });
+      return false;
+    }
+  } else {
+
+    return false;
+  }
+};
+
+export const getUserData = async (userId) => {
+  try {
+    const userData =await Parse.Cloud.run("getUserData")
+    console.log(userData);
+    return userData;
+  } catch (err) {
     notifications.show({
-      title: "No Logged In User",
+      title: "Error",
+      message: `Error! ${err.message} 🤥`,
+      color: "red",
     });
     return false;
   }

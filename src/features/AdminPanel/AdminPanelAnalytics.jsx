@@ -1,24 +1,24 @@
 import { createStyles, RingProgress, Text, SimpleGrid, Paper, ThemeIcon, Group, Center } from '@mantine/core';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons-preact';
-import { adminSideBarState, agents, properties } from "../../store/appState";
+import { adminSideBarState, agents, properties, viewStats } from "../../store/appState";
 import {signal, effect } from '@preact/signals';
- const data =[
+ const data = signal([
   {
-    "title": "Revenue",
-    "value": "$13,456",
+    "title": "Views",
+    "value": viewStats.value.views,
     "diff": 34
   },
   {
-    "title": "Profit",
-    "value": "$4,145",
+    "title": "Actions",
+    "value": viewStats.value.actions,
     "diff": -13
   },
   {
-    "title": "Coupons usage",
-    "value": "745",
+    "title": "Transition",
+    "value": `${((viewStats.value.actions/viewStats.value.views)*100).toFixed(0)} %`,
     "diff": 18
   }
-]
+])
 let data2 = signal([
   {
     "label": "Agents",
@@ -35,13 +35,31 @@ let data2 = signal([
     "icon": "up"
   },
   {
-    "label": "Ad. Views",
-    "stats": "4,735",
+    "label": "Credits",
+    "stats": 100,
     "progress": 52,
     "color": "red",
     "icon": "down"
   }
 ]) 
+effect(() => {
+  data.value=[{
+    "title": "Views",
+    "value": viewStats.value.views,
+    "diff": 34
+  },
+  {
+    "title": "Actions",
+    "value": viewStats.value.actions,
+    "diff": -13
+  },
+  {
+    "title": "Transition",
+    "value": `${((viewStats.value.actions/viewStats.value.views)*100).toFixed(0)} %`,
+    "diff": 18
+  }
+  ]
+});
 effect(() => {
   data2.value=[{
     "label": "Agents",
@@ -58,12 +76,13 @@ effect(() => {
     "icon": "up"
   },
   {
-    "label": "Ad. Views",
-    "stats": "4,735",
+    "label": "Credits",
+    "stats": 100,
     "progress": 52,
     "color": "red",
     "icon": "down"
-  }]
+  }
+  ]
 });
 const icons = {
   up: IconArrowUpRight,
@@ -83,7 +102,7 @@ const useStyles = createStyles((theme) => ({
   export default function AdminPanelAnalytics() {
     adminSideBarState.value=0
     const { classes } = useStyles();
-    const stats = data.map((stat) => {
+    const stats = data.value.map((stat) => {
       const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
       
       return (

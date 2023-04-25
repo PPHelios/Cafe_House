@@ -61,14 +61,14 @@ const adminMockdata = [
   { icon: IconHomeEdit, label: 'Add Property', target:"adminpanel/addproperty" ,role:"Moderator"},
   { icon: IconSubtask, label: 'Listed Properties', target:"adminpanel/listedproperties" },
   { icon: IconUsers, label: 'Agents', target:"adminpanel/agents" , role:"Moderator"},
-  { icon: IconUser, label: 'Account', target:"adminpanel/account" },
+  //{ icon: IconUser, label: 'Account', target:"adminpanel/account" },
   // { icon: IconFingerprint, label: 'Security', target:"adminpanel/security" , role:"Moderator"},
   // { icon: IconSettings, label: 'Settings', target:"adminpanel/settings" },
 ];
 const mockdata = [
   
   { icon: IconSubtask, label: 'Listed Properties', target:"adminpanel/listedproperties" },
-  { icon: IconUser, label: 'Account', target:"adminpanel/account" },
+  //{ icon: IconUser, label: 'Account', target:"adminpanel/account" },
   // { icon: IconFingerprint, label: 'Security', target:"adminpanel/security" , role:"Moderator"},
   // { icon: IconSettings, label: 'Settings', target:"adminpanel/settings" },
 ];
@@ -77,7 +77,8 @@ export default function AdminSideBar() {
   const admin = role === "SuperAdmin" ||
   role === "SubAdmin" ||
   role === "Agency" ||
-  role === "AgencyModerator" 
+  role === "Admin" ||
+  role === "Moderator" 
 const sidebarItems = admin?adminMockdata:mockdata
   const links =  sidebarItems.map((link, index) => {
    return( <NavbarLink

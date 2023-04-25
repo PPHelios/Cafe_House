@@ -32,14 +32,13 @@ const useStyles = createStyles((theme) => ({
 
 function ListedProperties() {
 
-
   adminSideBarState.value=2
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
-let propertiesData = null
- if(properties?.value){
-   rows = propertiesData.map((row) => {
-    const {adName, price, area, room, bath,pic0, propertyType,listingType, adStatus, isFeatured} = row?.attributes
+let rowsData = []
+ if(properties?.value.length>0){
+  rowsData = properties.value.map((row) => {
+    const {adName, price, area, room, bath,pic0, propertyType,listingType, adStatus, isFeatured,creatorEmail} = row?.attributes
     return(
     
     <tr key={row.name}>
@@ -58,8 +57,8 @@ let propertiesData = null
         <td>{propertyType}</td>
         <td>{listingType}</td>
         <td>{adStatus}</td>
-        <td>{isFeatured}</td>
-        
+        <td>{isFeatured.toString()}</td>
+        <td>{creatorEmail}</td>
     </tr>
   )})
  }
@@ -79,9 +78,10 @@ let propertiesData = null
         <th>Listing Type</th>
         <th>Ad Status</th>
         <th>Is Featured</th>
+        <th>Creator</th>
           </tr>
         </thead>
-        <tbody>{propertiesData && rows}</tbody>
+        <tbody>{rowsData.length>0 && rowsData}</tbody>
       </Table>
     </ScrollArea>
   );

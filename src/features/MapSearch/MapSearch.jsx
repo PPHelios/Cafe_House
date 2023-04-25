@@ -31,23 +31,27 @@ function MapSearch() {
   //   return itemsRef.current;
   // }
   const handlePropertyView = async (item) => {
-    console.log(item);
+    //console.log(item);
     try {
       const addPropertyView = await Parse.Cloud.run("addPropertyView", {
         id: item.id,
+        agency:item.get("agencyPointer").get("agencyName"),
+        creator:item.get("creatorEmail")
       });
-      console.log({ addPropertyView });
+    //  console.log({ addPropertyView });
     } catch (err) {
       console.log(err);
     }
   };
   const handlePropertyAction = async (item) => {
-    console.log(item);
+    console.log({item});
     try {
       const addPropertyAction = await Parse.Cloud.run("addPropertyAction", {
-        id: item,
+        id: item.id,
+        agency:item.get("agencyPointer").get("agencyName"),
+        creator:item.get("creatorEmail")
       });
-      console.log({ addPropertyAction });
+    //  console.log({ addPropertyAction });
     } catch (err) {
       console.log(err);
     }
@@ -87,7 +91,7 @@ function MapSearch() {
           sx={{ overflowY: "auto", overflowX: "hidden" }}
         >
           <PropertiesFilterMenu />
-          {filteredData.value &&
+          {filteredData.value.length > 0 &&
             filteredData.value.map((item, i) => (
               <Box
                 mt={10}
@@ -101,13 +105,14 @@ function MapSearch() {
                 // }}
                 key={i}
               >
-                <div onClick={() => handlePropertyView(item)}>
+                
                   <PlaceDetails
                     item={item}
                     setPopupInfo={(item) => setPopupInfo(item)}
                     handlePropertyAction={handlePropertyAction}
+                    handlePropertyView={handlePropertyView}
                   />
-                </div>
+              
               </Box>
             ))}
         </Box>

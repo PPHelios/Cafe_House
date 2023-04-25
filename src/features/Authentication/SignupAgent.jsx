@@ -32,6 +32,7 @@ export default function SignupAgent() {
       bio: "dfgdfgddddddddddd",
       bioAr: "fgdfgggggggggggggg",
       role:"",
+      agentStatus:"active",
       profilePic: null,
     },
 
@@ -46,32 +47,38 @@ export default function SignupAgent() {
           // phoneNumber:(val) => (/ ^[0-9]*$/.test(val) ? null : "Invalid Phone Number"),
           bio: (value) => (value.length < 10 ? 'Name must have at least 700 letters' : value.length>2000?'Name must have Maxmimum 2000 letters': null),
           bioAr: (value) => (value.length < 10 ? 'Name must have at least 700 letters' : value.length>2000?'Name must have Maxmimum 2000 letters': null),
-
-    },
+          role:(value) =>(!["Admin","Moderator","SeniorAgent" ,"Agent",].includes(value)?"Agent Role Is Required":null),
+          profilePic: (value) => (value === null ? 'Profile Picture Is Required' : null)},
   });
 
   const userRole = userData.value?.attributes?.userRole
-  console.log(userRole);
   let options =[]
   if(userRole==="Agency"){
-     options=["Moderator","AdCreator","SeniorAgent" ,"Agent",]
-  } else if(userRole==="Moderator"){
-    options=["AdCreator","SeniorAgent" ,"Agent",]
+     options=["Admin","Moderator","SeniorAgent" ,"Agent",]
+  } else if(userRole==="Admin"){
+    options=["Moderator","SeniorAgent" ,"Agent",]
+  }else if(userRole==="Moderator"){
+    options=["Agent",]
+  } else {
+    options=[]
   }
   
   async function addAgent(values) {
     setLoading(true)
-
+   
     let parseFile = null;
-    if (values.profilePic) {
-      parseFile = new Parse.File(values.profilePic.name.slice(-5), values.profilePic);
-      await parseFile.save()
-      values.profilePic = parseFile
-    }
-    // console.log(values.profilePic.name)
+   
+    
     try {
+      if (values.profilePic) {
+        parseFile = new Parse.File(`profilePic${values.profilePic.name.slice(-5)}`, values.profilePic);
+       // console.log(parseFile)
+        await parseFile.save()
+        values.profilePic = parseFile
+      }
      const addAgent =await Parse.Cloud.run("addAgent" ,values)
-    console.log(addAgent);
+    console.log({addAgent});
+    form.reset();
       setLoading(false)
       notifications.show({
         title: "Agent Added Successfully",
@@ -136,6 +143,7 @@ export default function SignupAgent() {
    
     } catch (error) {
       setLoading(false)
+      values.profilePic = null
       // Error can be caused by lack of Internet connection
       notifications.show({
         title: "Error",
@@ -272,7 +280,6 @@ export default function SignupAgent() {
               <Select
               required
               w={200}
-           
               data={options}
               display="inline-block"
               {...form.getInputProps("role")}
@@ -287,6 +294,7 @@ export default function SignupAgent() {
               // })}
             />
             <FileInput
+            required
               label="Profile Picture"
               placeholder="Upload Your Profile Picture"
               value={form.values.profilePic}
@@ -295,6 +303,7 @@ export default function SignupAgent() {
                 form.setFieldValue("profilePic", event);
               }}
               icon={<IconUpload size="1rem" />}
+              {...form.getInputProps('profilePic')}
             />
           </Stack>
 

@@ -3,12 +3,14 @@
 require("./functions/userSignup.js")
 require("./functions/addAgency.js")
 require("./functions/addAgent.js")
-require("./functions/queryAgents.js")
-require("./functions/queryProperties.js")
+require("./functions/search.js")
+require("./functions/queryAgentsInAgency.js")
+require("./functions/queryPropertiesInAgency.js")
 require("./functions/addProperty.js")
 require("./functions/propertyCounters.js")
-require("./functions/afterFileSave.js")
-require("./functions/filesBeforeSave.js")
+require("./functions/fileSave.js")
+require("./functions/editAgent.js")
+require("./functions/queryViewStats.js")
  //Parse Server 3.x
  Parse.Cloud.define("hello", (request) => {
    console.log("request")

@@ -27,7 +27,7 @@ function UserFavoritesPage() {
         >
           <PlaceDetails
             item={item.get("propertyPointer")}
-            favotitesPage={true}
+            favoritesPage={true}
           />
         </Box>
       ))}
