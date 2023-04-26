@@ -6,6 +6,7 @@ Parse.Cloud.define("queryViewStats", async (req, res) => {
   //  console.log(req.params);
   try {
     if (userRole === "SuperAdmin" || userRole === "SubAdmin") {
+      let actionsQuery = new Parse.Query("UserAction");
       let actionsQueryResult = await actionsQuery.count({
         useMasterKey: true,
       });

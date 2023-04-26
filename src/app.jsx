@@ -19,7 +19,8 @@ import {
   queryPropertiesInAgency,
   getUserFavorites,
   getUserData,
-  queryViewStats
+  queryViewStats,
+  queryAgencies
 } from "./store/appState";
 import { Notifications } from "@mantine/notifications";
 // BACKENDLESS
@@ -141,6 +142,10 @@ export function App() {
               }
               await queryPropertiesInAgency();
               await queryViewStats()
+              if (userData.value.userRole === "SuperAdmin" || userData.value.userRole === "SubAdmin"){
+                await queryAgencies()
+              }
+              
               return true;
             }}
           >

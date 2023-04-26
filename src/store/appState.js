@@ -9,7 +9,7 @@ export const themeColor = signal("light");
 export const userData = signal({});
 export const userFavorites = signal([]);
 export const viewStats = signal([]);
-
+export const agencies = signal([]);
 export const agents = signal([]);
 export const properties = signal([]);
 export const adminSideBarState = signal(0);
@@ -181,6 +181,27 @@ export const queryViewStats = async () => {
      viewStats.value = viewStatsResult;
       console.log(viewStatsResult);
       return viewStatsResult;
+    } catch (err) {
+      notifications.show({
+        title: "Error",
+        message: `Error! ${err.message} 🤥`,
+        color: "red",
+      });
+      return false;
+    }
+  } else {
+
+    return false;
+  }
+};
+
+export const queryAgencies = async () => {
+  if (userData.value?.id) {
+    try {
+      const queryAgencies =await Parse.Cloud.run("queryAgencies" )
+      agencies.value = queryAgencies;
+      console.log(queryAgencies);
+      return queryAgencies;
     } catch (err) {
       notifications.show({
         title: "Error",

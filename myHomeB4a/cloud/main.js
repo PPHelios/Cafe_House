@@ -11,6 +11,9 @@ require("./functions/propertyCounters.js")
 require("./functions/fileSave.js")
 require("./functions/editAgent.js")
 require("./functions/queryViewStats.js")
+require("./functions/queryAgencies.js")
+
+
  //Parse Server 3.x
  Parse.Cloud.define("hello", (request) => {
    console.log("request")
