@@ -38,7 +38,7 @@ const SelectItem = forwardRef(
 export default function AddProperty() {
   const [propertLocation, setPropertLocation] = useState({});
   const [loading, setLoading] = useState(false);
-  adminSideBarState.value = 1;
+  adminSideBarState.value = 4;
   filteredData.value=[]
   const maxNumberOfPics = 15;
   const maxNumberOfVideos = 2;
@@ -202,64 +202,6 @@ let videoUrls = []
         title: "Property Added Successfully",
       });
       console.log(saveproperty);
-      // let property = new Parse.Object("Property");
-      // property.set("adName", values.adName);
-      // property.set("adNameAr", values.adNameAr);
-      // property.set("description", values.description);
-      // property.set("descriptionAr", values.descriptionAr);
-      // property.set("propertyCode", values.propertyCode);
-      // property.set("listingType", values.listingType);
-      // property.set("propertyType", values.propertyType);
-      // property.set("price", values.price);
-      // property.set("area", values.area);
-      // property.set("room", values.room);
-      // property.set("bath", values.bath);
-      // property.set("isFeatured", values.isFeatured);
-      // property.set("adStatus", values.adStatus);
-      // property.set(
-      //   "location",
-        // new Parse.GeoPoint(
-        //   propertLocation.onDrag.lat,
-        //   propertLocation.onDrag.lng
-        // )
-      // );
-      // property.set("locationTags", values.locationTags);
-      // property.set("picUrls", picUrls);
-      // property.set("videoUrls", videoUrls);
-      // property.set("picFiles", picFiles);
-      // property.set("videoFiles", videoFiles);
-      // property.set("agentPointer", Parse.User.current().get("agentPointer"));
-      // property.set("agencyPointer", Parse.User.current().get("agencyPointer"));
-      // if (values.pics.length > 0) {
-      //   for (let i = 0; i < numberOfPics; i++) {
-      //     property.set(`pic${i}`, picFiles[i]);
-      //   }
-      // }
-      // if (values.videos.length > 0) {
-      //   for (let i = 0; i < numberOfVideos; i++) {
-      //     property.set(`video${i}`, videoFiles[i]);
-      //   }
-      // }
-
-      //ACL
-      // only current user has read/write access
-      // property.setACL(new Parce.ACL(Parse.User.current()))
-      // let propertyACL = new Parse.ACL()
-      // propertyACL.setWriteAccess(Parse.User.current(), true)
-      // //propertyACL.setWriteAccess(admin, true)
-      // propertyACL.setPublicWriteAccess(false)
-      // property.setACL(propertyACL)
-
-      // const saveproperty = await property.save();
-     
-
-      //       let PicsUrls=[]
-
-      //       saveproperty.set("PicsUrls", PicsUrls);
-      // const savePicsUrls = await property.save();
-
-      // console.log(savePicsUrls);
-
       return true;
     } catch (error) {
       setLoading(false);

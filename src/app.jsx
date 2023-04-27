@@ -20,7 +20,8 @@ import {
   getUserFavorites,
   getUserData,
   queryViewStats,
-  queryAgencies
+  queryAgencies,
+  agencyCredits,
 } from "./store/appState";
 import { Notifications } from "@mantine/notifications";
 // BACKENDLESS
@@ -65,7 +66,8 @@ import Agents from "./features/AdminPanel/Agents";
 import ResetPassword from "./features/Authentication/ResetPassword";
 import UserFavoritesPage from "./features/UserFavoritesPage/UserFavoritesPage";
 import EditUserData from "./features/EditUserData/EditUserData";
-import EditAgent from "./features/AdminPanel/EditAgent";
+import EditAgentRole from "./features/AdminPanel/EditAgentRole";
+import Agencies from "./features/AdminPanel/Agencies";
 
 export function App() {
   const rtlCache = createEmotionCache({
@@ -83,13 +85,12 @@ export function App() {
     const initialData = async () => {
       try {
         const currentUser = await Parse.User.current();
-        if(currentUser){
-           userData.value = currentUser;
-        console.log(currentUser);
-        userData.value.userRole = currentUser.attributes.userRole;
-        console.log(userData.value);
+        if (currentUser) {
+          currentUser.userRole = currentUser.attributes.userRole;
+          userData.value = currentUser;
+          console.log(userData.value);
         }
-       
+
         // const searchOptionsQuery = new Parse.Query("searchOptions");
         // searchOptionsQuery.contains("name", "englishOptions");
         // let queryResult = await searchOptionsQuery.first();
@@ -131,21 +132,38 @@ export function App() {
             }}
           />
           <Route path="/signupagency" element={<SignupAgency />} />
-          <Route path="/signupagent" element={<SignupAgent />} />
-          <Route path="/user/edituserdata" element={<EditUserData />} />
+
+          <Route
+            path="/user/edituserdata"
+            element={<SignupAgent edit={false} signup={false} />}
+          />
 
           <Route
             element={<AdminPanel />}
             loader={async () => {
-              if (userData.value.userRole !== "Agent"){
-                 await queryAgentsInAgency();
-              }
               await queryPropertiesInAgency();
-              await queryViewStats()
-              if (userData.value.userRole === "SuperAdmin" || userData.value.userRole === "SubAdmin"){
-                await queryAgencies()
+              if (
+                userData.value.userRole !== "Agent" ||
+                userData.value.userRole !== "SeniorAgent"
+              ) {
+                await queryAgentsInAgency();
+                await queryViewStats();
               }
-              
+
+              if (
+                userData.value.userRole === "SuperAdmin" ||
+                userData.value.userRole === "SubAdmin"
+              ) {
+                await queryAgencies();
+              }
+              if (
+                ["Agency", "Admin", "Moderator"].includes(
+                  userData.value.userRole
+                )
+              ) {
+                await agencyCredits();
+              }
+
               return true;
             }}
           >
@@ -158,13 +176,18 @@ export function App() {
               path="/adminpanel/agentanalytics"
               element={<AdminPanelAnalytics />}
             />
+            <Route path="/adminpanel/agencies" element={<Agencies />} />
             <Route path="/adminpanel/agents" element={<Agents />} />
+            <Route
+              path="/signupagent"
+              element={<SignupAgent edit={true} signup={true} />}
+            />
             <Route path="/adminpanel/account" element={<Account />} />
             <Route path="/adminpanel/security" element={<Security />} />
             <Route path="/adminpanel/settings" element={<Settings />} />
             <Route
               path="/adminpanel/editagent/:agentId"
-              element={<EditAgent />}
+              element={<EditAgentRole />}
             />
           </Route>
           <Route path="*" element={<NotFound404 />} />

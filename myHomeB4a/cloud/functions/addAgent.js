@@ -31,7 +31,7 @@ Parse.Cloud.define("addAgent", async (req, res) => {
     bioAr,
     phoneNumber,
     role,
-    agentStatus,
+    accountStatus,
     profilePic,
   } = req.params;
   // console.log(req.params);
@@ -73,7 +73,7 @@ Parse.Cloud.define("addAgent", async (req, res) => {
       const newAgent = new Parse.Object("Agent");
       newAgent.set("agencyName", agencyName);
     //  newAgent.set("userRole", role);
-      newAgent.set("agentStatus", agentStatus);
+      newAgent.set("accountStatus", accountStatus);
       newAgent.set("creator", req.user);
       newAgent.set("creatorEmail", req.user.get("email"));
       newAgent.set("userPointer", createdUser.toPointer());
@@ -86,7 +86,7 @@ Parse.Cloud.define("addAgent", async (req, res) => {
       }
       createdUser.set("agencyName", agencyName);
       createdUser.set("userRole", role);
-      createdUser.set("agentStatus", agentStatus);
+      createdUser.set("accountStatus", accountStatus);
 
       createdUser.set("agentPointer", saveAgent.toPointer());
       createdUser.set("agencyPointer", agency.toPointer());

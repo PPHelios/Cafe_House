@@ -10,7 +10,7 @@ import {
   Group,
   Button,
 } from "@mantine/core";
-import { adminSideBarState, agents } from "../../store/appState";
+import { adminSideBarState, agencies } from "../../store/appState";
 const useStyles = createStyles((theme) => ({
   header: {
     position: "sticky",
@@ -38,19 +38,20 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Agents() {
-  adminSideBarState.value = 2;
+function Agencies() {
+  adminSideBarState.value = 1;
   const navigate= useNavigate()
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
 let rowsData = []
-if(agents.value.length>0){
-  rowsData = agents.value.map((row) => {
-    const { firstName, lastName, email, phoneNumber, profilePic, userRole } =
+if(agencies.value.length>0){
+  rowsData = agencies.value.map((row) => {
+    const { firstName, lastName, email, phoneNumber, profilePic, agencyName} =
       row?.get("userPointer").attributes;
+      const {credits , numberOfAds} = row?.attributes;
       const userId = row?.get("userPointer").id
     return (
-      <tr key={row.name}>
+      <tr key={userId}>
         <td>
           <Group spacing="sm">
             <Avatar size={26} src={profilePic?._url} radius={26} />
@@ -59,12 +60,11 @@ if(agents.value.length>0){
             </Text>
           </Group>
         </td>
-        <td>{userRole}</td>
+        <td>{agencyName}</td>
         <td>{email}</td>
         <td>{phoneNumber}</td>
-        <td>
-          <Link to={`/adminpanel/editagent/${userId}`} >edit</Link>
-        </td>
+        <th>{numberOfAds}</th>
+        <th>{credits}</th>
       </tr>
     );
   });
@@ -73,7 +73,7 @@ if(agents.value.length>0){
   
   return (
     <>
-    <Button my={20} ml="auto" mr={30} display="block" variant="gradient" onClick={()=>navigate("/signupagent")} >Add New Agent</Button>
+    <Button my={20} ml="auto" mr={30} display="block" variant="gradient" onClick={()=>navigate("/signupagency")} >Add New Agency</Button>
     <ScrollArea
       w="calc(100vw - 100px)"
       maw={1000}
@@ -85,17 +85,21 @@ if(agents.value.length>0){
         <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <tr>
             <th>Name</th>
-            <th>Role</th>
+            <th>agencyName</th>
             <th>Email</th>
             <th>Phone Number</th>
-            <th>Ads.</th>
+            <th>numberOfAds</th>
+            <th>credits</th>
+            
           </tr>
         </thead>
-        <tbody>{rowsData.length>0 && rowsData}</tbody>
+        <tbody>{rowsData.length>0 && rowsData}
+        
+        </tbody>
       </Table>
     </ScrollArea>
     </>
   );
 }
 
-export default Agents;
+export default Agencies;

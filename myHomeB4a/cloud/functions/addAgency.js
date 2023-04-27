@@ -127,7 +127,7 @@ Parse.Cloud.define(
       createdUser.set("bio", values.bio);
       createdUser.set("bioAr", values.bioAr);
       createdUser.set("userRole", "Agency");
-      createdUser.set("agentStatus", agentStatus);
+      createdUser.set("accountStatus", values.accountStatus);
       createdUser.set("phoneNumber", values.phoneNumber);
     //  createdUser.set("moderatorRoleName", agencyModeratorName);
 

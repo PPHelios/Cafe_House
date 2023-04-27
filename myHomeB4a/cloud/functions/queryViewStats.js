@@ -63,3 +63,23 @@ Parse.Cloud.define("queryViewStats", async (req, res) => {
     throw new Error(err.message);
   }
 });
+
+Parse.Cloud.define("agencyCredits", async (req, res) => {
+  const role = req.user.get("userRole")
+  const agencyName =req.user.get("agencyName")
+  if(["Agency", "Admin", "Moderator"].includes(role)){
+    try {
+    let agencyQuery = new Parse.Query("Agency");
+    agencyQuery.equalTo("agencyName", agencyName);
+    let agencyQueryResult = await agencyQuery.first({useMasterKey:true});
+    // console.log(agencyQueryResult);
+    return agencyQueryResult.get("credits");
+  } catch (err) {
+   
+    throw new Error(err.message);
+  }
+  } else {
+    return 0
+  }
+  
+})

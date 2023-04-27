@@ -90,9 +90,18 @@ console.log({picFiles})
     newProperty.setACL(propertyACL);
     const saveProperty = await newProperty.save(null, { useMasterKey: true });
     console.log({ saveProperty });
+    agency.increment(numberOfAds)
+    await agency.save(null, {
+      useMasterKey: true,
+    });
     return saveProperty;
   } catch (err) {
 
     throw new Error(err.message);
   }
+});
+
+Parse.Cloud.afterSave("Property", (req) => {
+  const afterSaveProperty = req
+ console.log({afterSaveProperty});
 });

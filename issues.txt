@@ -1,2 +1,3 @@
 queryPropertiesInAgency No Logged In User2
 favoritespage bug
+edit user profile then edit agent doesnt reset state

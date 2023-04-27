@@ -30,7 +30,7 @@ export default function SignupAgency() {
       bio: "dfgdfgffffffff",
       bioAr: "fgdfgfffffffffff",
       role: "Agency",
-      agencyStatus:"active",
+      accountStatus:"active",
       profilePic: null,
     },
 

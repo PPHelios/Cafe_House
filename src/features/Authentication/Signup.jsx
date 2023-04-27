@@ -30,6 +30,7 @@ export default function Login() {
       lastName: "",
       email: "",
       password: "",
+      accountStatus:"active",
       user: "viewer",
     },
 

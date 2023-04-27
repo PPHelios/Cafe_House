@@ -12,6 +12,7 @@ export const viewStats = signal([]);
 export const agencies = signal([]);
 export const agents = signal([]);
 export const properties = signal([]);
+export const credits = signal(0);
 export const adminSideBarState = signal(0);
 export const searchOptions = signal([
   "New Cairo",
@@ -106,24 +107,22 @@ export const logout = async () => {
   }
 };
 
-export const queryAgency = async (agencyName) => {
-  //used
-  // console.log(agencyName);
-  try {
-    let agencyQuery = new Parse.Query("Agency");
-    agencyQuery.equalTo("agencyName", agencyName);
-    let agencyQueryResult = await agencyQuery.first();
+export const agencyCredits = async () => {
+  try{
+  const getCredits =await Parse.Cloud.run("agencyCredits")
+  console.log({getCredits});
+  credits.value = getCredits;
+  
+  return getCredits;
+} catch (err) {
 
-    // console.log(agencyQueryResult);
-    return agencyQueryResult;
-  } catch (err) {
-    notifications.show({
-      title: "Error",
-      message: `Error! ${err.message} 🤥`,
-      color: "red",
-    });
-    return false;
-  }
+  notifications.show({
+    title: "Error",
+    message: `Error! ${err.message} 🤥`,
+    color: "red",
+  });
+  return false;
+}
 };
 export const queryAgentsInAgency = async () => {
   //used
@@ -215,7 +214,25 @@ export const queryAgencies = async () => {
     return false;
   }
 };
+export const queryAgency = async (agencyName) => {
+  //used
+  // console.log(agencyName);
+  try {
+    let agencyQuery = new Parse.Query("Agency");
+    agencyQuery.equalTo("agencyName", agencyName);
+    let agencyQueryResult = await agencyQuery.first();
 
+    // console.log(agencyQueryResult);
+    return agencyQueryResult;
+  } catch (err) {
+    notifications.show({
+      title: "Error",
+      message: `Error! ${err.message} 🤥`,
+      color: "red",
+    });
+    return false;
+  }
+};
 export const getUserData = async (userId) => {
   try {
     const userData =await Parse.Cloud.run("getUserData")

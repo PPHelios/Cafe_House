@@ -1,6 +1,6 @@
 
 // The example below shows you how a cloud code function looks like.
-require("./functions/userSignup.js")
+require("./functions/userSignup_login.js")
 require("./functions/addAgency.js")
 require("./functions/addAgent.js")
 require("./functions/search.js")

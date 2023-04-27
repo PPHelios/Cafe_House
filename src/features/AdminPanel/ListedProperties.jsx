@@ -32,7 +32,7 @@ const useStyles = createStyles((theme) => ({
 
 function ListedProperties() {
 
-  adminSideBarState.value=2
+  adminSideBarState.value=3
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
 let rowsData = []

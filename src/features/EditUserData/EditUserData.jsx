@@ -22,13 +22,14 @@ export default function EditUserData() {
   const navigate = useNavigate();
 
 
-  const form = useForm({
+  let form = useForm({
     initialValues: {
       firstName: Parse.User.current().get("firstName"),
       lastName: Parse.User.current().get("lastName"),
       email: Parse.User.current().get("email"),
     },
 
+    
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
       // password: (val) =>

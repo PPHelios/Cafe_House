@@ -1,14 +1,18 @@
 Parse.Cloud.beforeFind('Property', async (request) => {
   console.log("propbeforefind")
    const beforeFindUser =request?.params?.user
-   console.log(beforeFindUser)
+   const beforeFindUser2 =request?.user
+   console.log({beforeFindUser})
+   console.log({beforeFindUser2})
    console.log(request)
  })
 
  Parse.Cloud.afterFind('Property', async (request) => {
   console.log("propafterfind")
   const afterFindUser =request?.params?.user
-  console.log(afterFindUser)
+  const afterFindUser2 =request?.user
+  console.log({afterFindUser})
+  console.log({afterFindUser2})
   console.log({request})
   });
 

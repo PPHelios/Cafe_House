@@ -5,14 +5,10 @@ import Parse from "parse/dist/parse.min.js";
 
 import { useForm } from "@mantine/form";
 import {
-  TextInput,
-  PasswordInput,
   Title,
   Paper,
   Group,
   Button,
-  Divider,
-  Anchor,
   Stack,
   Select
 } from "@mantine/core";
@@ -20,7 +16,7 @@ import { notifications } from "@mantine/notifications";
 
 //import Backendless from "backendless";
 import { userData, agents } from "../../store/appState";
-export default function EditAgent() {
+export default function EditAgentRole() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -66,7 +62,7 @@ let agentToEdit = []
      setLoading(true);
      try {
 values.agentId = agentId
-      const editAgent =await Parse.Cloud.run("editAgent" ,values)
+      const editAgent =await Parse.Cloud.run("editAgentRole" ,values)
       setLoading(false);
      // form.reset();
       notifications.show({
@@ -85,7 +81,7 @@ values.agentId = agentId
 }
   const editingAgentRole = userData.value?.userRole
   let roleOptions =[]
-  if(editingAgentRole==="Agency"){
+  if(["Agency","SuperAdmin","SubAdmin"].includes(editingAgentRole)){
      roleOptions=["Admin","Moderator","SeniorAgent" ,"Agent",]
   }else if(editingAgentRole==="Admin"){
     options=["Moderator","SeniorAgent" ,"Agent",]
