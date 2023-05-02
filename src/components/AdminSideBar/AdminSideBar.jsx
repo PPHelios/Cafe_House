@@ -2,12 +2,10 @@ import { adminSideBarState } from "../../store/appState";
 import Parse from "parse/dist/parse.min.js";
 import {
   Navbar,
-  Box,
   Tooltip,
   UnstyledButton,
   createStyles,
   Stack,
-  rem,
 } from "@mantine/core";
 import {
   IconDeviceDesktopAnalytics,
