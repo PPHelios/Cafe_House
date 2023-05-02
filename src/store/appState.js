@@ -110,7 +110,7 @@ export const logout = async () => {
 export const agencyCredits = async () => {
   try{
   const getCredits =await Parse.Cloud.run("agencyCredits")
-  console.log({getCredits});
+  //console.log({getCredits});
   credits.value = getCredits;
   
   return getCredits;
@@ -131,7 +131,7 @@ export const queryAgentsInAgency = async () => {
     try {
       const agentsInAgency =await Parse.Cloud.run("queryAgentsInAgency")
       agents.value = agentsInAgency;
-      console.log(agentsInAgency);
+      //console.log(agentsInAgency);
       return agentsInAgency;
     } catch (err) {
   
@@ -155,7 +155,7 @@ export const queryPropertiesInAgency = async () => {
     try {
       const propertiesInAgency =await Parse.Cloud.run("queryPropertiesInAgency" )
       properties.value = propertiesInAgency;
-      console.log(propertiesInAgency);
+      //console.log(propertiesInAgency);
       return propertiesInAgency;
     } catch (err) {
       notifications.show({
@@ -178,7 +178,7 @@ export const queryViewStats = async () => {
     try {
       const viewStatsResult =await Parse.Cloud.run("queryViewStats" )
      viewStats.value = viewStatsResult;
-      console.log(viewStatsResult);
+      //console.log(viewStatsResult);
       return viewStatsResult;
     } catch (err) {
       notifications.show({
@@ -199,7 +199,7 @@ export const queryAgencies = async () => {
     try {
       const queryAgencies =await Parse.Cloud.run("queryAgencies" )
       agencies.value = queryAgencies;
-      console.log(queryAgencies);
+      //console.log(queryAgencies);
       return queryAgencies;
     } catch (err) {
       notifications.show({

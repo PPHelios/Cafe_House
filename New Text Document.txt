@@ -47,14 +47,14 @@ import ListWithUs from "./features/ListWithUs/ListWithUs";
 // import Settings from "./features/AdminPanel/Settings";
 // import Agents from "./features/AdminPanel/Agents";
 
+import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
+import Menu from "./features/Menu/Menu";
 
 
 
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
 
 const AdminPanel = lazy(() => import("./layouts/AdminPanel"));
-import { ProtectedRoutes } from "./features/AdminPanel/ProtectedRoutes";
-import Menu from "./features/Menu/Menu";
 
 const HomePage = lazy(() => import("./features/HomePage/HomePage"));
 const MapSearch = lazy(() => import("./features/MapSearch/MapSearch"));
@@ -78,9 +78,20 @@ const NotFound404 = lazy(() => import("./features/NotFound404/NotFound404"));
 
 const ListWithUs = lazy(() => import("./features/ListWithUs/ListWithUs"));
 //const AdminHome = lazy(() => import("./components/AdminPanel/Agents"));
-const AdminPanelAnalytics = lazy(() => import("./components/AdminPanelStats/AdminPanelAnalytics"));
+const AdminPanelAnalytics = lazy(() => import("./features/AdminPanel/AdminPanelAnalytics"));
 const ListedProperties = lazy(() => import("./features/AdminPanel/ListedProperties"));
 const Account = lazy(() => import("./features/AdminPanel/Account"));
 const Security = lazy(() => import("./features/AdminPanel/Security"));
 const Settings = lazy(() => import("./features/AdminPanel/Settings"));
 const Agents = lazy(() => import("./features/AdminPanel/Agents"));
+const Agents = lazy(() => import("./features/AdminPanel/Agents"));
+const ResetPassword = lazy(() => import("./features/Authentication/ResetPassword"));
+const UserFavoritesPage = lazy(() => import("./features/UserFavoritesPage/UserFavoritesPage"));
+const EditAgentRole = lazy(() => import("./features/AdminPanel/EditAgentRole"));
+const Agencies = lazy(() => import("./features/AdminPanel/Agencies"));
+
+import ResetPassword from "./features/Authentication/ResetPassword";
+import UserFavoritesPage from "./features/UserFavoritesPage/UserFavoritesPage";
+import EditUserData from "./features/EditUserData/EditUserData";
+import EditAgentRole from "./features/AdminPanel/EditAgentRole";
+import Agencies from "./features/AdminPanel/Agencies";

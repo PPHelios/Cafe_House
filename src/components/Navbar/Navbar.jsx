@@ -30,10 +30,11 @@ import {
   IconHomeEdit,
   IconSettings,
   IconChevronDown,
-  IconChevronLeft, IconChevronRight ,
-  IconAirBalloon ,
-  IconHeartHandshake ,
-  IconDashboard
+  IconChevronLeft,
+  IconChevronRight,
+  IconAirBalloon,
+  IconHeartHandshake,
+  IconDashboard,
 } from "@tabler/icons-preact";
 import { userData, logout } from "../../store/appState";
 import { ThemeToggler } from "../ThemeToggler/ThemeToggler";
@@ -120,42 +121,50 @@ const useStyles = createStyles((theme) => ({
   },
   control: {
     fontWeight: 500,
-    display: 'block',
-    width: '100%',
+    display: "block",
+    width: "100%",
     padding: `${theme.spacing.xs} ${theme.spacing.md}`,
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
     fontSize: theme.fontSizes.sm,
 
-    '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-      color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    "&:hover": {
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[7]
+          : theme.colors.gray[0],
+      color: theme.colorScheme === "dark" ? theme.white : theme.black,
     },
   },
 
   burgerProfileLinks: {
     fontWeight: 500,
-    display: 'block',
-    textDecoration: 'none',
+    display: "block",
+    textDecoration: "none",
     padding: `${theme.spacing.xs} ${theme.spacing.md}`,
     paddingLeft: rem(31),
     marginLeft: rem(30),
     fontSize: theme.fontSizes.sm,
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
+    color:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[0]
+        : theme.colors.gray[7],
     borderLeft: `${rem(1)} solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
+      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
     }`,
 
-    '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-      color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    "&:hover": {
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[7]
+          : theme.colors.gray[0],
+      color: theme.colorScheme === "dark" ? theme.white : theme.black,
     },
   },
 
   chevron: {
-    transition: 'transform 200ms ease',
+    transition: "transform 200ms ease",
   },
 }));
-
 
 const links = [
   { label: "login", link: "/login" },
@@ -164,14 +173,14 @@ const links = [
 export function Navbar() {
   const [opened, { toggle }] = useDisclosure(false);
   const [opened2, { open, close }] = useDisclosure(false);
-  const [opened3, setOpened] = useState( false);
-  const [listWithUsOpened, setListWithUsOpened] = useState( false);
+  const [opened3, setOpened] = useState(false);
+  const [listWithUsOpened, setListWithUsOpened] = useState(false);
   const [active, setActive] = useState(links[0].label);
   const { classes, theme, cx } = useStyles();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const avatarUrl = userData.value?.attributes?.profilePicUrl;
   const role = userData.value?.attributes?.role;
-  const ChevronIcon = theme.dir === 'ltr' ? IconChevronRight : IconChevronLeft;
+  const ChevronIcon = theme.dir === "ltr" ? IconChevronRight : IconChevronLeft;
 
   const items = links.map((link) => (
     <Box
@@ -224,7 +233,7 @@ export function Navbar() {
               ome
             </Text>
           </Group>
-{/***************** dropdown List *************************/}
+          {/***************** dropdown List *************************/}
           <Group
             spacing={10}
             className={classes.actions}
@@ -249,14 +258,13 @@ export function Navbar() {
                     })}
                   >
                     <Group spacing={7}>
-                       
-                        <Avatar
-                          src={avatarUrl}
-                          alt="user avatar picture"
-                          radius="xl"
-                          size={42}
-                        />
-                     
+                      <Avatar
+                        src={avatarUrl}
+                        alt="user avatar picture"
+                        radius="xl"
+                        size={42}
+                      />
+
                       <Text
                         weight={500}
                         size="sm"
@@ -279,53 +287,60 @@ export function Navbar() {
                       />
                     }
                   >
-                  <Text component={Link} to="/userfavorites"> Favorites</Text>
+                    <Text component={Link} to="/userfavorites">
+                      {" "}
+                      Favorites
+                    </Text>
                   </Menu.Item>
                   {/* <Menu.Item
                     icon={
                       <IconStar
                         size="0.9rem"
-                        color={theme.colors.yellow[6]}
+                        color={theme.colors.blue[6]}
                         stroke={1.5}
                       />
                     }
                   >
                      <Text component={Link} to="/user/savedsearches"> Saved Searches</Text>
                    
-                  </Menu.Item> */} 
+                  </Menu.Item> */}
                   {role !== "viewer" && (
                     <>
-                       <Menu.Item
-                      icon={
-                        <IconDashboard
-                          size="0.9rem"
-                          color={theme.colors.blue[6]}
-                          stroke={1.5}
-                        />
-                      }
-                    >
-                     <Text component={Link} to="adminpanel/agentanalytics">Dashboard</Text>
-
-                    </Menu.Item>
-                    <Menu.Item
-                      icon={
-                        <IconHomeEdit
-                          size="0.9rem"
-                          color={theme.colors.blue[6]}
-                          stroke={1.5}
-                        />
-                      }
-                    >
-                     <Text component={Link} to="/adminpanel/addproperty"> Manage Ads.</Text>
-
-                    </Menu.Item>
+                      <Menu.Item
+                        icon={
+                          <IconDashboard
+                            size="0.9rem"
+                            color={theme.colors.blue[6]}
+                            stroke={1.5}
+                          />
+                        }
+                      >
+                        <Text component={Link} to="adminpanel/agentanalytics">
+                          Dashboard
+                        </Text>
+                      </Menu.Item>
+                      <Menu.Item
+                        icon={
+                          <IconHomeEdit
+                            size="0.9rem"
+                            color={theme.colors.blue[6]}
+                            stroke={1.5}
+                          />
+                        }
+                      >
+                        <Text component={Link} to="/adminpanel/addproperty">
+                          {" "}
+                          Manage Ads.
+                        </Text>
+                      </Menu.Item>
                     </>
                   )}
 
                   <Menu.Label>Settings</Menu.Label>
                   <Menu.Item icon={<IconSettings size="0.9rem" stroke={1.5} />}>
-                  <Text component={Link} to="/user/edituserdata">Account settings</Text>
-
+                    <Text component={Link} to="/user/edituserdata">
+                      Account settings
+                    </Text>
                   </Menu.Item>
 
                   <Menu.Item
@@ -353,8 +368,7 @@ export function Navbar() {
         </Container>
       </Header>
 
-
-{/***************** Burger Menu *************************/}
+      {/***************** Burger Menu *************************/}
 
       <Drawer
         opened={opened2}
@@ -364,175 +378,202 @@ export function Navbar() {
           toggle();
         }}
         title="My Home"
-        styles={() => ({inner:{zIndex:1000}})}
-        
+        styles={() => ({ inner: { zIndex: 1000 } })}
       >
-        {!userData.value?.id ? <Group position="center" my="0.4rem" spacing={42} >{items}</Group>:
-                <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control}>
-                    <Group position="apart" spacing={0} pl={10}>
-                      <Group>
+        {!userData.value?.id ? (
+          <Group position="center" my="0.4rem" spacing={42}>
+            {items}
+          </Group>
+        ) : (
+          <UnstyledButton
+            onClick={() => setOpened((o) => !o)}
+            className={classes.control}
+          >
+            <Group position="apart" spacing={0} pl={10}>
+              <Group>
+                <Avatar
+                  src={avatarUrl}
+                  alt="user avatar picture"
+                  radius="xl"
+                  size={42}
+                />
 
-                        
-                        <Avatar
-                          src={avatarUrl}
-                          alt="user avatar picture"
-                          radius="xl"
-                          size={42}
-                        />
-                      
-                      <Text
-                        weight={500}
-                        size="sm"
-                        sx={{ lineHeight: 1 }}
-                        mr={3}
-                      >
-                        Hi, {userData.value?.id ? userData.value?.attributes?.firstName : "There"}
-                      </Text>
-                      </Group>
-                     
-                         <ChevronIcon
-              className={classes.chevron}
-              size="1rem"
-              stroke={1.5}
-              style={{
-                transform: opened3 ? `rotate(${theme.dir === 'rtl' ? -90 : 90}deg)` : 'none',
-              }}
-            />
-                    </Group>
-                 
-                    </UnstyledButton>
-}
-                    <Collapse in={opened3}>
-                    <List>
-                    <List.Item
-                    className={classes.burgerProfileLinks}
-        icon={
-          <IconHeart
-            size="1rem"
-            color={theme.colors.yellow[6]}
-            stroke={1.5}
-          />
-        }
-      >
-        <Text component={Link} to="/userfavorites">Favorites</Text>
-       
-      </List.Item>
-      {/* <List.Item
+                <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                  Hi,{" "}
+                  {userData.value?.id
+                    ? userData.value?.attributes?.firstName
+                    : "There"}
+                </Text>
+              </Group>
+
+              <ChevronIcon
+                className={classes.chevron}
+                size="1rem"
+                stroke={1.5}
+                style={{
+                  transform: opened3
+                    ? `rotate(${theme.dir === "rtl" ? -90 : 90}deg)`
+                    : "none",
+                }}
+              />
+            </Group>
+          </UnstyledButton>
+        )}
+        <Collapse in={opened3}>
+          <List>
+            <List.Item
+              className={classes.burgerProfileLinks}
+              icon={
+                <IconHeart
+                  size="1rem"
+                  color={theme.colors.blue[6]}
+                  stroke={1.5}
+                />
+              }
+            >
+              <Text component={Link} to="/userfavorites">
+                Favorites
+              </Text>
+            </List.Item>
+            {/* <List.Item
        className={classes.burgerProfileLinks}
         icon={
           <IconStar
           size="1rem"
-          color={theme.colors.yellow[6]}
+          color={theme.colors.blue[6]}
           stroke={1.5}
         />
         }
       >
-        <Text component={Link} to="\user/savedsearches"> Saved Searches</Text>
+        <Text component={Link} to="/user/savedsearches"> Saved Searches</Text>
        
       </List.Item> */}
-      {role !== "viewer" &&
- <List.Item
- className={classes.burgerProfileLinks}
-  icon={
-    <IconHomeEdit
-    size="1rem"
-    color={theme.colors.yellow[6]}
-    stroke={1.5}
-  />
-  }
->
-  <Text component={Link} to="/adminpanel/addproperty">Manage Ads.</Text>
- 
-</List.Item>
-}
-<List.Item
- className={classes.burgerProfileLinks}
-  icon={
-    <IconSettings
-    size="1rem"
-    color={theme.colors.yellow[6]}
-    stroke={1.5}
-  />
-  }
->
-  <Text component={Link} to="/user/edituserdata">Account settings</Text>
- 
-</List.Item>
-<List.Item
- className={classes.burgerProfileLinks}
-  icon={
-    <IconLogout
-    size="1rem"
-    color={theme.colors.yellow[6]}
-    stroke={1.5}
-  />
-  }
-  onClick={() => logout()}
->
-  <Text> Logout</Text>
- 
-</List.Item>
-                    </List>
-                   
-                    </Collapse>
+            {role !== "viewer" && (
+              <>
+                <List.Item
+                  className={classes.burgerProfileLinks}
+                  icon={
+                    <IconHomeEdit
+                      size="1rem"
+                      color={theme.colors.blue[6]}
+                      stroke={1.5}
+                    />
+                  }
+                >
+                  <Text component={Link} to="/adminpanel/addproperty">
+                    Manage Ads.
+                  </Text>
+                </List.Item>
+                <List.Item
+                className={classes.burgerProfileLinks}
+                  icon={
+                    <IconHomeEdit
+                      size="0.9rem"
+                      color={theme.colors.blue[6]}
+                      stroke={1.5}
+                    />
+                  }
+                >
+                  <Text component={Link} to="adminpanel/agentanalytics">
+                    Dashboard
+                  </Text>
+                </List.Item>
+              </>
+            )}
+            <List.Item
+              className={classes.burgerProfileLinks}
+              icon={
+                <IconSettings
+                  size="1rem"
+                  color={theme.colors.blue[6]}
+                  stroke={1.5}
+                />
+              }
+            >
+              <Text component={Link} to="/user/edituserdata">
+                Account settings
+              </Text>
+            </List.Item>
+            <List.Item
+              className={classes.burgerProfileLinks}
+              icon={
+                <IconLogout
+                  size="1rem"
+                  color={theme.colors.blue[6]}
+                  stroke={1.5}
+                />
+              }
+              onClick={() => logout()}
+            >
+              <Text> Logout</Text>
+            </List.Item>
+          </List>
+        </Collapse>
 
-                    <UnstyledButton onClick={() => setListWithUsOpened((o) => !o)} className={classes.control}>
-        <Group position="apart" spacing={0}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <ThemeIcon variant="light" size={30}>
-              <IconHeartHandshake  size="1.1rem" />
-            </ThemeIcon>
-            <Box ml="md">List With Us</Box>
-          </Box>
-        
+        <UnstyledButton
+          onClick={() => setListWithUsOpened((o) => !o)}
+          className={classes.control}
+        >
+          <Group position="apart" spacing={0}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <ThemeIcon variant="light" size={30}>
+                <IconHeartHandshake size="1.1rem" />
+              </ThemeIcon>
+              <Box ml="md">List With Us</Box>
+            </Box>
+
             <ChevronIcon
               className={classes.chevron}
               size="1rem"
               stroke={1.5}
               style={{
-                transform: listWithUsOpened ? `rotate(${theme.dir === 'rtl' ? -90 : 90}deg)` : 'none',
+                transform: listWithUsOpened
+                  ? `rotate(${theme.dir === "rtl" ? -90 : 90}deg)`
+                  : "none",
               }}
             />
-          
-        </Group>
-      </UnstyledButton>
-      <Collapse in={listWithUsOpened}>
-      <List>
-                    <List.Item
- className={classes.burgerProfileLinks}>
-                  <Box component={Link} to="/signupagency">Agency</Box>
-
- </List.Item>
- <List.Item
- className={classes.burgerProfileLinks}>
-                  <Box component={Link} to="/signupagent">Agent</Box>
-
- </List.Item>
-                    </List>
-      </Collapse>
-                    <List>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }} className={classes.control}>
+          </Group>
+        </UnstyledButton>
+        <Collapse in={listWithUsOpened}>
+          <List>
+            <List.Item className={classes.burgerProfileLinks}>
+              <Box component={Link} to="/signupagency">
+                Agency
+              </Box>
+            </List.Item>
+            <List.Item className={classes.burgerProfileLinks}>
+              <Box component={Link} to="/signupagent">
+                Agent
+              </Box>
+            </List.Item>
+          </List>
+        </Collapse>
+        <List>
+          <Box
+            sx={{ display: "flex", alignItems: "center" }}
+            className={classes.control}
+          >
             <ThemeIcon variant="light" size={30}>
-              <IconAirBalloon  size="1.1rem" />
+              <IconAirBalloon size="1.1rem" />
             </ThemeIcon>
             <Box ml="md">Quick Links</Box>
           </Box>
-                    <List.Item
- className={classes.burgerProfileLinks}>
-                  <Text component={Link} to="/">Buy</Text>
-
- </List.Item>
- <List.Item
- className={classes.burgerProfileLinks}>
-                  <Text component={Link} to="/">Sell</Text>
-
- </List.Item>
- <List.Item
- className={classes.burgerProfileLinks}>
-                  <Text component={Link} to="/contactus">Contact Us</Text>
-
- </List.Item>
-                    </List>
+          <List.Item className={classes.burgerProfileLinks}>
+            <Text component={Link} to="/">
+              Buy
+            </Text>
+          </List.Item>
+          <List.Item className={classes.burgerProfileLinks}>
+            <Text component={Link} to="/">
+              Sell
+            </Text>
+          </List.Item>
+          <List.Item className={classes.burgerProfileLinks}>
+            <Text component={Link} to="/contactus">
+              Contact Us
+            </Text>
+          </List.Item>
+        </List>
       </Drawer>
     </>
   );

@@ -7,7 +7,10 @@ import AppMap from "../Map/AppMap";
 import { filteredData } from "../../store/appState";
 import PropertySearchBar from "../../components/PropertySearchBar/PropertySearchBar";
 import PropertiesFilterMenu from "../../components/PropertiesFilterMenu/PropertiesFilterMenu";
-
+// const PlaceDetails = lazy(() => import("../../components/PlaceDetails/PlaceDetails"));
+// const PropertySearchBar = lazy(() => import("../../components/PropertySearchBar/PropertySearchBar"));
+// const PropertiesFilterMenu = lazy(() => import("../../components/PropertiesFilterMenu/PropertiesFilterMenu"));
+//const AppMap = lazy(() => import("./Map/AppMap"));
 function MapSearch() {
   const [popupInfo, setPopupInfo] = useState(null);
 

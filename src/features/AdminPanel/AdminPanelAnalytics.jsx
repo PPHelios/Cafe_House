@@ -91,9 +91,9 @@ const useStyles = createStyles((theme) => ({
 
 export default function AdminPanelAnalytics() {
   const userRole = Parse.User.current()?.get("userRole");
-   console.log({userRole})
-   console.log({agencies})
-   console.log(credits.value)
+  //  console.log({userRole})
+  //  console.log({agencies})
+  //  console.log(credits.value)
    const data = signal([
     {
       title: "Views",

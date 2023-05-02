@@ -7,6 +7,7 @@ import { useState, useMemo, useRef, useCallback, useEffect } from "preact/hooks"
 import { filteredData } from "../../store/appState";
 import { Box, Image, Text, Group, Paper } from "@mantine/core";
 import { useWindowScroll } from '@mantine/hooks';
+import "./map.css"
 import Pin from "./pin";
 import PropertyModal from "../../components/PropertyModal/PropertyModal";
 import {
