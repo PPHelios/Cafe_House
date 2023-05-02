@@ -7,6 +7,7 @@
 * Users can have and manage favorites.
 * Agencies and agents can be added throw list with us button for ease of testing.
 * A full control panel is implemented to manage Agencies, Agents, Ads.
+* Analytics for ads., agencies, users actions.
 * Forms are validated using mantine forms.
 
 ## Technology
@@ -30,4 +31,5 @@
 * Arabic Localization (i18 next is already added and configured).
 * Client side Protected routes, db is already protected.
 * The project is still ongoing with pending ideas and testing components so it needs code cleanup.
+* Preact has a code splitting issue so migration to Next js is planned if going to production.
 
