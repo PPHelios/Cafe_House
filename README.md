@@ -29,5 +29,5 @@
 ## To be added
 * Arabic Localization (i18 next is already added and configured).
 * Client side Protected routes, db is already protected.
-* 
+* The project is still ongoing with pending ideas and testing components so it needs code cleanup.
 
