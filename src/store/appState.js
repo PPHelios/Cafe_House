@@ -2,6 +2,9 @@ import { signal } from "@preact/signals";
 
 
 import Parse from "parse/dist/parse.min.js";
+const PARSE_APPLICATION_ID = import.meta.env.VITE_PARSE_APPLICATION_ID;
+const PARSE_JAVASCRIPT_KEY = import.meta.env.VITE_PARSE_JAVASCRIPT_KEY;
+Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 import { notifications } from "@mantine/notifications";
 export const themeColor = signal("light");
 

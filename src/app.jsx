@@ -24,12 +24,7 @@ import {
   agencyCredits,
 } from "./store/appState";
 import { Notifications } from "@mantine/notifications";
-// BACKENDLESS
-// import Backendless from "backendless";
-// Backendless.initApp(
-//   import.meta.env.VITE_APPLICATION_ID,
-//   import.meta.env.VITE_JS_API_KEY
-// );
+
 //Import Parse minified version
 import Parse from "parse/dist/parse.min.js";
 Parse.enableEncryptedUser();
